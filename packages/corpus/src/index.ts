@@ -2,3 +2,5 @@
 export const VERSION_CONTRAT = 1
 
 export * from './entree.js'
+export * from './theme.js'
+export * from './artefact.js'
