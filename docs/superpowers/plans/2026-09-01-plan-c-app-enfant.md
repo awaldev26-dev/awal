@@ -56,7 +56,7 @@
 **Interfaces:**
 - Produces: application exportable statiquement, servie sur le port 3002
 
-- [ ] **Step 1: Écrire le test de fumée**
+- [x] **Step 1: Écrire le test de fumée**
 
 `apps/enfant/test/fumee.test.ts` :
 
@@ -71,7 +71,7 @@ describe('app enfant', () => {
 })
 ```
 
-- [ ] **Step 2: Créer la configuration**
+- [x] **Step 2: Créer la configuration**
 
 `apps/enfant/package.json` :
 
@@ -283,7 +283,7 @@ export default function Accueil() {
 }
 ```
 
-- [ ] **Step 3: Installer et vérifier**
+- [x] **Step 3: Installer et vérifier**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal
@@ -293,7 +293,7 @@ pnpm --filter enfant test
 
 Attendu : SUCCÈS — 1 test.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add -A && git commit -m "chore(enfant): squelette PWA"
@@ -319,7 +319,7 @@ git add -A && git commit -m "chore(enfant): squelette PWA"
 
 Les délais se comptent en jours calendaires, pas en heures : un enfant qui joue à 8 h puis à 19 h ne doit pas voir la même carte deux fois, et celui qui joue à 23 h 55 doit retrouver ses révisions le lendemain matin.
 
-- [ ] **Step 1: Écrire le test**
+- [x] **Step 1: Écrire le test**
 
 `apps/enfant/test/leitner.test.ts` :
 
@@ -417,7 +417,7 @@ describe('DELAIS_JOURS', () => {
 })
 ```
 
-- [ ] **Step 2: Vérifier l'échec**
+- [x] **Step 2: Vérifier l'échec**
 
 ```bash
 pnpm --filter enfant test
@@ -425,7 +425,7 @@ pnpm --filter enfant test
 
 Attendu : ÉCHEC — `@/moteur/leitner.js` introuvable.
 
-- [ ] **Step 3: Implémenter**
+- [x] **Step 3: Implémenter**
 
 `apps/enfant/src/moteur/types.ts` :
 
@@ -502,7 +502,7 @@ export function estAcquise(etat: EtatEntree): boolean {
 }
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 ```bash
 pnpm --filter enfant test && pnpm --filter enfant typecheck
@@ -510,7 +510,7 @@ pnpm --filter enfant test && pnpm --filter enfant typecheck
 
 Attendu : SUCCÈS — 13 tests au total.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add -A && git commit -m "feat(enfant): moteur Leitner à cinq boîtes"
@@ -534,7 +534,7 @@ git add -A && git commit -m "feat(enfant): moteur Leitner à cinq boîtes"
 
 Le plafond de mots nouveaux par jour est le réglage central : sans lui, un enfant enthousiaste absorbe quarante mots un dimanche et se retrouve deux semaines plus tard face à une session de quarante minutes, qu'il abandonne.
 
-- [ ] **Step 1: Écrire les tests**
+- [x] **Step 1: Écrire les tests**
 
 `apps/enfant/test/session.test.ts` :
 
@@ -748,7 +748,7 @@ describe('charge sur soixante jours', () => {
 })
 ```
 
-- [ ] **Step 2: Vérifier l'échec**
+- [x] **Step 2: Vérifier l'échec**
 
 ```bash
 pnpm --filter enfant test
@@ -756,7 +756,7 @@ pnpm --filter enfant test
 
 Attendu : ÉCHEC — `@/moteur/session.js` introuvable.
 
-- [ ] **Step 3: Implémenter**
+- [x] **Step 3: Implémenter**
 
 `apps/enfant/src/moteur/session.ts` :
 
@@ -869,7 +869,7 @@ export function serie(progression: Progression, maintenant: Date): number {
 }
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 ```bash
 pnpm --filter enfant test
@@ -877,7 +877,7 @@ pnpm --filter enfant test
 
 Attendu : SUCCÈS — 41 tests au total.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add -A && git commit -m "feat(enfant): composition de session et plafond de nouveautés"
@@ -898,7 +898,7 @@ git add -A && git commit -m "feat(enfant): composition de session et plafond de 
   - `class MagasinLocal implements MagasinProgression`
   - `AVATARS: string[]`
 
-- [ ] **Step 1: Écrire le test**
+- [x] **Step 1: Écrire le test**
 
 `apps/enfant/test/magasin.test.ts` :
 
@@ -966,7 +966,7 @@ describe('MagasinLocal', () => {
 })
 ```
 
-- [ ] **Step 2: Vérifier l'échec, puis implémenter**
+- [x] **Step 2: Vérifier l'échec, puis implémenter**
 
 `apps/enfant/src/stockage/magasin.ts` :
 
@@ -1050,7 +1050,7 @@ export class MagasinLocal implements MagasinProgression {
 }
 ```
 
-- [ ] **Step 3: Vérifier**
+- [x] **Step 3: Vérifier**
 
 ```bash
 pnpm --filter enfant test
@@ -1058,7 +1058,7 @@ pnpm --filter enfant test
 
 Attendu : SUCCÈS — 38 tests au total.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add -A && git commit -m "feat(enfant): profils et magasin de progression"
@@ -1082,7 +1082,7 @@ git add -A && git commit -m "feat(enfant): profils et magasin de progression"
 
 Le déverrouillage iOS est indispensable : Safari refuse toute lecture audio qui ne descend pas d'un geste utilisateur. On joue un silence au premier tap, ce qui autorise toutes les lectures suivantes.
 
-- [ ] **Step 1: Écrire le test**
+- [x] **Step 1: Écrire le test**
 
 `apps/enfant/test/charger.test.ts` :
 
@@ -1126,7 +1126,7 @@ describe('urlAudio', () => {
 })
 ```
 
-- [ ] **Step 2: Implémenter**
+- [x] **Step 2: Implémenter**
 
 `apps/enfant/src/corpus/charger.ts` :
 
@@ -1216,7 +1216,7 @@ export class Lecteur {
 }
 ```
 
-- [ ] **Step 3: Vérifier et commiter**
+- [x] **Step 3: Vérifier et commiter**
 
 ```bash
 pnpm --filter enfant test
@@ -1242,7 +1242,7 @@ Attendu : SUCCÈS — 43 tests au total.
 
 Les distracteurs sont tirés en priorité dans le même thème : quatre images sans rapport rendent la bonne réponse devinable sans écouter, ce qui vide l'exercice de son intérêt.
 
-- [ ] **Step 1: Écrire le test**
+- [x] **Step 1: Écrire le test**
 
 `apps/enfant/test/distracteurs.test.ts` :
 
@@ -1296,7 +1296,7 @@ describe('choisirDistracteurs', () => {
 })
 ```
 
-- [ ] **Step 2: Implémenter le tirage**
+- [x] **Step 2: Implémenter le tirage**
 
 `apps/enfant/src/jeux/choisirDistracteurs.ts` :
 
@@ -1337,7 +1337,7 @@ export function choisirDistracteurs(
 }
 ```
 
-- [ ] **Step 3: Implémenter les activités**
+- [x] **Step 3: Implémenter les activités**
 
 `apps/enfant/src/jeux/types.ts` :
 
@@ -1558,7 +1558,7 @@ export function Memory({ lot, artefact, lecteur, onTermine }: ProprietesJeu) {
 }
 ```
 
-- [ ] **Step 4: Vérifier et commiter**
+- [x] **Step 4: Vérifier et commiter**
 
 ```bash
 pnpm --filter enfant test && pnpm --filter enfant typecheck
@@ -1582,7 +1582,7 @@ Attendu : SUCCÈS — 49 tests au total.
 
 L'application entière est un composant client unique. Il n'y a pas de serveur, la navigation par URL n'apporterait rien à un enfant, et un état local rend les transitions instantanées.
 
-- [ ] **Step 1: Écrire l'orchestrateur**
+- [x] **Step 1: Écrire l'orchestrateur**
 
 `apps/enfant/src/app/Application.tsx` :
 
@@ -1726,7 +1726,7 @@ export function Application() {
 }
 ```
 
-- [ ] **Step 2: Écrire les écrans**
+- [x] **Step 2: Écrire les écrans**
 
 `apps/enfant/src/app/ecrans/ChoixProfil.tsx` :
 
@@ -2014,7 +2014,7 @@ export default function Page() {
 }
 ```
 
-- [ ] **Step 3: Vérifier**
+- [x] **Step 3: Vérifier**
 
 ```bash
 pnpm --filter enfant typecheck && pnpm --filter enfant build
@@ -2022,7 +2022,7 @@ pnpm --filter enfant typecheck && pnpm --filter enfant build
 
 Attendu : typecheck propre, export statique produit dans `out/`.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add -A && git commit -m "feat(enfant): écrans profil, accueil, collection et bilan"
@@ -2041,7 +2041,7 @@ git add -A && git commit -m "feat(enfant): écrans profil, accueil, collection e
 
 Les audios sont produits par la synthèse vocale française du système. La prononciation est fausse — c'est assumé et signalé : ils servent à vérifier que la mécanique fonctionne, et disparaissent dès le premier vrai enregistrement.
 
-- [ ] **Step 1: Écrire le script**
+- [x] **Step 1: Écrire le script**
 
 `outils/audio-de-remplacement.sh` :
 
@@ -2076,7 +2076,7 @@ echo
 echo "Audios de remplacement générés dans $SORTIE"
 ```
 
-- [ ] **Step 2: Exécuter et publier**
+- [x] **Step 2: Exécuter et publier**
 
 ```bash
 chmod +x outils/audio-de-remplacement.sh
@@ -2085,15 +2085,15 @@ chmod +x outils/audio-de-remplacement.sh
 
 Puis publier depuis le studio et vérifier que `apps/studio/medias/corpus/actuel.json` existe et contient 213 entrées.
 
-- [ ] **Step 3: Relier l'app enfant au corpus publié**
+- [x] **Step 3: Relier l'app enfant au corpus publié**
 
 Copier le corpus et les audios publiés dans `apps/enfant/public/` pour le développement, ou pointer `NEXT_PUBLIC_URL_CORPUS` vers le studio.
 
-- [ ] **Step 4: Vérifier dans un navigateur**
+- [x] **Step 4: Vérifier dans un navigateur**
 
 Créer un profil, lancer une session, répondre, constater que la collection se remplit et que la progression survit à un rechargement.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add -A && git commit -m "chore: audio de remplacement et vérification de bout en bout"
