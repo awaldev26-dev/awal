@@ -1,0 +1,18 @@
+:root {
+  color-scheme: light;
+  --fond: #fdf6ec;
+  --encre: #2b2118;
+  --accent: #c94f3d;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--fond);
+  color: var(--encre);
+  font-family: system-ui, -apple-system, sans-serif;
+  /* Un enfant tape partout : la sélection de texte n'apporte que des ennuis. */
+  user-select: none;
+  overscroll-behavior: none;
+}
+button { font: inherit; cursor: pointer; }
