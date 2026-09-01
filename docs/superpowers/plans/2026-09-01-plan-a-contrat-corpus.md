@@ -55,7 +55,7 @@ Découpage par responsabilité : un fichier par concept du domaine. `validation.
 - Consumes: rien
 - Produces: le paquet `@awal/corpus`, la commande `pnpm test` à la racine, et la constante `VERSION_CONTRAT: number` exportée depuis `src/index.ts`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Créer `packages/corpus/test/fumee.test.ts` :
 
@@ -70,7 +70,7 @@ describe('paquet corpus', () => {
 })
 ```
 
-- [ ] **Step 2: Créer les fichiers de configuration**
+- [x] **Step 2: Créer les fichiers de configuration**
 
 `pnpm-workspace.yaml` :
 
@@ -176,7 +176,7 @@ export default defineConfig({
 })
 ```
 
-- [ ] **Step 3: Run test to verify it fails**
+- [x] **Step 3: Run test to verify it fails**
 
 ```bash
 pnpm install && pnpm test
@@ -184,7 +184,7 @@ pnpm install && pnpm test
 
 Attendu : ÉCHEC — `Failed to resolve import "../src/index.js"`, le fichier n'existe pas.
 
-- [ ] **Step 4: Write minimal implementation**
+- [x] **Step 4: Write minimal implementation**
 
 `packages/corpus/src/index.ts` :
 
@@ -193,7 +193,7 @@ Attendu : ÉCHEC — `Failed to resolve import "../src/index.js"`, le fichier n'
 export const VERSION_CONTRAT = 1
 ```
 
-- [ ] **Step 5: Run test to verify it passes**
+- [x] **Step 5: Run test to verify it passes**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm test
@@ -201,7 +201,7 @@ cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm test
 
 Attendu : SUCCÈS — 1 test passé.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal
@@ -227,7 +227,7 @@ git commit -m "chore: squelette du monorepo et paquet corpus"
   - `type Entree` — la forme validée, avec `niveau`, `contient` et `notes` toujours présents
   - `type EntreeSaisie` — la forme acceptée en entrée, où ces trois champs sont optionnels
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Créer `packages/corpus/test/entree.test.ts` :
 
@@ -297,7 +297,7 @@ describe('schemaEntree', () => {
 })
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal/packages/corpus && pnpm test
@@ -305,7 +305,7 @@ cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal/packages/corpus && pnpm test
 
 Attendu : ÉCHEC — `Failed to resolve import "../src/entree.js"`.
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 Créer `packages/corpus/src/entree.ts` :
 
@@ -359,7 +359,7 @@ Modifier `packages/corpus/src/index.ts` pour y ajouter :
 export * from './entree.js'
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal/packages/corpus && pnpm test && pnpm typecheck
@@ -367,7 +367,7 @@ cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal/packages/corpus && pnpm test && pnpm
 
 Attendu : SUCCÈS — 9 tests au total, aucune erreur de type.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal
@@ -391,7 +391,7 @@ git commit -m "feat(corpus): schéma d'une entrée"
   - `schemaTheme`, `type Theme` — champs `id`, `nom`, `picto`, `couleur`
   - `schemaArtefact`, `type Artefact` — champs `version`, `publieLe`, `urlBaseAudio`, `themes`, `entrees`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Créer `packages/corpus/test/artefact.test.ts` :
 
@@ -459,7 +459,7 @@ describe('schemaArtefact', () => {
 })
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal/packages/corpus && pnpm test
@@ -467,7 +467,7 @@ cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal/packages/corpus && pnpm test
 
 Attendu : ÉCHEC — `Failed to resolve import "../src/theme.js"`.
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 Créer `packages/corpus/src/theme.ts` :
 
@@ -515,7 +515,7 @@ export * from './theme.js'
 export * from './artefact.js'
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal/packages/corpus && pnpm test && pnpm typecheck
@@ -523,7 +523,7 @@ cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal/packages/corpus && pnpm test && pnpm
 
 Attendu : SUCCÈS — 16 tests au total.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal
@@ -549,7 +549,7 @@ git commit -m "feat(corpus): schémas du thème et de l'artefact publié"
 
 Les codes `'audio-absent'` et `'picto-absent'` sont déclarés ici mais produits par la tâche 5 : les deux validateurs partagent un seul type de problème pour que le studio puisse concaténer leurs résultats.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Créer `packages/corpus/test/validation.test.ts` :
 
@@ -624,7 +624,7 @@ describe('validerStructure', () => {
 })
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal/packages/corpus && pnpm test
@@ -632,7 +632,7 @@ cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal/packages/corpus && pnpm test
 
 Attendu : ÉCHEC — `Failed to resolve import "../src/validation.js"`.
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 Créer `packages/corpus/src/validation.ts` :
 
@@ -723,7 +723,7 @@ Ajouter dans `packages/corpus/src/index.ts` :
 export * from './validation.js'
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal/packages/corpus && pnpm test && pnpm typecheck
@@ -731,7 +731,7 @@ cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal/packages/corpus && pnpm test && pnpm
 
 Attendu : SUCCÈS — 23 tests au total.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal
@@ -756,7 +756,7 @@ git commit -m "feat(corpus): validation structurelle inter-entrées"
 
 C'est la règle qui rend un mot muet impossible à publier. Le studio fournira une implémentation de `VerificateurMedias` adossée à R2 ; le paquet ne connaît que l'interface.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Créer `packages/corpus/test/medias.test.ts` :
 
@@ -832,7 +832,7 @@ describe('validerMedias', () => {
 })
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal/packages/corpus && pnpm test
@@ -840,7 +840,7 @@ cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal/packages/corpus && pnpm test
 
 Attendu : ÉCHEC — `Failed to resolve import "../src/medias.js"`.
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 Créer `packages/corpus/src/medias.ts` :
 
@@ -899,7 +899,7 @@ Ajouter dans `packages/corpus/src/index.ts` :
 export * from './medias.js'
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal/packages/corpus && pnpm test && pnpm typecheck
@@ -907,7 +907,7 @@ cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal/packages/corpus && pnpm test && pnpm
 
 Attendu : SUCCÈS — 28 tests au total.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal
@@ -930,7 +930,7 @@ git commit -m "feat(corpus): validation des médias par interface injectée"
 
 Six entrées couvrant les cas qui comptent : deux thèmes, un mot avec pluriel, un mot avec `kabyleStd`, une phrase avec `contient`, et deux niveaux différents.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Créer `packages/corpus/test/fixtures.test.ts` :
 
@@ -959,7 +959,7 @@ describe('corpusMinimal', () => {
 })
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal/packages/corpus && pnpm test
@@ -967,7 +967,7 @@ cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal/packages/corpus && pnpm test
 
 Attendu : ÉCHEC — `Failed to resolve import "../fixtures/corpus-minimal.js"`.
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 Créer `packages/corpus/fixtures/corpus-minimal.ts` :
 
@@ -1063,7 +1063,7 @@ export const corpusMinimal: Artefact = schemaArtefact.parse({
 })
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal/packages/corpus && pnpm test && pnpm typecheck
@@ -1071,7 +1071,7 @@ cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal/packages/corpus && pnpm test && pnpm
 
 Attendu : SUCCÈS — 31 tests au total.
 
-- [ ] **Step 5: Vérifier la surface publique complète**
+- [x] **Step 5: Vérifier la surface publique complète**
 
 Le fichier `packages/corpus/src/index.ts` doit maintenant contenir exactement :
 
@@ -1086,7 +1086,7 @@ export * from './validation.js'
 export * from './medias.js'
 ```
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal
