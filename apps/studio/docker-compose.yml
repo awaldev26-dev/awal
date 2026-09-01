@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: awal-postgres
+    environment:
+      POSTGRES_USER: awal
+      POSTGRES_PASSWORD: awal
+      POSTGRES_DB: awal
+    ports:
+      - '5433:5432'
+    volumes:
+      - awal-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U awal']
+      interval: 5s
+      retries: 10
+
+volumes:
+  awal-pgdata:
