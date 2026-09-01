@@ -61,7 +61,7 @@ Séparation par responsabilité : `stockage/` ne connaît pas la base, `publicat
 - Consumes: `@awal/corpus` (`VERSION_CONTRAT`)
 - Produces: application démarrable par `pnpm --filter studio dev` sur le port 3001, Postgres local sur 5433
 
-- [ ] **Step 1: Écrire le test de fumée**
+- [x] **Step 1: Écrire le test de fumée**
 
 `apps/studio/test/fumee.test.ts` :
 
@@ -76,7 +76,7 @@ describe('studio', () => {
 })
 ```
 
-- [ ] **Step 2: Créer les fichiers de configuration**
+- [x] **Step 2: Créer les fichiers de configuration**
 
 `apps/studio/package.json` :
 
@@ -269,7 +269,7 @@ export default function Accueil() {
 }
 ```
 
-- [ ] **Step 3: Installer et vérifier que le test passe**
+- [x] **Step 3: Installer et vérifier que le test passe**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal
@@ -279,7 +279,7 @@ pnpm --filter studio test
 
 Attendu : SUCCÈS — 1 test.
 
-- [ ] **Step 4: Démarrer Postgres et vérifier**
+- [x] **Step 4: Démarrer Postgres et vérifier**
 
 ```bash
 cd apps/studio
@@ -290,7 +290,7 @@ docker compose ps
 
 Attendu : le conteneur `awal-postgres` est `healthy`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal
@@ -316,7 +316,7 @@ git commit -m "chore(studio): squelette Next.js et Postgres local"
 
 La colonne `entrees.themes` est un tableau de texte plutôt qu'une table de liaison : le corpus est petit, une entrée porte un à trois thèmes, et la table de liaison n'apporterait ici que de la cérémonie.
 
-- [ ] **Step 1: Écrire le test**
+- [x] **Step 1: Écrire le test**
 
 `apps/studio/test/schema.test.ts` :
 
@@ -349,7 +349,7 @@ describe('schéma de base', () => {
 })
 ```
 
-- [ ] **Step 2: Vérifier l'échec**
+- [x] **Step 2: Vérifier l'échec**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio test
@@ -357,7 +357,7 @@ cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio test
 
 Attendu : ÉCHEC — module `@/db/schema.js` introuvable.
 
-- [ ] **Step 3: Implémenter**
+- [x] **Step 3: Implémenter**
 
 `apps/studio/src/db/schema.ts` :
 
@@ -432,7 +432,7 @@ export default {
 
 Noter que `audio` est nullable en base alors que le schéma du corpus l'exige : une entrée existe en base avant d'être enregistrée. C'est la publication qui refuse les entrées sans audio.
 
-- [ ] **Step 4: Vérifier et générer la migration**
+- [x] **Step 4: Vérifier et générer la migration**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio test
@@ -441,7 +441,7 @@ cd apps/studio && set -a && source .env.local && set +a && pnpm db:generer && pn
 
 Attendu : tests au vert, migration créée dans `drizzle/`, tables créées en base.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal
@@ -466,7 +466,7 @@ git commit -m "feat(studio): schéma de base et connexion Drizzle"
   - `verifierSession(jeton: string | undefined): Promise<boolean>`
   - `NOM_COOKIE = 'awal_session'`
 
-- [ ] **Step 1: Écrire le test**
+- [x] **Step 1: Écrire le test**
 
 `apps/studio/test/session.test.ts` :
 
@@ -504,7 +504,7 @@ describe('session du studio', () => {
 })
 ```
 
-- [ ] **Step 2: Vérifier l'échec**
+- [x] **Step 2: Vérifier l'échec**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio test
@@ -512,7 +512,7 @@ cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio test
 
 Attendu : ÉCHEC — module `@/auth/session.js` introuvable.
 
-- [ ] **Step 3: Implémenter**
+- [x] **Step 3: Implémenter**
 
 `apps/studio/src/auth/session.ts` :
 
@@ -626,7 +626,7 @@ export default function Connexion() {
 }
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio test
@@ -634,7 +634,7 @@ cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio test
 
 Attendu : SUCCÈS — 6 tests au total.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal
@@ -660,7 +660,7 @@ git commit -m "feat(studio): authentification par mot de passe unique"
 
 `StockageDisque` sert aussi bien au développement qu'aux tests, ce qui évite d'écrire un troisième faux.
 
-- [ ] **Step 1: Écrire les tests**
+- [x] **Step 1: Écrire les tests**
 
 `apps/studio/test/pictos.test.ts` :
 
@@ -774,7 +774,7 @@ describe('creerVerificateur', () => {
 })
 ```
 
-- [ ] **Step 2: Vérifier l'échec**
+- [x] **Step 2: Vérifier l'échec**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio test
@@ -782,7 +782,7 @@ cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio test
 
 Attendu : ÉCHEC — modules de `@/stockage/` introuvables.
 
-- [ ] **Step 3: Implémenter**
+- [x] **Step 3: Implémenter**
 
 `apps/studio/src/stockage/pictos.ts` :
 
@@ -966,7 +966,7 @@ export function creerVerificateur(stockage: StockageMedias): VerificateurMedias 
 }
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio test
@@ -974,7 +974,7 @@ cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio test
 
 Attendu : SUCCÈS — 22 tests au total.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal
@@ -998,7 +998,7 @@ git commit -m "feat(studio): stockage des médias, disque et R2"
 
 Fonction pure : elle reçoit des lignes déjà lues, ce qui la rend testable sans base.
 
-- [ ] **Step 1: Écrire le test**
+- [x] **Step 1: Écrire le test**
 
 `apps/studio/test/construire.test.ts` :
 
@@ -1075,7 +1075,7 @@ describe('construireArtefact', () => {
 })
 ```
 
-- [ ] **Step 2: Vérifier l'échec**
+- [x] **Step 2: Vérifier l'échec**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio test
@@ -1083,7 +1083,7 @@ cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio test
 
 Attendu : ÉCHEC — `@/publication/construire.js` introuvable.
 
-- [ ] **Step 3: Implémenter**
+- [x] **Step 3: Implémenter**
 
 `apps/studio/src/publication/construire.ts` :
 
@@ -1146,7 +1146,7 @@ export function construireArtefact(
 }
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio test
@@ -1154,7 +1154,7 @@ cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio test
 
 Attendu : SUCCÈS — 28 tests au total.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal
@@ -1179,7 +1179,7 @@ git commit -m "feat(studio): construction de l'artefact depuis la base"
 
 Écrit deux fichiers : `corpus/v{n}.json` qui est immuable, et `corpus/actuel.json` qui est écrasé. L'app enfant ne lit que le second, mais l'historique permet de revenir en arrière si une publication est mauvaise.
 
-- [ ] **Step 1: Écrire le test**
+- [x] **Step 1: Écrire le test**
 
 `apps/studio/test/publier.test.ts` :
 
@@ -1294,7 +1294,7 @@ describe('publierArtefact', () => {
 })
 ```
 
-- [ ] **Step 2: Vérifier l'échec**
+- [x] **Step 2: Vérifier l'échec**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio test
@@ -1302,7 +1302,7 @@ cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio test
 
 Attendu : ÉCHEC — `@/publication/publier.js` introuvable.
 
-- [ ] **Step 3: Implémenter**
+- [x] **Step 3: Implémenter**
 
 `apps/studio/src/publication/publier.ts` :
 
@@ -1346,7 +1346,7 @@ export async function publierArtefact(
 }
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio test
@@ -1354,7 +1354,7 @@ cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio test
 
 Attendu : SUCCÈS — 34 tests au total.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal
@@ -1384,7 +1384,7 @@ git commit -m "feat(studio): publication validée de l'artefact"
 
 L'enregistrement passe par `MediaRecorder`. Le type MIME diffère selon le navigateur — `audio/webm` sur Chrome, `audio/mp4` sur Safari — donc l'extension est déduite du blob et non imposée.
 
-- [ ] **Step 1: Écrire les actions serveur**
+- [x] **Step 1: Écrire les actions serveur**
 
 `apps/studio/src/app/actions.ts` :
 
@@ -1456,7 +1456,7 @@ export async function lancerPublication(): Promise<ResultatPublication> {
 }
 ```
 
-- [ ] **Step 2: Écrire la route de service des médias en développement**
+- [x] **Step 2: Écrire la route de service des médias en développement**
 
 `apps/studio/src/app/medias/[...cle]/route.ts` :
 
@@ -1475,7 +1475,7 @@ export async function GET(_requete: Request, contexte: { params: Promise<{ cle: 
 }
 ```
 
-- [ ] **Step 3: Écrire l'enregistreur**
+- [x] **Step 3: Écrire l'enregistreur**
 
 `apps/studio/src/app/Enregistreur.tsx` :
 
@@ -1533,7 +1533,7 @@ export function Enregistreur({ id, audioActuel }: { id: string; audioActuel: str
 }
 ```
 
-- [ ] **Step 4: Écrire les pages**
+- [x] **Step 4: Écrire les pages**
 
 `apps/studio/src/app/entrees/page.tsx` :
 
@@ -1725,7 +1725,7 @@ export function Publication() {
 }
 ```
 
-- [ ] **Step 5: Vérifier la compilation**
+- [x] **Step 5: Vérifier la compilation**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio typecheck && pnpm --filter studio build
@@ -1733,7 +1733,7 @@ cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio typecheck &&
 
 Attendu : typecheck propre et build réussi.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal
@@ -1761,7 +1761,7 @@ L'extraction lit les tableaux du document plutôt que de ressaisir 213 entrées 
 
 Les identifiants sont dérivés du kabyle par translittération en slug — `3` devient `3`, les espaces des tirets. En cas de collision, un suffixe numérique est ajouté.
 
-- [ ] **Step 1: Écrire le test**
+- [x] **Step 1: Écrire le test**
 
 `apps/studio/test/extraire.test.ts` :
 
@@ -1822,7 +1822,7 @@ describe('extraireCorpus', () => {
 })
 ```
 
-- [ ] **Step 2: Vérifier l'échec**
+- [x] **Step 2: Vérifier l'échec**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio test
@@ -1830,7 +1830,7 @@ cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio test
 
 Attendu : ÉCHEC — `../seed/extraire.js` introuvable.
 
-- [ ] **Step 3: Implémenter l'extraction**
+- [x] **Step 3: Implémenter l'extraction**
 
 `apps/studio/seed/extraire.ts` :
 
@@ -1930,7 +1930,7 @@ function nettoyer(cellule: string): string {
 }
 ```
 
-- [ ] **Step 4: Vérifier l'extraction et ajuster**
+- [x] **Step 4: Vérifier l'extraction et ajuster**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal && pnpm --filter studio test
@@ -1948,7 +1948,7 @@ console.log('TOTAL', entrees.length)
 "
 ```
 
-- [ ] **Step 5: Écrire la table des pictos et le seed**
+- [x] **Step 5: Écrire la table des pictos et le seed**
 
 `apps/studio/seed/pictos.ts` : une correspondance `id → codepoint`, avec un défaut par thème pour les entrées abstraites.
 
@@ -2038,7 +2038,7 @@ console.log(`${corpus.themes.length} thèmes, ${corpus.entrees.length} entrées 
 process.exit(0)
 ```
 
-- [ ] **Step 6: Exécuter le seed et vérifier**
+- [x] **Step 6: Exécuter le seed et vérifier**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal/apps/studio
@@ -2048,7 +2048,7 @@ pnpm db:seed
 
 Attendu : `11 thèmes, 213 entrées insérés.`
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 cd /Users/aghiles.benkaoudjt/DEV_PERSO/awal
