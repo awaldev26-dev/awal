@@ -4,6 +4,7 @@ import './globals.css'
 export const metadata = {
   title: 'Awal',
   manifest: '/manifest.webmanifest',
+  icons: { icon: '/favicon.png', apple: '/icone-192.png' },
 }
 
 export const viewport = {
