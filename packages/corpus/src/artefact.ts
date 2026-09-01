@@ -10,7 +10,17 @@ import { schemaTheme } from './theme.js'
 export const schemaArtefact = z.object({
   version: z.number().int().positive(),
   publieLe: z.string().datetime(),
-  urlBaseAudio: z.string().url(),
+  /**
+   * Base des URL audio : soit absolue (« https://medias.exemple.com/ »),
+   * soit un chemin absolu (« / ») quand les médias sont servis par la même
+   * origine que l'application — ce qui est le cas en développement.
+   */
+  urlBaseAudio: z
+    .string()
+    .refine(
+      (valeur) => valeur.startsWith('/') || /^https?:\/\//.test(valeur),
+      'urlBaseAudio : URL absolue (https://…) ou chemin absolu (/…)',
+    ),
   themes: z.array(schemaTheme).min(1),
   entrees: z.array(schemaEntree).min(1),
 })

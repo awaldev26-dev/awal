@@ -55,7 +55,13 @@ describe('schemaArtefact', () => {
     expect(schemaArtefact.safeParse({ ...artefact, publieLe: '01/09/2026' }).success).toBe(false)
   })
 
+  it('accepte un chemin absolu comme base audio', () => {
+    expect(schemaArtefact.safeParse({ ...artefact, urlBaseAudio: '/' }).success).toBe(true)
+    expect(schemaArtefact.safeParse({ ...artefact, urlBaseAudio: '/medias/' }).success).toBe(true)
+  })
+
   it('refuse une url de base invalide', () => {
     expect(schemaArtefact.safeParse({ ...artefact, urlBaseAudio: 'media.awal.app' }).success).toBe(false)
+    expect(schemaArtefact.safeParse({ ...artefact, urlBaseAudio: 'ftp://x/' }).success).toBe(false)
   })
 })

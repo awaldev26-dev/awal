@@ -25,7 +25,10 @@ export function creerStockage(): StockageMedias {
       exige('R2_SECRET_ACCESS_KEY'),
     )
   }
-  return new StockageDisque(racineParDefaut(), 'http://localhost:3001/medias/')
+  // Les audios publiés sont destinés à être copiés dans public/ de l'app enfant,
+  // d'où une base relative par défaut. Le studio, lui, sert ses propres audios
+  // par sa route /medias, indépendamment de cette valeur.
+  return new StockageDisque(racineParDefaut(), process.env.STOCKAGE_DISQUE_URL_PUBLIQUE ?? '/')
 }
 
 /**

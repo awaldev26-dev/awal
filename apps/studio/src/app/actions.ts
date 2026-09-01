@@ -3,10 +3,10 @@
 import { revalidatePath } from 'next/cache'
 import { eq } from 'drizzle-orm'
 import { db } from '@/db/index.js'
-import { entrees, publications, themes } from '@/db/schema.js'
+import { entrees } from '@/db/schema.js'
 import { creerStockage } from '@/stockage/index.js'
-import { construireArtefact } from '@/publication/construire.js'
-import { publierArtefact, type ResultatPublication } from '@/publication/publier.js'
+import { publierDepuisBase } from '@/publication/depuisBase.js'
+import type { ResultatPublication } from '@/publication/publier.js'
 
 export async function enregistrerEntree(donnees: FormData): Promise<void> {
   const id = String(donnees.get('id'))
@@ -37,29 +37,7 @@ export async function televerserAudio(id: string, fichier: File): Promise<{ cle:
 }
 
 export async function lancerPublication(): Promise<ResultatPublication> {
-  const [lignes, listeThemes, derniere] = await Promise.all([
-    db.select().from(entrees),
-    db.select().from(themes),
-    db.select().from(publications),
-  ])
-  const version = Math.max(0, ...derniere.map((p) => p.version)) + 1
-  const stockage = creerStockage()
-
-  const publiables = lignes.filter((ligne) => ligne.audio !== null)
-  if (publiables.length === 0) {
-    return { ok: false, problemes: [{ code: 'audio-absent', message: 'Aucune entrée enregistrée.' }] }
-  }
-
-  const artefact = construireArtefact(publiables, listeThemes, {
-    version,
-    publieLe: new Date(),
-    urlBaseAudio: stockage.urlPublique(),
-  })
-
-  const resultat = await publierArtefact(artefact, stockage)
-  if (resultat.ok) {
-    await db.insert(publications).values({ version, nbEntrees: publiables.length })
-    revalidatePath('/')
-  }
+  const resultat = await publierDepuisBase()
+  if (resultat.ok) revalidatePath('/')
   return resultat
 }
