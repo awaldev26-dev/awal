@@ -45,7 +45,18 @@ export function EcouteEtChoisis({ lot, artefact, lecteur, onTermine }: Propriete
   }
 
   return (
-    <main style={{ display: 'grid', gap: 24, placeItems: 'center', padding: 24, minHeight: '100dvh' }}>
+    <main
+      style={{
+        display: 'grid',
+        gap: 20,
+        placeItems: 'center',
+        // alignContent groupe les deux blocs au centre ; sans lui, la grille
+        // répartit ses lignes et laisse le haut-parleur seul en haut de l'écran.
+        alignContent: 'center',
+        padding: 24,
+        minHeight: '100dvh',
+      }}
+    >
       <button
         type="button"
         onClick={() => lecteur.jouer(urlAudio(artefact, cible))}

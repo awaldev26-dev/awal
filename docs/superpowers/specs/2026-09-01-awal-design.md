@@ -173,12 +173,34 @@ contrat qui rend le moteur unique et l'ajout d'un jeu sans effet de bord.
 | Activité | Mode | Âge | Travaille |
 |---|---|---|---|
 | Écoute et choisis | solo | 5-11 | compréhension orale |
-| Memory audio | solo | 5-11 | mémorisation son ↔ sens |
+| ~~Memory audio~~ | — | — | **retiré, voir ci-dessous** |
 | L'intrus | solo | 6-11 | catégorisation |
 | Écho | solo | 5-11 | production orale |
 | Mot mystère | solo | 8-11 | écrit |
 | Duel | duo | 5-11 | vitesse, rejouabilité |
 | Chasse au trésor | duo | 5-11 | ancrage physique |
+
+**Le Memory audio a été retiré** après l'avoir vu tourner, et son code supprimé.
+Trois défauts que la conception n'avait pas anticipés :
+
+1. **L'écran de départ ne dit rien** — douze rectangles vides, rien n'indique
+   qu'on peut les toucher ni ce qu'on cherche.
+2. **Il exige de mémoriser des sons, pas des images.** Un memory classique
+   s'appuie sur la mémoire visuelle, très efficace chez l'enfant ; retenir
+   « le troisième haut-parleur, c'était *aghroum* » est bien plus difficile.
+   Six paires, c'est trop.
+3. **Toutes les cartes « son » se ressemblent** — le même 🔊 — donc impossible
+   de s'y repérer sans réécouter.
+
+Une démonstration animée l'aurait rendu compréhensible, pas bon. La session du
+jour n'utilise donc qu'Écoute-et-choisis, qui ne demande aucune explication :
+on entend un mot, on touche l'image.
+
+**L'imagier** (« Écouter les mots ») remplace le mode entraînement initialement
+prévu comme second exercice. Les 243 cartes visibles par thème, image et
+traduction, un tap pour entendre la prononciation. Ni score, ni progression, ni
+échec possible : c'est un dictionnaire visuel, consultable à tout moment, et il
+n'écrit rien — faire monter les boîtes en rejouant détruirait l'espacement.
 
 **L'Écho ne note rien.** L'enfant s'enregistre, réécoute la voix du père puis la sienne. Pas
 de score, pas d'évaluation. C'est la pratique des orthophonistes, et la seule honnête en

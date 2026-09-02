@@ -10,7 +10,6 @@ import type { Progression, ResultatEntree } from '@/moteur/types.js'
 import { MagasinLocal } from '@/stockage/local.js'
 import type { Profil } from '@/stockage/magasin.js'
 import { EcouteEtChoisis } from '@/jeux/EcouteEtChoisis.js'
-import { Memory } from '@/jeux/Memory.js'
 import { Accueil } from './ecrans/Accueil.js'
 import { Bilan } from './ecrans/Bilan.js'
 import { ChoixProfil } from './ecrans/ChoixProfil.js'
@@ -33,7 +32,6 @@ export function Application() {
   const [progression, setProgression] = useState<Progression | null>(null)
   const [ecran, setEcran] = useState<Ecran>('profil')
   const [derniersResultats, setDerniersResultats] = useState<ResultatEntree[]>([])
-  const [jeu, setJeu] = useState<'ecoute' | 'memory'>('ecoute')
   const lot = useRef<Entree[]>([])
 
   useEffect(() => {
@@ -65,7 +63,6 @@ export function Application() {
     if (compose.length === 0) return
     lot.current = compose
     await lecteur.precharger(compose.map((entree) => urlAudio(artefact, entree)))
-    setJeu(compose.length >= 6 && Math.random() < 0.4 ? 'memory' : 'ecoute')
     setEcran('session')
   }, [artefact, profil, progression, lecteur])
 
@@ -100,8 +97,9 @@ export function Application() {
   }
 
   if (ecran === 'session') {
-    const proprietes = { lot: lot.current, artefact, lecteur, onTermine: terminer }
-    return jeu === 'memory' ? <Memory {...proprietes} /> : <EcouteEtChoisis {...proprietes} />
+    return (
+      <EcouteEtChoisis lot={lot.current} artefact={artefact} lecteur={lecteur} onTermine={terminer} />
+    )
   }
 
   if (ecran === 'collection') {

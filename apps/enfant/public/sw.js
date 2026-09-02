@@ -1,7 +1,5 @@
-const CACHE = 'awal-v2'
+const CACHE = 'awal-v3'
 
-// L'app shell est mise en cache à l'installation ; le reste l'est à la demande,
-// puisqu'on ne connaît pas les URL des audios avant d'avoir lu le corpus.
 self.addEventListener('install', (evenement) => {
   evenement.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(['/'])))
   self.skipWaiting()
@@ -22,40 +20,51 @@ function mettreEnCache(requete, reponse) {
   caches.open(CACHE).then((cache) => cache.put(requete, copie))
 }
 
+/**
+ * Seules les ressources dont l'URL ne change jamais de contenu peuvent être
+ * servies depuis le cache sans vérifier le réseau : les audios, et les fichiers
+ * de Next dont le nom porte une empreinte.
+ *
+ * Tout le reste — la page elle-même et le corpus publié — passe par le réseau
+ * d'abord. En « cache d'abord », ni un nouvel enregistrement ni une correction
+ * de l'application ne parviendraient jamais à l'enfant : l'app resterait figée
+ * dans la version du premier lancement.
+ */
+function estImmuable(chemin) {
+  return chemin.includes('/audio/') || chemin.startsWith('/_next/static/')
+}
+
 self.addEventListener('fetch', (evenement) => {
   const requete = evenement.request
   if (requete.method !== 'GET') return
 
   const chemin = new URL(requete.url).pathname
 
-  // Le corpus change à chaque publication : réseau d'abord, cache en secours.
-  // En « cache d'abord », une nouvelle publication ne parviendrait jamais à
-  // l'enfant — le fichier est petit, la requête réseau est indolore.
-  if (chemin.includes('/corpus/')) {
+  if (estImmuable(chemin)) {
     evenement.respondWith(
-      fetch(requete)
-        .then((reponse) => {
+      caches.match(requete).then((enCache) => {
+        if (enCache) return enCache
+        return fetch(requete).then((reponse) => {
           mettreEnCache(requete, reponse)
           return reponse
         })
-        .catch(() =>
-          caches.match(requete).then((enCache) =>
-            enCache ?? new Response('corpus indisponible', { status: 503 }),
-          ),
-        ),
+      }),
     )
     return
   }
 
-  // Les audios sont immuables et lourds : cache d'abord, et un audio déjà
-  // entendu ne doit jamais être retéléchargé.
+  // Réseau d'abord, cache en secours : c'est le cache qui permet de jouer
+  // hors ligne, pas de figer l'application.
   evenement.respondWith(
-    caches.match(requete).then((enCache) => {
-      if (enCache) return enCache
-      return fetch(requete).then((reponse) => {
-        if (chemin.includes('/audio/')) mettreEnCache(requete, reponse)
+    fetch(requete)
+      .then((reponse) => {
+        mettreEnCache(requete, reponse)
         return reponse
       })
-    }),
+      .catch(() =>
+        caches.match(requete).then((enCache) =>
+          enCache ?? new Response('hors ligne', { status: 503 }),
+        ),
+      ),
   )
 })
