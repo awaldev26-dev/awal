@@ -106,6 +106,25 @@ pnpm tsx seed/audio-remplacement.ts --purger  # effacer les audios synthétiques
 Le studio peut rester sur ta machine si tu préfères : seul l'artefact publié
 doit être accessible aux enfants.
 
+## Hors ligne
+
+Trois stratégies de cache, selon ce que garantit l'URL :
+
+| Ressource | Stratégie | Pourquoi |
+|---|---|---|
+| Audios, fichiers Next à empreinte | cache d'abord | l'URL garantit le contenu |
+| La page elle-même | cache puis réseau | démarrage instantané, aucun contenu en jeu |
+| Le corpus publié | réseau d'abord, garde de 1,5 s | la fraîcheur compte, mais on ne pend jamais |
+
+Vérifié réseau coupé : l'app démarre, les profils et la progression sont
+retrouvés, l'imagier et la session fonctionnent, et les audios déjà entendus
+jouent depuis le cache.
+
+**Limite connue** : seuls les audios **déjà écoutés** sont disponibles hors
+ligne. Une session portant sur du vocabulaire neuf serait muette, donc
+injouable. Précharger les 243 audios (environ 7 Mo) au premier lancement
+lèverait cette limite — pas encore fait.
+
 ## Les deux modes de jeu
 
 **La session du jour** est la seule porte d'entrée du vocabulaire nouveau, et
