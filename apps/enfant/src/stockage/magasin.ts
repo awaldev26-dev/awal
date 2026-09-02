@@ -18,6 +18,9 @@ export interface MagasinProgression {
   supprimerProfil(id: string): void
   progression(profilId: string): Progression
   enregistrer(profilId: string, progression: Progression): void
+  /** Profil en cours de jeu, retenu pour qu'un rechargement n'y renvoie pas. */
+  profilActif(): Profil | null
+  definirProfilActif(id: string | null): void
 }
 
 export const AVATARS = ['🦊', '🐢', '🦁', '🐝', '🦋', '🐬', '🦉', '🐿️', '🦔', '🐧']

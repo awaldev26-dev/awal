@@ -11,20 +11,25 @@ import { emoji } from '@/jeux/emoji.js'
  * choisi. Tout afficher d'un seul tenant faisait un mur de 243 cartes,
  * décourageant avant même d'avoir commencé.
  *
+ * Le thème courant vient de l'URL et non d'un état interne : le geste de retour
+ * du système remonte ainsi d'un niveau, au lieu de fermer l'application.
+ *
  * Volontairement dépourvu de jeu, de score et de progression : c'est un
  * dictionnaire visuel où l'on ne peut pas se tromper.
  */
 export function Imagier({
   artefact,
   lecteur,
+  theme: choisi,
+  onChoisirTheme,
   onRetour,
 }: {
   artefact: Artefact
   lecteur: Lecteur
+  theme: Theme | null
+  onChoisirTheme: (theme: Theme | null) => void
   onRetour: () => void
 }) {
-  const [choisi, setChoisi] = useState<Theme | null>(null)
-
   const parTheme = useMemo(() => {
     const table = new Map<string, Entree[]>()
     for (const theme of artefact.themes) {
@@ -36,7 +41,7 @@ export function Imagier({
     return table
   }, [artefact])
 
-  const retour = () => (choisi ? setChoisi(null) : onRetour())
+  const retour = () => (choisi ? onChoisirTheme(null) : onRetour())
 
   return (
     <main style={{ padding: 20, paddingBottom: 48, minHeight: '100dvh' }}>
@@ -62,7 +67,7 @@ export function Imagier({
       </header>
 
       {choisi === null ? (
-        <ListeThemes artefact={artefact} parTheme={parTheme} onChoisir={setChoisi} />
+        <ListeThemes artefact={artefact} parTheme={parTheme} onChoisir={onChoisirTheme} />
       ) : (
         <Cartes
           entrees={parTheme.get(choisi.id) ?? []}

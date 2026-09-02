@@ -1,14 +1,21 @@
 'use client'
 
-import dynamique from 'next/dynamic'
+import { useRouter } from 'next/navigation'
+import { ChoixProfil } from './ecrans/ChoixProfil.js'
+import { useAwal, useMagasin } from './contexte/FournisseurAwal.js'
 
-// L'application entière dépend de localStorage et de l'audio : la rendre
-// côté serveur n'apporterait rien et provoquerait un décalage d'hydratation.
-const Application = dynamique(
-  () => import('./Application.js').then((module) => module.Application),
-  { ssr: false },
-)
+export default function PageProfils() {
+  const router = useRouter()
+  const magasin = useMagasin()
+  const { choisirProfil } = useAwal()
 
-export default function Page() {
-  return <Application />
+  return (
+    <ChoixProfil
+      magasin={magasin}
+      onChoisi={(profil) => {
+        choisirProfil(profil)
+        router.push('/jouer')
+      }}
+    />
+  )
 }

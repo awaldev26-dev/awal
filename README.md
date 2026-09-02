@@ -106,6 +106,37 @@ pnpm tsx seed/audio-remplacement.ts --purger  # effacer les audios synthétiques
 Le studio peut rester sur ta machine si tu préfères : seul l'artefact publié
 doit être accessible aux enfants.
 
+## Routes
+
+L'app enfant a de vraies routes, servies en statique et parcourues côté client :
+
+| URL | Écran |
+|---|---|
+| `/` | qui joue ? |
+| `/jouer` | accueil du profil |
+| `/jouer/session` | la session en cours |
+| `/jouer/bilan` | le bilan de fin |
+| `/jouer/collection` | la collection de cartes |
+| `/mots` | thèmes de l'imagier |
+| `/mots?theme=les-animaux` | cartes d'un thème |
+
+Le thème passe par un paramètre de requête et non par `/mots/[theme]` : les
+thèmes viennent du corpus téléchargé à l'exécution, l'export statique ne peut
+donc pas les prégénérer.
+
+L'intérêt n'est pas cosmétique : **le geste de retour du système remonte d'un
+écran** au lieu de fermer l'application, ce qui compte sur une tablette Android.
+
+L'état partagé — corpus, lecteur audio, profil actif, progression — vit dans un
+contexte porté par le layout, donc le corpus n'est téléchargé qu'une fois pour
+toute la navigation.
+
+Deux états restent volontairement volatils : le lot de la session en cours et
+ses résultats. Recharger `/jouer/session` ou `/jouer/bilan` renvoie donc à
+l'accueil, plutôt que d'afficher un écran sans contenu. Les transitions
+session → bilan → accueil utilisent `replace`, pour qu'on ne puisse pas revenir
+dans une partie terminée.
+
 ## Hors ligne
 
 Trois stratégies de cache, selon ce que garantit l'URL :

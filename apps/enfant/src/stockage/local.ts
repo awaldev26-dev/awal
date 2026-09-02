@@ -2,6 +2,7 @@ import { progressionVide, type Progression } from '@/moteur/types.js'
 import type { MagasinProgression, Profil } from './magasin.js'
 
 const CLE_PROFILS = 'awal.profils'
+const CLE_PROFIL_ACTIF = 'awal.profilActif'
 const PREFIXE_PROGRESSION = 'awal.progression.'
 
 /**
@@ -32,6 +33,19 @@ export class MagasinLocal implements MagasinProgression {
   supprimerProfil(id: string): void {
     localStorage.setItem(CLE_PROFILS, JSON.stringify(this.profils().filter((p) => p.id !== id)))
     localStorage.removeItem(PREFIXE_PROGRESSION + id)
+    if (localStorage.getItem(CLE_PROFIL_ACTIF) === id) localStorage.removeItem(CLE_PROFIL_ACTIF)
+  }
+
+  profilActif(): Profil | null {
+    const id = localStorage.getItem(CLE_PROFIL_ACTIF)
+    if (!id) return null
+    // Un identifiant qui ne correspond plus à rien vaut absence de profil.
+    return this.profils().find((profil) => profil.id === id) ?? null
+  }
+
+  definirProfilActif(id: string | null): void {
+    if (id === null) localStorage.removeItem(CLE_PROFIL_ACTIF)
+    else localStorage.setItem(CLE_PROFIL_ACTIF, id)
   }
 
   progression(profilId: string): Progression {

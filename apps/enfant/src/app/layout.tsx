@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { FournisseurAwal } from './contexte/FournisseurAwal.js'
 import './globals.css'
 
 export const metadata = {
@@ -18,7 +19,11 @@ export const viewport = {
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <html lang="fr">
-      <body>{children}</body>
+      <body>
+        {/* Le fournisseur vit dans le layout : le corpus n'est donc téléchargé
+            qu'une fois pour toute la navigation. */}
+        <FournisseurAwal>{children}</FournisseurAwal>
+      </body>
     </html>
   )
 }
