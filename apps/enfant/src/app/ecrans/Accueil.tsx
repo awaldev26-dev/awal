@@ -3,12 +3,14 @@
 import type { Profil } from '@/stockage/magasin.js'
 
 export function Accueil({
-  profil, serie, aFaire, onDemarrer, onCollection, onChangerProfil,
+  profil, serie, aFaire, peutSentrainer, onDemarrer, onEntrainement, onCollection, onChangerProfil,
 }: {
   profil: Profil
   serie: number
   aFaire: number
+  peutSentrainer: boolean
   onDemarrer: () => void
+  onEntrainement: () => void
   onCollection: () => void
   onChangerProfil: () => void
 }) {
@@ -30,16 +32,33 @@ export function Accueil({
           background: aFaire === 0 ? '#e6d9c6' : '#c94f3d', color: '#fff', lineHeight: 1.3,
         }}
       >
-        {aFaire === 0 ? <>Tout est fait !<br />🎉</> : <>Session du jour<br />▶</>}
+        {aFaire === 0 ? <>Session faite !<br />🎉</> : <>Session du jour<br />▶</>}
       </button>
 
-      <button
-        type="button"
-        onClick={onCollection}
-        style={{ fontSize: 20, padding: '12px 28px', borderRadius: 16, border: '3px solid #e6d9c6', background: '#fff' }}
-      >
-        Ma collection
-      </button>
+      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
+        {/* Toujours accessible, même quand la session du jour est faite :
+            c'est ce qui permet de continuer à jouer sans casser l'espacement. */}
+        <button
+          type="button"
+          onClick={onEntrainement}
+          disabled={!peutSentrainer}
+          style={{
+            fontSize: 20, padding: '12px 28px', borderRadius: 16,
+            border: '3px solid #e6d9c6', background: '#fff',
+            opacity: peutSentrainer ? 1 : 0.4,
+          }}
+        >
+          S’entraîner
+        </button>
+
+        <button
+          type="button"
+          onClick={onCollection}
+          style={{ fontSize: 20, padding: '12px 28px', borderRadius: 16, border: '3px solid #e6d9c6', background: '#fff' }}
+        >
+          Ma collection
+        </button>
+      </div>
     </main>
   )
 }

@@ -106,6 +106,18 @@ pnpm tsx seed/audio-remplacement.ts --purger  # effacer les audios synthétiques
 Le studio peut rester sur ta machine si tu préfères : seul l'artefact publié
 doit être accessible aux enfants.
 
+## Les deux modes de jeu
+
+**La session du jour** est la seule porte d'entrée du vocabulaire nouveau, et
+elle est plafonnée : 5 mots avant 8 ans, 8 après. C'est ce plafond qui empêche
+un enfant enthousiaste de se retrouver deux semaines plus tard face à quarante
+minutes de révisions.
+
+**L'entraînement** rejoue librement, autant qu'on veut, ce qui a déjà été
+rencontré — par thème ou en vrac. Il **n'écrit rien** dans la progression :
+faire monter les boîtes en rejouant cinq fois le même mot le classerait
+« acquis » sans aucune mémorisation réelle, et détruirait la répétition espacée.
+
 ## Ce qui n'est pas encore fait
 
 Lot 2 — Écho, L'intrus, Duel. Lot 3 — Mot mystère, Chasse au trésor.
