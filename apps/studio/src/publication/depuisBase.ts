@@ -2,6 +2,7 @@ import { db } from '@/db/index.js'
 import { entrees, publications, themes } from '@/db/schema.js'
 import { creerStockage } from '@/stockage/index.js'
 import { construireArtefact } from './construire.js'
+import { ecarterPhrasesOrphelines } from './phrases.js'
 import { publierArtefact, type ResultatPublication } from './publier.js'
 
 /**
@@ -19,7 +20,7 @@ export async function publierDepuisBase(): Promise<ResultatPublication> {
     db.select().from(publications),
   ])
 
-  const publiables = lignes.filter((ligne) => ligne.audio !== null)
+  const publiables = ecarterPhrasesOrphelines(lignes.filter((ligne) => ligne.audio !== null))
   if (publiables.length === 0) {
     return { ok: false, problemes: [{ code: 'audio-absent', message: 'Aucune entrée enregistrée.' }] }
   }

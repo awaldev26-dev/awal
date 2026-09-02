@@ -329,6 +329,50 @@ C'est ce qui transforme du vocabulaire en conversation. Indispensable au rituel 
 
 ---
 
+## 12. Phrases
+
+Trente phrases courtes, construites **uniquement** sur le vocabulaire des sections
+précédentes : le moteur ne les proposera à un enfant que lorsqu'il connaîtra déjà
+les mots qu'elles contiennent.
+
+**Toutes sont marquées à valider.** La syntaxe est bien plus risquée que le lexique
+pour un modèle de langue : l'ordre des mots, les particules, les pronoms suffixés
+(`efk-iyi`, `anda-t`) sont exactement ce que je maîtrise le moins. Corrige-les en
+les enregistrant — c'est la partie du corpus qui a le plus besoin de ton oreille.
+
+| Français | Kabyle | Note |
+|---|---|---|
+| mange le pain | etch aghroum | ⚠️ à valider |
+| bois de l'eau | sew aman | ⚠️ à valider |
+| donne-moi de l'eau | efk-iyi aman | ⚠️ à valider |
+| donne-moi du pain | efk-iyi aghroum | ⚠️ à valider |
+| ouvre la porte | ldi thawourth | ⚠️ à valider |
+| ferme la porte | sekker thawourth | ⚠️ à valider |
+| apporte le couteau | awi lmous | ⚠️ à valider |
+| prends la clé | eddem thasarouth | ⚠️ à valider |
+| regarde le soleil | mouqel thafoukth | ⚠️ à valider |
+| regarde la lune | mouqel ayyour | ⚠️ à valider |
+| lave les mains | ssired ifassen | ⚠️ à valider — pluriel de afous |
+| écoute maman | sel i yemma | ⚠️ à valider — la particule i est incertaine |
+| papa, viens | a baba, as-ed | ⚠️ à valider — a est le vocatif |
+| maman, viens | a yemma, as-ed | ⚠️ à valider |
+| mon fils, assieds-toi | a mmi, eqqim | ⚠️ à valider |
+| ma fille, dors | a yelli, ttes | ⚠️ à valider |
+| mon frère, joue | a gma, ourar | ⚠️ à valider |
+| ma sœur, mange | a oultma, etch | ⚠️ à valider |
+| où est papa ? | anda-t baba ? | ⚠️ à valider — t est le pronom masculin |
+| où est maman ? | anda-t yemma ? | ⚠️ à valider |
+| où est le chat ? | anda-t amchich ? | ⚠️ à valider |
+| où est l'eau ? | anda-t aman ? | ⚠️ à valider |
+| comment vas-tu, papa ? | amek thellidh a baba ? | ⚠️ à valider |
+| ça va, merci | labas, thanemmirth | ⚠️ à valider |
+| oui, ça va | ih, labas | ⚠️ à valider |
+| bonjour, bienvenue | azul, marhba | ⚠️ à valider |
+| à demain, maman | ar toufath a yemma | ⚠️ à valider |
+| c'est du pain | d aghroum | ⚠️ à valider — d est la particule d'attribution |
+| c'est de l'eau | d aman | ⚠️ à valider |
+| c'est un chat | d amchich | ⚠️ à valider |
+
 ## Volumétrie
 
 | Thème | Entrées |
@@ -344,7 +388,8 @@ C'est ce qui transforme du vocabulaire en conversation. Indispensable au rituel 
 | La maison | 10 |
 | Les vêtements | 7 |
 | Les couleurs | 5 |
-| **Total** | **213** |
+| Phrases | 30 |
+| **Total** | **243** |
 
 À environ 15 secondes par entrée, refaire compris, le corpus audio complet représente
 **une à deux heures de studio**, découpables en séances par thème.

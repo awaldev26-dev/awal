@@ -26,8 +26,9 @@ await db
   .values(
     corpus.entrees.map((entree) => ({
       id: entree.id,
-      type: 'mot' as const,
+      type: entree.type,
       kabyle: entree.kabyle,
+      contient: entree.contient,
       fr: entree.fr,
       picto: pictoPour(entree.id, entree.theme),
       themes: [entree.theme],

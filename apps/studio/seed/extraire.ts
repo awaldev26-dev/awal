@@ -6,15 +6,67 @@ export interface ThemeSeed {
 
 export interface EntreeSeed {
   id: string
+  type: 'mot' | 'phrase'
   kabyle: string
   fr: string
   theme: string
+  /** Identifiants des mots employés. Vide pour un mot. */
+  contient: string[]
   notes: string
   aValider: boolean
 }
 
 /** Titres de section à ignorer : ils ne décrivent pas des thèmes de vocabulaire. */
 const SECTIONS_HORS_CORPUS = /^(Critère|Convention|Volumétrie|Ce qui a été retiré)/
+
+/** Nom de la section dont les entrées sont des phrases et non des mots. */
+const SECTION_PHRASES = 'Phrases'
+
+/**
+ * Repère, dans une phrase, les mots du corpus qu'elle emploie.
+ *
+ * Deux passes, car deux difficultés distinctes : les expressions de plusieurs
+ * mots (« ar toufath ») se cherchent par inclusion, tandis qu'un mot simple
+ * peut porter un pronom suffixé (« efk-iyi », « anda-t ») et se cherche donc
+ * comme préfixe de token. La forme la plus longue gagne, pour que « as-ed »
+ * ne soit pas réduit à autre chose.
+ *
+ * @param connus forme kabyle → identifiant
+ */
+export function normaliser(texte: string): string {
+  return texte.toLowerCase().replace(/[?!.,;:]/g, ' ').replace(/\s+/g, ' ').trim()
+}
+
+export function motsContenus(phrase: string, connus: Map<string, string>): string[] {
+  const nettoyee = normaliser(phrase)
+  const trouves: string[] = []
+  let restant = ` ${nettoyee} `
+
+  const expressions = [...connus.keys()]
+    .filter((forme) => forme.includes(' '))
+    .sort((a, b) => b.length - a.length)
+
+  for (const forme of expressions) {
+    if (restant.includes(` ${forme} `)) {
+      const id = connus.get(forme)
+      if (id && !trouves.includes(id)) trouves.push(id)
+      restant = restant.replace(` ${forme} `, '  ')
+    }
+  }
+
+  const simples = [...connus.keys()]
+    .filter((forme) => !forme.includes(' '))
+    .sort((a, b) => b.length - a.length)
+
+  for (const token of restant.trim().split(' ').filter(Boolean)) {
+    const forme = simples.find((candidate) => token.startsWith(candidate))
+    if (!forme) continue
+    const id = connus.get(forme)
+    if (id && !trouves.includes(id)) trouves.push(id)
+  }
+
+  return trouves
+}
 
 export function versSlug(texte: string): string {
   return texte
@@ -33,6 +85,9 @@ export function extraireCorpus(markdown: string): { themes: ThemeSeed[]; entrees
   const themes: ThemeSeed[] = []
   const entrees: EntreeSeed[] = []
   const idsPris = new Set<string>()
+  // Renseigné au fil de la lecture ; les phrases arrivent après les mots,
+  // ce qui garantit que le vocabulaire est déjà connu quand on les traite.
+  const formes = new Map<string, string>()
 
   let themeCourant: ThemeSeed | null = null
 
@@ -77,11 +132,19 @@ export function extraireCorpus(markdown: string): { themes: ThemeSeed[]; entrees
     while (idsPris.has(id)) id = `${base}-${suffixe++}`
     idsPris.add(id)
 
+    const estPhrase = themeCourant.nom === SECTION_PHRASES
+    // Les mots interrogatifs sont notés « anda ? » dans le document : sans
+    // normalisation, leur point d'interrogation les ferait passer pour des
+    // expressions de plusieurs mots et ils ne seraient jamais reconnus.
+    if (!estPhrase) formes.set(normaliser(kabyle), id)
+
     entrees.push({
       id,
+      type: estPhrase ? 'phrase' : 'mot',
       kabyle,
       fr,
       theme: themeCourant.id,
+      contient: estPhrase ? motsContenus(kabyle, formes) : [],
       notes,
       aValider: notes.includes('⚠️'),
     })
