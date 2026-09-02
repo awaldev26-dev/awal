@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { Entree } from '@awal/corpus'
-import { OPTIONS_PAR_AGE, appliquerResultats, composerSession, serie } from '@/moteur/session.js'
+import { MAX_PHRASES_NOUVELLES, OPTIONS_PAR_AGE, appliquerResultats, composerSession, serie } from '@/moteur/session.js'
 import { progressionVide, type Progression } from '@/moteur/types.js'
 import { jour } from '@/moteur/leitner.js'
 
@@ -138,5 +138,43 @@ describe('serie', () => {
   it('s’interrompt après deux jours manqués', () => {
     const p = { ...progressionVide(), joursJoues: ['2026-09-01', '2026-09-02', '2026-09-07'] }
     expect(serie(p, LUNDI)).toBe(1)
+  })
+})
+
+describe('priorité des phrases nouvelles', () => {
+  const options = { taille: 12, plafondNouveaux: 5, niveauMax: 3 }
+
+  function phrase(id: string, contient: string[]): Entree {
+    return { ...entree(id), type: 'phrase', contient }
+  }
+
+  it('ne propose pas une phrase dont les mots ne sont pas connus', () => {
+    const corpus = [entree('etch'), entree('aghroum'), phrase('etch-aghroum', ['etch', 'aghroum'])]
+    const lot = composerSession(corpus, progressionVide(), options, LUNDI)
+    expect(lot.map((e) => e.id)).not.toContain('etch-aghroum')
+  })
+
+  it('fait passer une phrase débloquée avant les mots nouveaux', () => {
+    // Les phrases sont en fin de corpus : sans priorité explicite, elles
+    // n'arriveraient qu'après les 213 mots, donc jamais.
+    const progression = progressionVide()
+    progression.etats.etch = { boite: 2, prochaine: '2026-12-01' }
+    progression.etats.aghroum = { boite: 2, prochaine: '2026-12-01' }
+    const corpus = [...vingtMots, phrase('etch-aghroum', ['etch', 'aghroum'])]
+    const lot = composerSession(corpus, progression, options, LUNDI)
+    expect(lot[0]?.id).toBe('etch-aghroum')
+  })
+
+  it('plafonne les phrases nouvelles par session', () => {
+    const progression = progressionVide()
+    for (const id of ['a', 'b', 'c', 'd', 'e', 'f']) {
+      progression.etats[id] = { boite: 3, prochaine: '2026-12-01' }
+    }
+    const corpus = [
+      ...vingtMots,
+      phrase('p1', ['a', 'b']), phrase('p2', ['c', 'd']), phrase('p3', ['e', 'f']),
+    ]
+    const lot = composerSession(corpus, progression, options, LUNDI)
+    expect(lot.filter((e) => e.type === 'phrase')).toHaveLength(MAX_PHRASES_NOUVELLES)
   })
 })

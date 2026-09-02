@@ -113,6 +113,12 @@ elle est plafonnée : 5 mots avant 8 ans, 8 après. C'est ce plafond qui empêch
 un enfant enthousiaste de se retrouver deux semaines plus tard face à quarante
 minutes de révisions.
 
+**Les phrases attendent leur vocabulaire.** Une phrase n'est proposée que
+lorsque tous les mots qu'elle emploie sont connus — entendre `etch aghroum`
+sans reconnaître ni `etch` ni `aghroum` n'apprend rien. Une fois débloquées,
+elles passent en priorité sur les mots nouveaux, plafonnées à deux par session :
+elles consolident deux mots connus tout en apportant la syntaxe.
+
 **L'entraînement** rejoue librement, autant qu'on veut, ce qui a déjà été
 rencontré — par thème ou en vrac. Il **n'écrit rien** dans la progression :
 faire monter les boîtes en rejouant cinq fois le même mot le classerait

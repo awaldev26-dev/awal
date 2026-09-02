@@ -1,5 +1,6 @@
 import type { Entree } from '@awal/corpus'
 import { apresReponse, estDue, jour, nouvelEtat } from './leitner.js'
+import { phraseDebloquee } from './phrases.js'
 import type { Progression, ResultatEntree } from './types.js'
 
 export interface OptionsSession {
@@ -10,6 +11,16 @@ export interface OptionsSession {
   /** Niveau le plus élevé accessible au profil. */
   niveauMax: number
 }
+
+/**
+ * Nombre maximal de phrases nouvelles par session.
+ *
+ * Les phrases débloquées passent avant les mots nouveaux : elles consolident
+ * deux mots déjà connus tout en apportant la syntaxe, ce qui vaut mieux qu'un
+ * mot isolé de plus. Mais elles restent plafonnées — sans quoi une session
+ * n'introduirait plus que des phrases dès que le vocabulaire s'installe.
+ */
+export const MAX_PHRASES_NOUVELLES = 2
 
 export function OPTIONS_PAR_AGE(age: number): OptionsSession {
   return age <= 7
@@ -45,9 +56,20 @@ export function composerSession(
     Math.max(0, options.taille - revisions.length),
   )
 
-  const nouveautes = eligibles
-    .filter((entree) => progression.etats[entree.id] === undefined)
-    .slice(0, placesNouveautes)
+  const candidates = eligibles.filter(
+    (entree) =>
+      progression.etats[entree.id] === undefined &&
+      // Une phrase attend que ses mots soient connus : la découvrir avant
+      // n'apprendrait rien et découragerait.
+      phraseDebloquee(entree, progression),
+  )
+
+  const phrases = candidates
+    .filter((entree) => entree.type === 'phrase')
+    .slice(0, MAX_PHRASES_NOUVELLES)
+  const mots = candidates.filter((entree) => entree.type === 'mot')
+
+  const nouveautes = [...phrases, ...mots].slice(0, placesNouveautes)
 
   return [...revisions, ...nouveautes].slice(0, options.taille)
 }

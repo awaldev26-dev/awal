@@ -90,3 +90,51 @@ describe('charge sur soixante jours', () => {
     expect(fin.vus).toBeLessThanOrEqual(213)
   })
 })
+
+describe('déblocage des phrases sur la durée', () => {
+  /** Corpus mêlant mots et phrases, comme le vrai : 213 mots, 30 phrases. */
+  function corpusMele(): Entree[] {
+    const mots = corpus(213)
+    const phrases: Entree[] = Array.from({ length: 30 }, (_, i) => ({
+      ...corpus(1)[0]!,
+      id: `phrase-${i}`,
+      type: 'phrase' as const,
+      // Chaque phrase emploie deux mots pris dans le corpus.
+      contient: [`mot-${i * 2}`, `mot-${i * 2 + 1}`],
+    }))
+    return [...mots, ...phrases]
+  }
+
+  function simulerMele(jours: number): { phrasesVues: number; motsVus: number } {
+    const entrees = corpusMele()
+    let progression: Progression = progressionVide()
+    for (let n = 0; n < jours; n++) {
+      const date = new Date(Date.UTC(2026, 8, 7 + n, 8))
+      const lot = composerSession(entrees, progression, OPTIONS, date)
+      progression = appliquerResultats(
+        progression,
+        lot.map((e) => ({ entreeId: e.id, reussi: true })),
+        date,
+      )
+    }
+    const vus = Object.keys(progression.etats)
+    return {
+      phrasesVues: vus.filter((id) => id.startsWith('phrase-')).length,
+      motsVus: vus.filter((id) => id.startsWith('mot-')).length,
+    }
+  }
+
+  it('n’introduit aucune phrase le premier jour', () => {
+    // Aucun mot n'est encore connu : toutes les phrases doivent être verrouillées.
+    expect(simulerMele(1).phrasesVues).toBe(0)
+  })
+
+  it('finit par les débloquer une fois le vocabulaire installé', () => {
+    expect(simulerMele(60).phrasesVues).toBeGreaterThan(0)
+  })
+
+  it('sert le vocabulaire avant les phrases', () => {
+    const { phrasesVues, motsVus } = simulerMele(60)
+    expect(motsVus).toBeGreaterThan(phrasesVues)
+  })
+})
