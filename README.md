@@ -119,10 +119,14 @@ sans reconnaître ni `etch` ni `aghroum` n'apprend rien. Une fois débloquées,
 elles passent en priorité sur les mots nouveaux, plafonnées à deux par session :
 elles consolident deux mots connus tout en apportant la syntaxe.
 
-**L'entraînement** rejoue librement, autant qu'on veut, ce qui a déjà été
-rencontré — par thème ou en vrac. Il **n'écrit rien** dans la progression :
-faire monter les boîtes en rejouant cinq fois le même mot le classerait
-« acquis » sans aucune mémorisation réelle, et détruirait la répétition espacée.
+**L'entraînement** est toujours disponible et rejoue librement, autant qu'on
+veut, par thème ou en vrac. Il propose d'abord le vocabulaire déjà rencontré,
+et se rabat sur celui du niveau quand un thème n'a pas encore été abordé — le
+bouton ne mène jamais à un écran où l'on ne peut rien faire.
+
+Il **n'écrit rien** dans la progression : faire monter les boîtes en rejouant
+cinq fois le même mot le classerait « acquis » sans aucune mémorisation réelle,
+et détruirait la répétition espacée.
 
 ## Ce qui n'est pas encore fait
 

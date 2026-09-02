@@ -17,6 +17,12 @@ const corpus = [
   entree('dur', 'animaux', 3),
 ]
 
+function avecBoites2(ids: string[]): Progression {
+  const p = progressionVide()
+  for (const id of ids) p.etats[id] = { boite: 2, prochaine: '2026-12-01' }
+  return p
+}
+
 function vues(ids: string[]): Progression {
   const p = progressionVide()
   for (const id of ids) p.etats[id] = { boite: 2, prochaine: '2026-12-01' }
@@ -52,8 +58,29 @@ describe('composerEntrainement', () => {
     expect(lot.map((e) => e.id)).toEqual(['amchich'])
   })
 
-  it('ne rend rien quand rien n’a été rencontré', () => {
-    expect(composerEntrainement(corpus, progressionVide(), { taille: 10, niveauMax: 3 })).toEqual([])
+  it('se rabat sur le vocabulaire du niveau quand rien n’a été rencontré', () => {
+    // Le bouton « S'entraîner » est toujours actif : il ne doit jamais mener
+    // à un écran où l'on ne peut rien faire.
+    const lot = composerEntrainement(corpus, progressionVide(), { taille: 10, niveauMax: 3 })
+    expect(lot.length).toBeGreaterThan(0)
+    expect(lot.every((e) => e.niveau <= 3)).toBe(true)
+  })
+
+  it('respecte le niveau même en repli', () => {
+    const lot = composerEntrainement(corpus, progressionVide(), { taille: 10, niveauMax: 1 })
+    expect(lot.map((e) => e.id)).not.toContain('dur')
+  })
+
+  it('garde les phrases verrouillées en repli', () => {
+    // Un débutant ne doit pas tomber sur une phrase dont il ignore les mots.
+    const avecPhrase = [...corpus, { ...entree('etch-aghroum', 'manger'), type: 'phrase' as const, contient: ['etch', 'aghroum'] }]
+    const lot = composerEntrainement(avecPhrase, progressionVide(), { taille: 20, niveauMax: 3 })
+    expect(lot.map((e) => e.id)).not.toContain('etch-aghroum')
+  })
+
+  it('privilégie le vocabulaire rencontré quand il y en a', () => {
+    const lot = composerEntrainement(corpus, vues(['amchich']), { taille: 10, niveauMax: 3 })
+    expect(lot.map((e) => e.id)).toEqual(['amchich'])
   })
 
   it('mélange le lot pour ne pas rejouer le même ordre', () => {
@@ -74,23 +101,58 @@ describe('themesDisponibles', () => {
 
   it('compte les entrées rencontrées par thème', () => {
     const dispo = themesDisponibles(corpus, themes, vues(['amchich', 'aydi', 'aghroum']), 3)
-    expect(dispo).toEqual([
-      { theme: themes[0], nombre: 2 },
-      { theme: themes[1], nombre: 1 },
+    expect(dispo.map((d) => [d.theme.id, d.nombre])).toEqual([
+      ['animaux', 2],
+      ['manger', 1],
     ])
   })
 
-  it('écarte les thèmes sans aucune entrée rencontrée', () => {
+  it('propose les thèmes non encore abordés, à zéro', () => {
+    // Ils restent jouables : l'entraînement se rabat sur leur vocabulaire.
     const dispo = themesDisponibles(corpus, themes, vues(['amchich']), 3)
-    expect(dispo.map((d) => d.theme.id)).toEqual(['animaux'])
+    expect(dispo.map((d) => [d.theme.id, d.nombre])).toEqual([
+      ['animaux', 1],
+      ['manger', 0],
+    ])
   })
 
-  it('ne compte pas les entrées au-dessus du niveau', () => {
-    const dispo = themesDisponibles(corpus, themes, vues(['dur']), 1)
-    expect(dispo).toEqual([])
+  it('écarte les thèmes qui n’ont aucune entrée du niveau', () => {
+    // « vide » ne contient rien, et « animaux » n'a que du niveau 3.
+    expect(themesDisponibles(corpus, themes, progressionVide(), 1).map((d) => d.theme.id))
+      .toEqual(['animaux', 'manger'])
   })
 
-  it('rend une liste vide au tout début', () => {
-    expect(themesDisponibles(corpus, themes, progressionVide(), 3)).toEqual([])
+  it('écarte un thème dont tout est verrouillé', () => {
+    // Le thème des phrases ne doit pas s'afficher tant qu'aucune n'est
+    // débloquée : le choisir ouvrirait sur un écran vide.
+    const phrase = {
+      ...corpus[0]!, id: 'etch-aghroum', type: 'phrase' as const,
+      themes: ['phrases'], contient: ['etch', 'aghroum'],
+    }
+    const avecPhrases = [
+      ...themes,
+      { id: 'phrases', nom: 'Phrases', picto: 'openmoji:1F5E8', couleur: '#444444' },
+    ]
+    const dispo = themesDisponibles([...corpus, phrase], avecPhrases, progressionVide(), 3)
+    expect(dispo.map((d) => d.theme.id)).not.toContain('phrases')
+  })
+
+  it('propose le thème des phrases dès qu’une est débloquée', () => {
+    const phrase = {
+      ...corpus[0]!, id: 'etch-aghroum', type: 'phrase' as const,
+      themes: ['phrases'], contient: ['etch', 'aghroum'],
+    }
+    const avecPhrases = [
+      ...themes,
+      { id: 'phrases', nom: 'Phrases', picto: 'openmoji:1F5E8', couleur: '#444444' },
+    ]
+    const p = avecBoites2(['etch', 'aghroum'])
+    const dispo = themesDisponibles([...corpus, phrase], avecPhrases, p, 3)
+    expect(dispo.map((d) => d.theme.id)).toContain('phrases')
+  })
+
+  it('propose tous les thèmes fournis au tout début', () => {
+    expect(themesDisponibles(corpus, themes, progressionVide(), 3).map((d) => d.theme.id))
+      .toEqual(['animaux', 'manger'])
   })
 })

@@ -3,12 +3,11 @@
 import type { Profil } from '@/stockage/magasin.js'
 
 export function Accueil({
-  profil, serie, aFaire, peutSentrainer, onDemarrer, onEntrainement, onCollection, onChangerProfil,
+  profil, serie, aFaire, onDemarrer, onEntrainement, onCollection, onChangerProfil,
 }: {
   profil: Profil
   serie: number
   aFaire: number
-  peutSentrainer: boolean
   onDemarrer: () => void
   onEntrainement: () => void
   onCollection: () => void
@@ -36,16 +35,15 @@ export function Accueil({
       </button>
 
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
-        {/* Toujours accessible, même quand la session du jour est faite :
-            c'est ce qui permet de continuer à jouer sans casser l'espacement. */}
+        {/* Jamais désactivé : la session du jour faite, c'est le seul moyen de
+            continuer à jouer, et l'entraînement se rabat sur le vocabulaire du
+            niveau quand rien n'a encore été rencontré. */}
         <button
           type="button"
           onClick={onEntrainement}
-          disabled={!peutSentrainer}
           style={{
             fontSize: 20, padding: '12px 28px', borderRadius: 16,
             border: '3px solid #e6d9c6', background: '#fff',
-            opacity: peutSentrainer ? 1 : 0.4,
           }}
         >
           S’entraîner

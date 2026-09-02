@@ -169,14 +169,12 @@ export function Application() {
 
   const options = OPTIONS_PAR_AGE(profil.age)
   const aFaire = composerSession(artefact.entrees, progression, options, new Date()).length
-  const peutSentrainer = Object.keys(progression.etats).length > 0
 
   return (
     <Accueil
       profil={profil}
       serie={serie(progression, new Date())}
       aFaire={aFaire}
-      peutSentrainer={peutSentrainer}
       onDemarrer={demarrer}
       onEntrainement={() => setEcran('entrainement')}
       onCollection={() => setEcran('collection')}

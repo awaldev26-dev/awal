@@ -1,5 +1,6 @@
 import type { Entree, Theme } from '@awal/corpus'
 import { melanger } from '@/jeux/choisirDistracteurs.js'
+import { phraseDebloquee } from './phrases.js'
 import type { Progression } from './types.js'
 
 export interface OptionsEntrainement {
@@ -9,19 +10,28 @@ export interface OptionsEntrainement {
   theme?: string
 }
 
+function dansLePerimetre(entree: Entree, options: OptionsEntrainement): boolean {
+  return (
+    entree.niveau <= options.niveauMax &&
+    (options.theme === undefined || entree.themes.includes(options.theme))
+  )
+}
+
 /**
  * Compose un lot d'entraînement libre.
  *
  * Deux différences essentielles avec la session du jour :
  * — on ignore les dates de révision, puisque l'enjeu est justement de pouvoir
  *   rejouer quand on veut ;
- * — on ne propose **que** du vocabulaire déjà rencontré. La session du jour
- *   reste la seule porte d'entrée du vocabulaire nouveau, ce qui garde le
- *   plafond quotidien efficace.
+ * — rien n'est écrit dans la progression. L'appelant ne doit pas enregistrer
+ *   les résultats : faire monter les boîtes ici détruirait la répétition
+ *   espacée, un mot rejoué cinq fois de suite passerait pour acquis.
  *
- * L'appelant ne doit pas enregistrer les résultats : faire monter les boîtes
- * ici détruirait la répétition espacée, un mot rejoué cinq fois de suite
- * passerait pour acquis sans avoir été mémorisé.
+ * Le vocabulaire déjà rencontré passe d'abord. À défaut, on se rabat sur les
+ * entrées du niveau : le bouton « S'entraîner » est toujours actif, il ne doit
+ * jamais mener à un écran où l'on ne peut rien faire. Les phrases restent
+ * verrouillées dans ce repli — un débutant ne doit pas tomber sur une phrase
+ * dont il ignore les mots.
  */
 export function composerEntrainement(
   entrees: Entree[],
@@ -29,25 +39,30 @@ export function composerEntrainement(
   options: OptionsEntrainement,
   alea: () => number = Math.random,
 ): Entree[] {
-  const eligibles = entrees.filter(
-    (entree) =>
-      entree.niveau <= options.niveauMax &&
-      progression.etats[entree.id] !== undefined &&
-      (options.theme === undefined || entree.themes.includes(options.theme)),
-  )
+  const perimetre = entrees.filter((entree) => dansLePerimetre(entree, options))
 
-  return melanger(eligibles, alea).slice(0, options.taille)
+  const rencontrees = perimetre.filter((entree) => progression.etats[entree.id] !== undefined)
+  const vivier = rencontrees.length > 0
+    ? rencontrees
+    : perimetre.filter((entree) => phraseDebloquee(entree, progression))
+
+  return melanger(vivier, alea).slice(0, options.taille)
 }
 
 export interface ThemeDisponible {
   theme: Theme
+  /** Entrées du thème déjà rencontrées. Peut valoir zéro : le thème reste jouable. */
   nombre: number
 }
 
 /**
- * Thèmes dans lesquels l'enfant a déjà rencontré au moins un mot, avec leur
- * compte. Ceux qu'il n'a pas encore abordés ne sont pas affichés : proposer un
- * thème vide n'aboutirait qu'à un écran sans rien.
+ * Thèmes proposés à l'entraînement, avec le nombre d'entrées déjà rencontrées.
+ *
+ * Les thèmes jamais abordés sont proposés : l'entraînement se rabat sur leur
+ * vocabulaire, donc ils mènent à quelque chose. Un thème n'est écarté que s'il
+ * ne mène à rien du tout — le cas concret étant celui des phrases, toutes
+ * verrouillées tant que le vocabulaire n'est pas installé : l'afficher
+ * ouvrirait sur un écran vide.
  */
 export function themesDisponibles(
   entrees: Entree[],
@@ -56,14 +71,20 @@ export function themesDisponibles(
   niveauMax: number,
 ): ThemeDisponible[] {
   return themes
-    .map((theme) => ({
-      theme,
-      nombre: entrees.filter(
-        (entree) =>
-          entree.themes.includes(theme.id) &&
-          entree.niveau <= niveauMax &&
-          progression.etats[entree.id] !== undefined,
-      ).length,
-    }))
-    .filter((disponible) => disponible.nombre > 0)
+    .map((theme) => {
+      const duTheme = entrees.filter(
+        (entree) => entree.themes.includes(theme.id) && entree.niveau <= niveauMax,
+      )
+      const rencontrees = duTheme.filter((entree) => progression.etats[entree.id] !== undefined)
+      return {
+        theme,
+        // Ce que l'entraînement pourrait réellement servir dans ce thème.
+        jouables: rencontrees.length > 0
+          ? rencontrees.length
+          : duTheme.filter((entree) => phraseDebloquee(entree, progression)).length,
+        nombre: rencontrees.length,
+      }
+    })
+    .filter((disponible) => disponible.jouables > 0)
+    .map(({ theme, nombre }) => ({ theme, nombre }))
 }

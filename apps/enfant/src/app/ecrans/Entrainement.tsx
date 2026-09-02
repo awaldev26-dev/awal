@@ -4,9 +4,11 @@ import { emoji } from '@/jeux/emoji.js'
 import type { ThemeDisponible } from '@/moteur/entrainement.js'
 
 /**
- * Choix du thème pour l'entraînement libre. Les thèmes non encore abordés
- * ne sont pas affichés : le spec voulait qu'aucun thème ne soit verrouillé,
- * mais proposer un thème vide n'ouvrirait que sur un écran sans rien.
+ * Choix du thème pour l'entraînement libre.
+ *
+ * Aucun thème n'est verrouillé, comme le voulait le spec : ceux jamais abordés
+ * sont proposés avec la mention « à découvrir », puisque l'entraînement se
+ * rabat sur leur vocabulaire.
  */
 export function Entrainement({
   disponibles,
@@ -30,12 +32,7 @@ export function Entrainement({
 
       <h1 style={{ fontSize: 24, marginTop: 16 }}>S’entraîner</h1>
 
-      {disponibles.length === 0 ? (
-        <p style={{ fontSize: 18, opacity: 0.7 }}>
-          Fais d’abord une session du jour, et tu pourras rejouer tes mots ici.
-        </p>
-      ) : (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 8 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 8 }}>
           <button
             type="button"
             onClick={() => onChoisir(undefined)}
@@ -60,11 +57,12 @@ export function Entrainement({
             >
               <span style={{ fontSize: 34 }}>{emoji(theme.picto)}</span>
               <span>{theme.nom}</span>
-              <span style={{ opacity: 0.55, fontSize: 13 }}>{nombre} mots</span>
+              <span style={{ opacity: 0.55, fontSize: 13 }}>
+                {nombre > 0 ? `${nombre} mots` : 'à découvrir'}
+              </span>
             </button>
           ))}
-        </div>
-      )}
+      </div>
     </main>
   )
 }
