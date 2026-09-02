@@ -35,9 +35,8 @@ export function Accueil({
       </button>
 
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
-        {/* Jamais désactivé : la session du jour faite, c'est le seul moyen de
-            continuer à jouer, et l'entraînement se rabat sur le vocabulaire du
-            niveau quand rien n'a encore été rencontré. */}
+        {/* Jamais désactivé : l'imagier est consultable à tout moment, il ne
+            dépend d'aucune progression. */}
         <button
           type="button"
           onClick={onEntrainement}
@@ -46,7 +45,7 @@ export function Accueil({
             border: '3px solid #e6d9c6', background: '#fff',
           }}
         >
-          S’entraîner
+          Écouter les mots
         </button>
 
         <button

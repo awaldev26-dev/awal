@@ -5,7 +5,6 @@ import type { Artefact, Entree } from '@awal/corpus'
 import { Lecteur } from '@/audio/lecteur.js'
 import { chargerCorpus, urlAudio } from '@/corpus/charger.js'
 import { estAcquise } from '@/moteur/leitner.js'
-import { composerEntrainement, themesDisponibles } from '@/moteur/entrainement.js'
 import { OPTIONS_PAR_AGE, appliquerResultats, composerSession, serie } from '@/moteur/session.js'
 import type { Progression, ResultatEntree } from '@/moteur/types.js'
 import { MagasinLocal } from '@/stockage/local.js'
@@ -16,9 +15,9 @@ import { Accueil } from './ecrans/Accueil.js'
 import { Bilan } from './ecrans/Bilan.js'
 import { ChoixProfil } from './ecrans/ChoixProfil.js'
 import { Collection } from './ecrans/Collection.js'
-import { Entrainement } from './ecrans/Entrainement.js'
+import { Imagier } from './ecrans/Imagier.js'
 
-type Ecran = 'profil' | 'accueil' | 'session' | 'collection' | 'bilan' | 'entrainement'
+type Ecran = 'profil' | 'accueil' | 'session' | 'collection' | 'bilan' | 'imagier'
 
 /**
  * L'application entière tient dans un composant client. Il n'y a pas de serveur,
@@ -35,8 +34,6 @@ export function Application() {
   const [ecran, setEcran] = useState<Ecran>('profil')
   const [derniersResultats, setDerniersResultats] = useState<ResultatEntree[]>([])
   const [jeu, setJeu] = useState<'ecoute' | 'memory'>('ecoute')
-  /** Vrai quand le lot en cours vient de l'entraînement : ses résultats ne comptent pas. */
-  const [libre, setLibre] = useState(false)
   const lot = useRef<Entree[]>([])
 
   useEffect(() => {
@@ -69,47 +66,19 @@ export function Application() {
     lot.current = compose
     await lecteur.precharger(compose.map((entree) => urlAudio(artefact, entree)))
     setJeu(compose.length >= 6 && Math.random() < 0.4 ? 'memory' : 'ecoute')
-    setLibre(false)
     setEcran('session')
   }, [artefact, profil, progression, lecteur])
-
-  const demarrerEntrainement = useCallback(
-    async (themeId?: string) => {
-      if (!artefact || !profil || !progression) return
-      const options = OPTIONS_PAR_AGE(profil.age)
-      const compose = composerEntrainement(artefact.entrees, progression, {
-        taille: options.taille,
-        niveauMax: options.niveauMax,
-        theme: themeId,
-      })
-      if (compose.length === 0) return
-      lot.current = compose
-      await lecteur.precharger(compose.map((entree) => urlAudio(artefact, entree)))
-      setJeu(compose.length >= 6 && Math.random() < 0.5 ? 'memory' : 'ecoute')
-      setLibre(true)
-      setEcran('session')
-    },
-    [artefact, profil, progression, lecteur],
-  )
 
   const terminer = useCallback(
     (resultats: ResultatEntree[]) => {
       if (!profil || !progression) return
-
-      // L'entraînement n'écrit rien : faire monter les boîtes en rejouant
-      // détruirait la répétition espacée. On revient simplement à l'accueil.
-      if (libre) {
-        setEcran('entrainement')
-        return
-      }
-
       const suivante = appliquerResultats(progression, resultats, new Date())
       magasin.enregistrer(profil.id, suivante)
       setProgression(suivante)
       setDerniersResultats(resultats)
       setEcran('bilan')
     },
-    [profil, progression, magasin, libre],
+    [profil, progression, magasin],
   )
 
   if (erreur) {
@@ -139,19 +108,8 @@ export function Application() {
     return <Collection artefact={artefact} progression={progression} onRetour={() => setEcran('accueil')} />
   }
 
-  if (ecran === 'entrainement') {
-    return (
-      <Entrainement
-        disponibles={themesDisponibles(
-          artefact.entrees,
-          artefact.themes,
-          progression,
-          OPTIONS_PAR_AGE(profil.age).niveauMax,
-        )}
-        onChoisir={demarrerEntrainement}
-        onRetour={() => setEcran('accueil')}
-      />
-    )
+  if (ecran === 'imagier') {
+    return <Imagier artefact={artefact} lecteur={lecteur} onRetour={() => setEcran('accueil')} />
   }
 
   if (ecran === 'bilan') {
@@ -176,7 +134,7 @@ export function Application() {
       serie={serie(progression, new Date())}
       aFaire={aFaire}
       onDemarrer={demarrer}
-      onEntrainement={() => setEcran('entrainement')}
+      onEntrainement={() => setEcran('imagier')}
       onCollection={() => setEcran('collection')}
       onChangerProfil={() => setEcran('profil')}
     />

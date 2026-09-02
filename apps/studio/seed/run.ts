@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { sql } from 'drizzle-orm'
 import { db } from '../src/db/index.js'
 import { entrees, themes } from '../src/db/schema.js'
 import { extraireCorpus } from './extraire.js'
@@ -36,7 +37,12 @@ await db
       aValider: entree.aValider,
     })),
   )
-  .onConflictDoNothing()
+  // Les pictos sont remis à jour, mais rien d'autre : le kabyle, le français
+  // et les notes peuvent avoir été corrigés à la main dans le studio.
+  .onConflictDoUpdate({
+    target: entrees.id,
+    set: { picto: sql`excluded.picto` },
+  })
 
 console.log(`${corpus.themes.length} thèmes, ${corpus.entrees.length} entrées insérés.`)
 process.exit(0)

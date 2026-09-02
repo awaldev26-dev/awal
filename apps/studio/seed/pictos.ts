@@ -1,6 +1,10 @@
 /**
  * Emoji par entrée, désigné par son codepoint Unicode.
  *
+ * Éviter les séquences à jointure (ZWJ, `200D`) comme 👨‍👦 : elles retombent sur
+ * un carré générique dans les navigateurs qui n'ont pas le glyphe composé. Les
+ * séquences base + teinte de peau (`1F468-1F3FD`) sont sûres.
+ *
  * L'unicité compte autant que la justesse : le jeu « écoute et choisis » présente
  * quatre images côte à côte, et deux emojis identiques rendent la question insoluble.
  * Un test vérifie qu'aucun emoji n'est employé deux fois.
@@ -17,7 +21,7 @@ export const PICTOS: Record<string, string> = {
   aqerrouy: '1F464', thit: '1F441', amezzough: '1F442', thinzerth: '1F443',
   imi: '1F444', iles: '1F445', thoughmesth: '1F9B7', afous: '270B',
   adhar: '1F9B6', ighil: '1F4AA', adhadh: '1F446', oul: '2764',
-  a3bboudh: '1F930', achebboub: '1F487', azagour: '1F519', oudhem: '1F600',
+  a3bboudh: '1F930', achebboub: '1F487', azagour: '1FAC2', oudhem: '1F600',
   ighes: '1F9B4', idammen: '1FA78',
 
   // ── Les animaux ──
@@ -89,13 +93,13 @@ export const PICTOS: Record<string, string> = {
   // ── Phrases ──
   // Ces emojis n'illustrent pas un mot mais une scène : l'enfant doit pouvoir
   // distinguer « mange le pain » de « bois de l'eau » d'un coup d'œil.
-  'etch-aghroum': '1F96A', 'sew-aman': '1F9CB', 'efk-iyi-aman': '1F942',
-  'efk-iyi-aghroum': '1F950', 'ldi-thawourth': '1F6AF', 'sekker-thawourth': '1F510',
+  'etch-aghroum': '1F96A', 'sew-aman': '1F943', 'efk-iyi-aman': '1F942',
+  'efk-iyi-aghroum': '1F950', 'ldi-thawourth': '1F450', 'sekker-thawourth': '1F510',
   'awi-lmous': '1F5E1', 'eddem-thasarouth': '1F5DD', 'mouqel-thafoukth': '1F31F',
-  'mouqel-ayyour': '1F303', 'ssired-ifassen': '1FAE7', 'sel-i-yemma': '1F507',
-  'a-baba-as-ed': '1F468-200D-1F466', 'a-yemma-as-ed': '1F491', 'a-mmi-eqqim': '1F9CE',
+  'mouqel-ayyour': '1F31C', 'ssired-ifassen': '1FAE7', 'sel-i-yemma': '1F50A',
+  'a-baba-as-ed': '1F468-1F3FD', 'a-yemma-as-ed': '1F469-1F3FD', 'a-mmi-eqqim': '1F9CE',
   'a-yelli-ttes': '1F6CC', 'a-gma-ourar': '1F3B2', 'a-oultma-etch': '1F959',
-  'anda-t-baba': '1F575', 'anda-t-yemma': '1F440-200D-1F5E8', 'anda-t-amchich': '1F43C',
+  'anda-t-baba': '1F575', 'anda-t-yemma': '1F937', 'anda-t-amchich': '1F408',
   'anda-t-aman': '1F6B0', 'amek-thellidh-a-baba': '1F44C', 'labas-thanemmirth': '1F607',
   'ih-labas': '1F44D-1F3FC', 'azul-marhba': '1F44F-1F3FC', 'ar-toufath-a-yemma': '1F31B',
   'd-aghroum': '1F956', 'd-aman': '1F6BF', 'd-amchich': '1F638',

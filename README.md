@@ -119,14 +119,10 @@ sans reconnaître ni `etch` ni `aghroum` n'apprend rien. Une fois débloquées,
 elles passent en priorité sur les mots nouveaux, plafonnées à deux par session :
 elles consolident deux mots connus tout en apportant la syntaxe.
 
-**L'entraînement** est toujours disponible et rejoue librement, autant qu'on
-veut, par thème ou en vrac. Il propose d'abord le vocabulaire déjà rencontré,
-et se rabat sur celui du niveau quand un thème n'a pas encore été abordé — le
-bouton ne mène jamais à un écran où l'on ne peut rien faire.
-
-Il **n'écrit rien** dans la progression : faire monter les boîtes en rejouant
-cinq fois le même mot le classerait « acquis » sans aucune mémorisation réelle,
-et détruirait la répétition espacée.
+**L'imagier** (bouton « Écouter les mots ») affiche les 243 cartes, groupées par
+thème, avec leur image et leur traduction. Un tap joue la prononciation. C'est
+tout : pas de jeu, pas de score, pas de progression — on ne peut pas s'y
+tromper. C'est un dictionnaire visuel, pas un second exercice.
 
 ## Ce qui n'est pas encore fait
 
