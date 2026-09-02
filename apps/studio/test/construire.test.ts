@@ -11,7 +11,7 @@ function ligne(reste: Partial<LigneEntree> = {}): LigneEntree {
     id: 'amchich', type: 'mot', kabyle: 'amchich', kabyleStd: null, fr: 'le chat',
     audio: 'audio/amchich.webm', variante: 'kabyle-nord', picto: 'openmoji:1F408',
     themes: ['les-animaux'], niveau: 1, pluriel: null, contient: [], notes: '',
-    aValider: true, creeLe: new Date('2026-09-01T18:00:00.000Z'), ...reste,
+    aValider: true, ordre: 0, creeLe: new Date('2026-09-01T18:00:00.000Z'), ...reste,
   }
 }
 

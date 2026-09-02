@@ -6,6 +6,8 @@ export interface ThemeSeed {
 
 export interface EntreeSeed {
   id: string
+  /** Position dans le document, tous thèmes confondus. */
+  ordre: number
   type: 'mot' | 'phrase'
   kabyle: string
   fr: string
@@ -140,6 +142,7 @@ export function extraireCorpus(markdown: string): { themes: ThemeSeed[]; entrees
 
     entrees.push({
       id,
+      ordre: entrees.length,
       type: estPhrase ? 'phrase' : 'mot',
       kabyle,
       fr,

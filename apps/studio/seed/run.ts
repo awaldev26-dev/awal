@@ -35,13 +35,14 @@ await db
       themes: [entree.theme],
       notes: entree.notes,
       aValider: entree.aValider,
+      ordre: entree.ordre,
     })),
   )
   // Les pictos sont remis à jour, mais rien d'autre : le kabyle, le français
   // et les notes peuvent avoir été corrigés à la main dans le studio.
   .onConflictDoUpdate({
     target: entrees.id,
-    set: { picto: sql`excluded.picto` },
+    set: { picto: sql`excluded.picto`, ordre: sql`excluded.ordre` },
   })
 
 console.log(`${corpus.themes.length} thèmes, ${corpus.entrees.length} entrées insérés.`)

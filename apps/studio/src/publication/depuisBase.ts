@@ -1,3 +1,4 @@
+import { asc } from 'drizzle-orm'
 import { db } from '@/db/index.js'
 import { entrees, publications, themes } from '@/db/schema.js'
 import { creerStockage } from '@/stockage/index.js'
@@ -15,7 +16,8 @@ import { publierArtefact, type ResultatPublication } from './publier.js'
  */
 export async function publierDepuisBase(): Promise<ResultatPublication> {
   const [lignes, listeThemes, faites] = await Promise.all([
-    db.select().from(entrees),
+    // L'ordre du document est un choix éditorial : l'artefact doit le porter.
+    db.select().from(entrees).orderBy(asc(entrees.ordre), asc(entrees.id)),
     db.select().from(themes),
     db.select().from(publications),
   ])

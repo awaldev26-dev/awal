@@ -8,6 +8,13 @@
       "when": 1788298835784,
       "tag": "0000_thick_rumiko_fujikawa",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1788357829604,
+      "tag": "0001_awesome_proudstar",
+      "breakpoints": true
     }
   ]
 }

@@ -1,0 +1,1 @@
+ALTER TABLE "entrees" ADD COLUMN "ordre" integer DEFAULT 0 NOT NULL;

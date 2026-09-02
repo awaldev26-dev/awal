@@ -24,6 +24,12 @@ export const entrees = pgTable('entrees', {
   notes: text('notes').notNull().default(''),
   /** Vrai tant que le locuteur natif n'a pas confirmé la forme. */
   aValider: boolean('a_valider').notNull().default(true),
+  /**
+   * Position dans le document de corpus. L'ordre y est un choix éditorial —
+   * les mots les plus courants d'abord — que l'imagier doit respecter.
+   * Sans lui, Postgres rend les lignes dans un ordre arbitraire.
+   */
+  ordre: integer('ordre').notNull().default(0),
   creeLe: timestamp('cree_le', { withTimezone: true }).notNull().defaultNow(),
 })
 

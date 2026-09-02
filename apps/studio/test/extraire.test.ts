@@ -167,3 +167,24 @@ describe('extraction des phrases', () => {
     expect(entrees.filter((e) => e.type === 'phrase').every((p) => p.aValider)).toBe(true)
   })
 })
+
+describe('ordre des entrées', () => {
+  const { entrees } = extraireCorpus(markdown)
+
+  it('numérote les entrées dans l’ordre du document', () => {
+    // L'ordre du document est un choix éditorial : les mots les plus courants
+    // d'abord. L'imagier doit le respecter, donc l'extraction le fige.
+    expect(entrees.map((e) => e.ordre)).toEqual(entrees.map((_, index) => index))
+  })
+
+  it('place la famille avant les phrases', () => {
+    const baba = entrees.find((e) => e.id === 'baba')
+    const phrase = entrees.find((e) => e.type === 'phrase')
+    expect(baba?.ordre).toBeLessThan(phrase?.ordre ?? -1)
+  })
+
+  it('conserve l’ordre à l’intérieur d’un thème', () => {
+    const animaux = entrees.filter((e) => e.theme === 'les-animaux')
+    expect(animaux.map((e) => e.id).slice(0, 3)).toEqual(['amchich', 'aydi', 'thafounasth'])
+  })
+})

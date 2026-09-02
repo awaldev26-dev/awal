@@ -119,10 +119,14 @@ sans reconnaître ni `etch` ni `aghroum` n'apprend rien. Une fois débloquées,
 elles passent en priorité sur les mots nouveaux, plafonnées à deux par session :
 elles consolident deux mots connus tout en apportant la syntaxe.
 
-**L'imagier** (bouton « Écouter les mots ») affiche les 243 cartes, groupées par
-thème, avec leur image et leur traduction. Un tap joue la prononciation. C'est
-tout : pas de jeu, pas de score, pas de progression — on ne peut pas s'y
-tromper. C'est un dictionnaire visuel, pas un second exercice.
+**L'imagier** (bouton « Écouter les mots ») présente d'abord les douze thèmes,
+puis les cartes du thème choisi, avec leur image et leur traduction. Un tap joue
+la prononciation. C'est tout : pas de jeu, pas de score, pas de progression — on
+ne peut pas s'y tromper. C'est un dictionnaire visuel, pas un second exercice.
+
+L'ordre des cartes suit celui de `docs/corpus-v1.md`, qui est un choix éditorial
+— les mots les plus courants d'abord. La colonne `ordre` en base le fige, sinon
+Postgres rendrait les lignes dans un ordre arbitraire.
 
 ## Ce qui n'est pas encore fait
 

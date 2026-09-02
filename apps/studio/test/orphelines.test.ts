@@ -6,7 +6,7 @@ function ligne(id: string, contient: string[] = [], type = 'mot'): LigneEntree {
   return {
     id, type, kabyle: id, kabyleStd: null, fr: id, audio: `audio/${id}.wav`,
     variante: 'kabyle-nord', picto: 'openmoji:1F35E', themes: ['t'], niveau: 1,
-    pluriel: null, contient, notes: '', aValider: false,
+    pluriel: null, contient, notes: '', aValider: false, ordre: 0,
     creeLe: new Date('2026-09-01T00:00:00.000Z'),
   }
 }
