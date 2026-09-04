@@ -24,11 +24,11 @@ describe('chargerCorpus', () => {
 describe('urlAudio', () => {
   it('concatène la base et la clé', () => {
     const entree = corpusMinimal.entrees[0]!
-    expect(urlAudio(corpusMinimal, entree)).toBe(`${corpusMinimal.urlBaseAudio}${entree.audio}`)
+    expect(urlAudio(corpusMinimal, entree)).toBe(`${corpusMinimal.urlBaseMedias}${entree.audio}`)
   })
 
   it('ne double pas la barre oblique', () => {
-    const artefact = { ...corpusMinimal, urlBaseAudio: 'https://x.test/' }
+    const artefact = { ...corpusMinimal, urlBaseMedias: 'https://x.test/' }
     const entree = { ...corpusMinimal.entrees[0]!, audio: '/audio/a.webm' }
     expect(urlAudio(artefact, entree)).toBe('https://x.test/audio/a.webm')
   })

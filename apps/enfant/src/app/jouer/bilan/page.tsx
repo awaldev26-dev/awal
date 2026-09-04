@@ -30,5 +30,7 @@ export default function PageBilan() {
     .map((id) => artefact.entrees.find((entree) => entree.id === id))
     .filter((entree): entree is Entree => entree !== undefined)
 
-  return <Bilan acquises={acquises} onContinuer={() => router.replace('/jouer')} />
+  return (
+    <Bilan acquises={acquises} artefact={artefact} onContinuer={() => router.replace('/jouer')} />
+  )
 }

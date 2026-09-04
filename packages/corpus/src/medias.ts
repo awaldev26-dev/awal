@@ -7,6 +7,10 @@ import type { ProblemeValidation } from './validation.js'
  */
 export interface VerificateurMedias {
   audioExiste(cle: string): Promise<boolean>
+  /**
+   * Un picto emoji est valide par sa seule syntaxe ; un picto image doit en
+   * plus exister dans le stockage. L'implémentation s'occupe des deux cas.
+   */
   pictoExiste(reference: string): Promise<boolean>
 }
 

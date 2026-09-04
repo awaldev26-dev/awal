@@ -2,10 +2,27 @@
 
 import { useEffect, useState } from 'react'
 import type { LigneEntree } from '@/db/schema.js'
-import { emojiDepuisPicto } from '@/stockage/pictos.js'
+import { analyserPicto, emojiDepuisPicto } from '@awal/corpus'
 import { enregistrerEntree } from '../actions.js'
 import { Champ, classesChamp } from './Champ.js'
+import { ChoixPicto } from './ChoixPicto.js'
 import { Enregistreur } from './Enregistreur.js'
+
+/** Affiche l'illustration, qu'elle soit un emoji ou une image. */
+function Vignette({ picto, urlBase }: { picto: string; urlBase: string }) {
+  const analyse = analyserPicto(picto)
+  if (analyse?.type === 'image') {
+    // eslint-disable-next-line @next/next/no-img-element
+    return (
+      <img
+        src={`${urlBase}${analyse.cle}`}
+        alt=""
+        className="size-11 shrink-0 rounded-champ object-cover"
+      />
+    )
+  }
+  return <span className="text-4xl leading-none">{emojiDepuisPicto(picto)}</span>
+}
 
 export function Editeur({
   ligne,
@@ -41,7 +58,7 @@ export function Editeur({
   return (
     <div className="flex h-full flex-col">
       <header className="flex items-center gap-bloc border-b border-bordure px-section py-bloc">
-        <span className="text-4xl leading-none">{emojiDepuisPicto(ligne.picto)}</span>
+        <Vignette picto={ligne.picto} urlBase={urlBase} />
         <div className="min-w-0 flex-1">
           <h1 className="truncate font-kabyle text-xl text-encre">{ligne.kabyle}</h1>
           <p className="truncate text-sm text-encre-douce">{ligne.fr}</p>
@@ -75,6 +92,13 @@ export function Editeur({
           audioActuel={ligne.audio}
           urlBase={urlBase}
           onEnvoye={onModifie}
+        />
+
+        <ChoixPicto
+          entreeId={ligne.id}
+          picto={ligne.picto}
+          urlBase={urlBase}
+          onChange={onModifie}
         />
 
         <form action={soumettre} className="space-y-bloc">

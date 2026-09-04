@@ -1,9 +1,17 @@
 'use client'
 
-import type { Entree } from '@awal/corpus'
-import { emoji } from '@/jeux/emoji.js'
+import type { Artefact, Entree } from '@awal/corpus'
+import { Picto } from '@/jeux/Picto.js'
 
-export function Bilan({ acquises, onContinuer }: { acquises: Entree[]; onContinuer: () => void }) {
+export function Bilan({
+  acquises,
+  artefact,
+  onContinuer,
+}: {
+  acquises: Entree[]
+  artefact: Artefact
+  onContinuer: () => void
+}) {
   const pluriel = acquises.length > 1 ? 's' : ''
   return (
     <main style={{ display: 'grid', gap: 28, placeItems: 'center', padding: 24, minHeight: '100dvh' }}>
@@ -12,7 +20,7 @@ export function Bilan({ acquises, onContinuer }: { acquises: Entree[]; onContinu
       </p>
       <div style={{ display: 'flex', gap: 16 }}>
         {acquises.slice(0, 5).map((entree) => (
-          <span key={entree.id} style={{ fontSize: 56 }}>{emoji(entree.picto)}</span>
+          <Picto key={entree.id} picto={entree.picto} artefact={artefact} taille="3.5rem" />
         ))}
       </div>
       <p style={{ fontSize: 22, opacity: 0.7 }}>Ar toufath !</p>

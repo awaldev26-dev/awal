@@ -5,7 +5,7 @@ import type { Entree } from '@awal/corpus'
 import { urlAudio } from '@/corpus/charger.js'
 import type { ResultatEntree } from '@/moteur/types.js'
 import { choisirDistracteurs, melanger } from './choisirDistracteurs.js'
-import { emoji } from './emoji.js'
+import { Picto } from './Picto.js'
 import type { ProprietesJeu } from './types.js'
 
 export function EcouteEtChoisis({ lot, artefact, lecteur, onTermine }: ProprietesJeu) {
@@ -83,7 +83,7 @@ export function EcouteEtChoisis({ lot, artefact, lecteur, onTermine }: Propriete
               opacity: ecartees.includes(entree.id) ? 0.25 : 1,
             }}
           >
-            {emoji(entree.picto)}
+            <Picto picto={entree.picto} artefact={artefact} taille="4.5rem" />
           </button>
         ))}
       </div>

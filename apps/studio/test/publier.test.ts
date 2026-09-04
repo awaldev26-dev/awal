@@ -22,7 +22,7 @@ function artefact(reste: Partial<Artefact> = {}): Artefact {
   return schemaArtefact.parse({
     version: 2,
     publieLe: '2026-09-01T18:00:00.000Z',
-    urlBaseAudio: 'https://medias.awal.test/',
+    urlBaseMedias: 'https://medias.awal.test/',
     themes: [{ id: 'animaux', nom: 'Animaux', picto: 'openmoji:1F408', couleur: '#3d7ec9' }],
     entrees: [{
       id: 'amchich', type: 'mot', kabyle: 'amchich', fr: 'le chat',
@@ -89,13 +89,46 @@ describe('publierArtefact', () => {
     if (!resultat.ok) expect(resultat.problemes.map((p) => p.code)).toContain('theme-inconnu')
   })
 
+  it('signale une image de picto manquante', async () => {
+    // Un picto emoji vaut par sa seule syntaxe ; une image doit exister dans
+    // le stockage. C'est le seul cas où « picto-absent » a un sens, une
+    // référence mal formée étant refusée plus tôt par le schéma.
+    const s = await avecAudio()
+    const avecImage = artefact({
+      entrees: [{
+        id: 'amchich', type: 'mot', kabyle: 'amchich', fr: 'le chat',
+        audio: 'audio/amchich.webm', variante: 'kabyle-nord',
+        picto: 'image:pictos/amchich.webp', themes: ['animaux'],
+        niveau: 1, contient: [], notes: '',
+      }],
+    })
+    const resultat = await publierArtefact(avecImage, s)
+    expect(resultat.ok).toBe(false)
+    if (!resultat.ok) expect(resultat.problemes.map((p) => p.code)).toEqual(['picto-absent'])
+  })
+
+  it('publie quand l’image du picto est présente', async () => {
+    const s = await avecAudio()
+    await s.ecrire('pictos/amchich.webp', new Uint8Array([1, 2]), 'image/webp')
+    const avecImage = artefact({
+      entrees: [{
+        id: 'amchich', type: 'mot', kabyle: 'amchich', fr: 'le chat',
+        audio: 'audio/amchich.webm', variante: 'kabyle-nord',
+        picto: 'image:pictos/amchich.webp', themes: ['animaux'],
+        niveau: 1, contient: [], notes: '',
+      }],
+    })
+    expect((await publierArtefact(avecImage, s)).ok).toBe(true)
+  })
+
   it('remonte tous les problèmes d’un coup', async () => {
     const s = stockage()
     const casse = artefact({
       entrees: [{
         id: 'amchich', type: 'mot', kabyle: 'amchich', fr: 'le chat',
         audio: 'audio/amchich.webm', variante: 'kabyle-nord',
-        picto: 'cassé', themes: ['theme-fantome'], niveau: 1, contient: [], notes: '',
+        picto: 'image:pictos/absente.webp', themes: ['theme-fantome'],
+        niveau: 1, contient: [], notes: '',
       }],
     })
     const resultat = await publierArtefact(casse, s)

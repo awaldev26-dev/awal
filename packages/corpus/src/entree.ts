@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { pictoValide } from './picto.js'
 
 /** Slug stable : minuscules, chiffres, tirets. Jamais renommé après publication. */
 export const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/
@@ -26,7 +27,9 @@ export const schemaEntree = z.object({
   fr: z.string().min(1, 'fr : traduction obligatoire'),
   audio: z.string().min(1, 'audio : clé obligatoire'),
   variante: z.string().min(1, 'variante : obligatoire'),
-  picto: z.string().min(1, 'picto : référence obligatoire'),
+  picto: z
+    .string()
+    .refine(pictoValide, 'picto : « openmoji:1F35E » ou « image:pictos/x.webp »'),
   themes: z.array(z.string().min(1)).min(1, 'themes : au moins un thème'),
   niveau: z.number().int().min(1).max(3).default(1),
   pluriel: z.string().min(1).optional(),

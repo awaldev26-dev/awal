@@ -23,7 +23,7 @@ const entree = {
 const artefact = {
   version: 1,
   publieLe: '2026-09-01T18:00:00.000Z',
-  urlBaseAudio: 'https://media.awal.app/',
+  urlBaseMedias: 'https://media.awal.app/',
   themes: [theme],
   entrees: [entree],
 }
@@ -56,12 +56,12 @@ describe('schemaArtefact', () => {
   })
 
   it('accepte un chemin absolu comme base audio', () => {
-    expect(schemaArtefact.safeParse({ ...artefact, urlBaseAudio: '/' }).success).toBe(true)
-    expect(schemaArtefact.safeParse({ ...artefact, urlBaseAudio: '/medias/' }).success).toBe(true)
+    expect(schemaArtefact.safeParse({ ...artefact, urlBaseMedias: '/' }).success).toBe(true)
+    expect(schemaArtefact.safeParse({ ...artefact, urlBaseMedias: '/medias/' }).success).toBe(true)
   })
 
   it('refuse une url de base invalide', () => {
-    expect(schemaArtefact.safeParse({ ...artefact, urlBaseAudio: 'media.awal.app' }).success).toBe(false)
-    expect(schemaArtefact.safeParse({ ...artefact, urlBaseAudio: 'ftp://x/' }).success).toBe(false)
+    expect(schemaArtefact.safeParse({ ...artefact, urlBaseMedias: 'media.awal.app' }).success).toBe(false)
+    expect(schemaArtefact.safeParse({ ...artefact, urlBaseMedias: 'ftp://x/' }).success).toBe(false)
   })
 })

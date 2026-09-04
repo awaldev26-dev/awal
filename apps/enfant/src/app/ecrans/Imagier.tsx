@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react'
 import type { Artefact, Entree, Theme } from '@awal/corpus'
 import type { Lecteur } from '@/audio/lecteur.js'
 import { urlAudio } from '@/corpus/charger.js'
-import { emoji } from '@/jeux/emoji.js'
+import { Picto } from '@/jeux/Picto.js'
 
 /**
  * Imagier consultable, en deux temps : les thèmes, puis les cartes du thème
@@ -59,7 +59,8 @@ export function Imagier({
         </button>
         {choisi ? (
           <h1 style={{ fontSize: 22, margin: 0, color: choisi.couleur }}>
-            {emoji(choisi.picto)} {choisi.nom}
+            <Picto picto={choisi.picto} artefact={artefact} taille="1.4rem" className="mr-1 inline-block align-middle" />
+            {choisi.nom}
           </h1>
         ) : (
           <h1 style={{ fontSize: 22, margin: 0 }}>Écouter les mots</h1>
@@ -116,7 +117,7 @@ function ListeThemes({
               padding: 8,
             }}
           >
-            <span style={{ fontSize: 44, lineHeight: 1 }}>{emoji(theme.picto)}</span>
+            <Picto picto={theme.picto} artefact={artefact} taille="2.75rem" />
             <span style={{ lineHeight: 1.2, textAlign: 'center' }}>{theme.nom}</span>
             <span style={{ opacity: 0.55, fontSize: 13 }}>
               {nombre} {unite}
@@ -168,7 +169,7 @@ function Cartes({
             alignContent: 'center',
           }}
         >
-          <span style={{ fontSize: 42, lineHeight: 1 }}>{emoji(entree.picto)}</span>
+          <Picto picto={entree.picto} artefact={artefact} taille="2.6rem" />
           <span style={{ fontSize: 14, lineHeight: 1.2, textAlign: 'center' }}>{entree.fr}</span>
         </button>
       ))}

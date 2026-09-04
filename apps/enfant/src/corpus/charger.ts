@@ -16,7 +16,7 @@ export async function chargerCorpus(fetcher: Fetcher = (url) => fetch(url)): Pro
 }
 
 export function urlAudio(artefact: Artefact, entree: Entree): string {
-  const base = artefact.urlBaseAudio.replace(/\/+$/, '')
+  const base = artefact.urlBaseMedias.replace(/\/+$/, '')
   const cle = entree.audio.replace(/^\/+/, '')
   return `${base}/${cle}`
 }

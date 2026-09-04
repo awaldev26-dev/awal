@@ -9,7 +9,7 @@ import type { Artefact } from '../src/artefact.js'
 export const corpusMinimal: Artefact = schemaArtefact.parse({
   version: 1,
   publieLe: '2026-09-01T18:00:00.000Z',
-  urlBaseAudio: 'https://media.awal.test/',
+  urlBaseMedias: 'https://media.awal.test/',
   themes: [
     { id: 'manger-et-boire', nom: 'Manger et boire', picto: 'openmoji:1F35E', couleur: '#c94f3d' },
     { id: 'les-animaux', nom: 'Les animaux', picto: 'openmoji:1F408', couleur: '#3d7ec9' },

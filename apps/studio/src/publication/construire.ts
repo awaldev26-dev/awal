@@ -15,7 +15,7 @@ export class EntreeIncomplete extends Error {
 export interface OptionsArtefact {
   version: number
   publieLe: Date
-  urlBaseAudio: string
+  urlBaseMedias: string
 }
 
 /**
@@ -30,7 +30,7 @@ export function construireArtefact(
   return schemaArtefact.parse({
     version: options.version,
     publieLe: options.publieLe.toISOString(),
-    urlBaseAudio: options.urlBaseAudio,
+    urlBaseMedias: options.urlBaseMedias,
     themes: [...themes]
       .sort((a, b) => a.ordre - b.ordre)
       .map(({ id, nom, picto, couleur }) => ({ id, nom, picto, couleur })),

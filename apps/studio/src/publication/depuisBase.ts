@@ -33,7 +33,7 @@ export async function publierDepuisBase(): Promise<ResultatPublication> {
   const artefact = construireArtefact(publiables, listeThemes, {
     version,
     publieLe: new Date(),
-    urlBaseAudio: stockage.urlPublique(),
+    urlBaseMedias: stockage.urlPublique(),
   })
 
   const resultat = await publierArtefact(artefact, stockage)

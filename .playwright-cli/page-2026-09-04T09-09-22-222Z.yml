@@ -1,0 +1,5 @@
+- main [ref=e2]:
+  - heading "Studio Awal" [level=1] [ref=e3]
+  - generic [ref=e4]:
+    - textbox "Mot de passe" [active] [ref=e5]
+    - button "Entrer" [ref=e6]

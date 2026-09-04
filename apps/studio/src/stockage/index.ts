@@ -5,16 +5,14 @@
  * client qui viendrait y chercher une fonction utilitaire ferait échouer le
  * build. Pour les pictos, importer directement `./pictos.js`, qui est pur.
  */
-import type { VerificateurMedias } from '@awal/corpus'
+import { clePictoImage, pictoValide, type VerificateurMedias } from '@awal/corpus'
 import { StockageDisque, racineParDefaut } from './disque.js'
 import { StockageR2 } from './r2.js'
-import { pictoValide } from './pictos.js'
 import type { StockageMedias } from './types.js'
 
 export * from './types.js'
 export { StockageDisque } from './disque.js'
 export { StockageR2 } from './r2.js'
-export { pictoValide, emojiDepuisPicto } from './pictos.js'
 
 function exige(nom: string): string {
   const valeur = process.env[nom]
@@ -45,6 +43,11 @@ export function creerStockage(): StockageMedias {
 export function creerVerificateur(stockage: StockageMedias): VerificateurMedias {
   return {
     audioExiste: (cle) => stockage.existe(cle),
-    pictoExiste: async (reference) => pictoValide(reference),
+    pictoExiste: async (reference) => {
+      if (!pictoValide(reference)) return false
+      const cle = clePictoImage(reference)
+      // Un emoji se suffit de sa syntaxe ; une image doit exister.
+      return cle === null ? true : stockage.existe(cle)
+    },
   }
 }

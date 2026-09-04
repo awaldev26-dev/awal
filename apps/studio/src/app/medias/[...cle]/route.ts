@@ -1,17 +1,27 @@
 import { creerStockage } from '@/stockage/index.js'
 
 /**
- * Types servis. Le MediaRecorder produit du webm sur Chrome et du mp4 sur
- * Safari, et les audios de remplacement sont en wav : annoncer un type
- * erroné suffit à ce que Safari refuse de lire le fichier.
+ * Types servis, déduits de l'extension.
+ *
+ * Le MediaRecorder produit du webm sur Chrome et du mp4 sur Safari, et les
+ * audios de remplacement sont en wav : annoncer un type erroné suffit à ce que
+ * Safari refuse de lire le fichier. Les images des pictos suivent la même règle.
  */
 const TYPES: Record<string, string> = {
+  // Audio
   webm: 'audio/webm',
   mp4: 'audio/mp4',
   m4a: 'audio/mp4',
   wav: 'audio/wav',
   ogg: 'audio/ogg',
   opus: 'audio/ogg',
+  // Images des pictos
+  webp: 'image/webp',
+  png: 'image/png',
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  svg: 'image/svg+xml',
+  // Corpus
   json: 'application/json',
 }
 

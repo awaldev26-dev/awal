@@ -1,7 +1,7 @@
 'use client'
 
 import type { LigneEntree } from '@/db/schema.js'
-import { emojiDepuisPicto } from '@/stockage/pictos.js'
+import { analyserPicto, emojiDepuisPicto } from '@awal/corpus'
 
 /** Ce qu'on veut voir d'un coup d'œil : enregistré, à valider, ou rien. */
 function Etat({ ligne }: { ligne: LigneEntree }) {
@@ -17,10 +17,12 @@ function Etat({ ligne }: { ligne: LigneEntree }) {
 export function Liste({
   lignes,
   selection,
+  urlBase,
   onSelectionner,
 }: {
   lignes: LigneEntree[]
   selection: string | null
+  urlBase: string
   onSelectionner: (id: string) => void
 }) {
   if (lignes.length === 0) {
@@ -44,8 +46,21 @@ export function Liste({
                 active ? 'bg-surface-active' : 'hover:bg-surface-creuse',
               ].join(' ')}
             >
-              <span className="w-6 shrink-0 text-lg leading-none">
-                {emojiDepuisPicto(ligne.picto)}
+              <span className="grid w-6 shrink-0 place-items-center text-lg leading-none">
+                {(() => {
+                  const analyse = analyserPicto(ligne.picto)
+                  if (analyse?.type === 'image') {
+                    // eslint-disable-next-line @next/next/no-img-element
+                    return (
+                      <img
+                        src={`${urlBase}${analyse.cle}`}
+                        alt=""
+                        className="size-6 rounded-sm object-cover"
+                      />
+                    )
+                  }
+                  return emojiDepuisPicto(ligne.picto)
+                })()}
               </span>
               <span
                 className={[

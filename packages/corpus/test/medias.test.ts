@@ -8,7 +8,7 @@ function construire(ids: string[]): Artefact {
   return schemaArtefact.parse({
     version: 1,
     publieLe: '2026-09-01T18:00:00.000Z',
-    urlBaseAudio: 'https://media.awal.app/',
+    urlBaseMedias: 'https://media.awal.app/',
     themes: [{ id: 'manger-et-boire', nom: 'Manger', picto: 'openmoji:1F35E', couleur: '#c94f3d' }],
     entrees: ids.map((id) => ({
       id,
@@ -17,10 +17,14 @@ function construire(ids: string[]): Artefact {
       fr: id,
       audio: `audio/${id}.opus`,
       variante: 'kabyle-nord',
-      picto: `openmoji:${id}`,
+      picto: `openmoji:1F3${(100 + ids.indexOf(id)).toString(16).toUpperCase()}`,
       themes: ['manger-et-boire'],
     })),
   })
+}
+
+function pictoDe(ids: string[], id: string): string {
+  return `openmoji:1F3${(100 + ids.indexOf(id)).toString(16).toUpperCase()}`
 }
 
 function verificateur(audiosPresents: string[], pictosPresents: string[]): VerificateurMedias {
@@ -35,14 +39,17 @@ describe('validerMedias', () => {
     const artefact = construire(['aghroum'])
     const problemes = await validerMedias(
       artefact,
-      verificateur(['audio/aghroum.opus'], ['openmoji:aghroum']),
+      verificateur(['audio/aghroum.opus'], [pictoDe(['aghroum'], 'aghroum')]),
     )
     expect(problemes).toEqual([])
   })
 
   it('signale un audio absent', async () => {
     const artefact = construire(['aghroum'])
-    const problemes = await validerMedias(artefact, verificateur([], ['openmoji:aghroum']))
+    const problemes = await validerMedias(
+      artefact,
+      verificateur([], [pictoDe(['aghroum'], 'aghroum')]),
+    )
     expect(problemes.map((p) => p.code)).toEqual(['audio-absent'])
     expect(problemes[0]?.entreeId).toBe('aghroum')
   })
@@ -62,7 +69,10 @@ describe('validerMedias', () => {
     const artefact = construire(['aghroum', 'aman', 'idh'])
     const problemes = await validerMedias(
       artefact,
-      verificateur(['audio/aghroum.opus'], ['openmoji:aghroum', 'openmoji:aman', 'openmoji:idh']),
+      verificateur(
+        ['audio/aghroum.opus'],
+        ['aghroum', 'aman', 'idh'].map((id) => pictoDe(['aghroum', 'aman', 'idh'], id)),
+      ),
     )
     expect(problemes.map((p) => p.entreeId).sort()).toEqual(['aman', 'idh'])
   })

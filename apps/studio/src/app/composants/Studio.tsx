@@ -127,7 +127,12 @@ export function Studio({
           </div>
 
           <div className="min-h-0 flex-1 overflow-y-auto">
-            <Liste lignes={visibles} selection={courante?.id ?? null} onSelectionner={setSelection} />
+            <Liste
+              lignes={visibles}
+              selection={courante?.id ?? null}
+              urlBase={urlBase}
+              onSelectionner={setSelection}
+            />
           </div>
         </aside>
 

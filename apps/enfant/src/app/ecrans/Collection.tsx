@@ -3,7 +3,7 @@
 import type { Artefact } from '@awal/corpus'
 import { estAcquise } from '@/moteur/leitner.js'
 import type { Progression } from '@/moteur/types.js'
-import { emoji } from '@/jeux/emoji.js'
+import { Picto } from '@/jeux/Picto.js'
 
 export function Collection({
   artefact, progression, onRetour,
@@ -50,7 +50,7 @@ export function Collection({
                       border: `2px solid ${gagnee ? theme.couleur : '#e6d9c6'}`,
                     }}
                   >
-                    {emoji(entree.picto)}
+                    <Picto picto={entree.picto} artefact={artefact} taille="2rem" />
                   </div>
                 )
               })}

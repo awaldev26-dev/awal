@@ -7,7 +7,7 @@ function construire(entrees: unknown[], themesIds = ['manger-et-boire']): Artefa
   return schemaArtefact.parse({
     version: 1,
     publieLe: '2026-09-01T18:00:00.000Z',
-    urlBaseAudio: 'https://media.awal.app/',
+    urlBaseMedias: 'https://media.awal.app/',
     themes: themesIds.map((id) => ({ id, nom: id, picto: 'openmoji:1F35E', couleur: '#c94f3d' })),
     entrees,
   })

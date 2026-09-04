@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { extraireCorpus } from '../seed/extraire.js'
 import { COULEUR_PAR_THEME, PICTOS, PICTO_PAR_THEME, pictoPour } from '../seed/pictos.js'
-import { pictoValide } from '@/stockage/pictos.js'
+import { pictoValide } from '@awal/corpus'
 
 const { themes, entrees } = extraireCorpus(
   readFileSync(join(import.meta.dirname, '../../../docs/corpus-v1.md'), 'utf8'),

@@ -18,7 +18,7 @@ function ligne(reste: Partial<LigneEntree> = {}): LigneEntree {
 const options = {
   version: 3,
   publieLe: new Date('2026-09-01T18:00:00.000Z'),
-  urlBaseAudio: 'https://medias.awal.app/',
+  urlBaseMedias: 'https://medias.awal.app/',
 }
 
 describe('construireArtefact', () => {
@@ -26,7 +26,7 @@ describe('construireArtefact', () => {
     const artefact = construireArtefact([ligne()], [theme], options)
     expect(artefact.version).toBe(3)
     expect(artefact.publieLe).toBe('2026-09-01T18:00:00.000Z')
-    expect(artefact.urlBaseAudio).toBe('https://medias.awal.app/')
+    expect(artefact.urlBaseMedias).toBe('https://medias.awal.app/')
     expect(artefact.entrees).toHaveLength(1)
   })
 
