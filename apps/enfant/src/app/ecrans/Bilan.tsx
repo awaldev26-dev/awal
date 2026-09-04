@@ -1,6 +1,8 @@
 'use client'
 
 import type { Artefact, Entree } from '@awal/corpus'
+import { Confettis } from '@/interface/Confettis.js'
+import { Touche } from '@/interface/Touche.js'
 import { Picto } from '@/jeux/Picto.js'
 
 export function Bilan({
@@ -12,25 +14,48 @@ export function Bilan({
   artefact: Artefact
   onContinuer: () => void
 }) {
+  const gagne = acquises.length > 0
   const pluriel = acquises.length > 1 ? 's' : ''
+
   return (
-    <main style={{ display: 'grid', gap: 28, placeItems: 'center', padding: 24, minHeight: '100dvh' }}>
-      <p style={{ fontSize: 26 }}>
-        {acquises.length > 0 ? `★ ${acquises.length} nouvelle${pluriel} carte${pluriel}` : 'Bien joué !'}
+    <main className="relative mx-auto grid min-h-dvh w-full max-w-2xl content-center justify-items-center gap-large px-bloc py-large">
+      {/* Les confettis ne tombent que s'il y a vraiment quelque chose à fêter :
+          en tomber à chaque fois les viderait de leur sens. */}
+      <Confettis actif={gagne} />
+
+      <p className="animate-apparition text-center text-3xl leading-tight text-encre">
+        {gagne ? (
+          <>
+            <span className="block text-5xl">⭐</span>
+            {acquises.length} nouvelle{pluriel} carte{pluriel}
+          </>
+        ) : (
+          <>
+            <span className="block text-5xl">👏</span>
+            Bien joué&nbsp;!
+          </>
+        )}
       </p>
-      <div style={{ display: 'flex', gap: 16 }}>
-        {acquises.slice(0, 5).map((entree) => (
-          <Picto key={entree.id} picto={entree.picto} artefact={artefact} taille="3.5rem" />
-        ))}
-      </div>
-      <p style={{ fontSize: 22, opacity: 0.7 }}>Ar toufath !</p>
-      <button
-        type="button"
-        onClick={onContinuer}
-        style={{ fontSize: 22, padding: '14px 40px', borderRadius: 16, border: 'none', background: '#c94f3d', color: '#fff' }}
-      >
-        OK
-      </button>
+
+      {gagne ? (
+        <div className="flex flex-wrap justify-center gap-carte">
+          {acquises.slice(0, 5).map((entree, rang) => (
+            <span
+              key={entree.id}
+              className="animate-apparition grid w-pastille place-items-center rounded-carte bg-surface py-3 shadow-relief"
+              style={{ animationDelay: `${rang * 90}ms` }}
+            >
+              <Picto picto={entree.picto} artefact={artefact} taille="2.5rem" />
+            </span>
+          ))}
+        </div>
+      ) : null}
+
+      <p className="font-mot text-xl text-encre-douce">Ar toufath&nbsp;!</p>
+
+      <Touche ton="accent" taille="grande" onClick={onContinuer}>
+        Continuer
+      </Touche>
     </main>
   )
 }

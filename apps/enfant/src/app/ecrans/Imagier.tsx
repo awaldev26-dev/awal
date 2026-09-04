@@ -44,26 +44,26 @@ export function Imagier({
   const retour = () => (choisi ? onChoisirTheme(null) : onRetour())
 
   return (
-    <main style={{ padding: 20, paddingBottom: 48, minHeight: '100dvh' }}>
-      <header style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
+    <main className="mx-auto w-full max-w-3xl px-bloc pt-carte pb-large">
+      <header className="flex items-center gap-carte">
         <button
           type="button"
           onClick={retour}
           aria-label="retour"
-          style={{
-            fontSize: 20, padding: '8px 16px', borderRadius: 12,
-            border: '3px solid #e6d9c6', background: '#fff',
-          }}
+          className="grid size-12 shrink-0 place-items-center rounded-pilule bg-surface text-2xl shadow-relief transition active:translate-y-1 active:shadow-none"
         >
           ←
         </button>
         {choisi ? (
-          <h1 style={{ fontSize: 22, margin: 0, color: choisi.couleur }}>
-            <Picto picto={choisi.picto} artefact={artefact} taille="1.4rem" className="mr-1 inline-block align-middle" />
-            {choisi.nom}
+          <h1
+            className="flex min-w-0 items-center gap-2 font-mot text-2xl"
+            style={{ color: choisi.couleur }}
+          >
+            <Picto picto={choisi.picto} artefact={artefact} taille="1.75rem" />
+            <span className="truncate">{choisi.nom}</span>
           </h1>
         ) : (
-          <h1 style={{ fontSize: 22, margin: 0 }}>Écouter les mots</h1>
+          <h1 className="font-mot text-2xl text-encre">Écouter les mots</h1>
         )}
       </header>
 
@@ -91,7 +91,10 @@ function ListeThemes({
   onChoisir: (theme: Theme) => void
 }) {
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 22 }}>
+    <div
+      className="mt-large grid gap-carte"
+      style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(9.5rem, 44vw), 1fr))' }}
+    >
       {artefact.themes.map((theme) => {
         const duTheme = parTheme.get(theme.id) ?? []
         const nombre = duTheme.length
@@ -103,23 +106,12 @@ function ListeThemes({
             key={theme.id}
             type="button"
             onClick={() => onChoisir(theme)}
-            style={{
-              width: 158,
-              height: 132,
-              borderRadius: 22,
-              border: `3px solid ${theme.couleur}`,
-              background: '#fff',
-              display: 'grid',
-              placeItems: 'center',
-              alignContent: 'center',
-              gap: 4,
-              fontSize: 16,
-              padding: 8,
-            }}
+            className="grid content-center justify-items-center gap-1 rounded-touche bg-surface px-bloc py-bloc transition-all duration-100 active:translate-y-1.5 active:shadow-none"
+            style={{ boxShadow: `0 6px 0 ${theme.couleur}` }}
           >
             <Picto picto={theme.picto} artefact={artefact} taille="2.75rem" />
-            <span style={{ lineHeight: 1.2, textAlign: 'center' }}>{theme.nom}</span>
-            <span style={{ opacity: 0.55, fontSize: 13 }}>
+            <span className="text-center leading-tight text-encre">{theme.nom}</span>
+            <span className="text-sm text-encre-douce">
               {nombre} {unite}
             </span>
           </button>
@@ -150,27 +142,24 @@ function Cartes({
   }
 
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 22 }}>
+    <div
+      className="mt-large grid gap-carte"
+      style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(6.5rem, 28vw), 1fr))' }}
+    >
       {entrees.map((entree) => (
         <button
           key={entree.id}
           type="button"
           onClick={() => ecouter(entree)}
-          style={{
-            width: 112,
-            minHeight: 118,
-            padding: '10px 6px',
-            borderRadius: 18,
-            border: `3px solid ${enCours === entree.id ? couleur : '#e6d9c6'}`,
-            background: enCours === entree.id ? '#fff8ee' : '#fff',
-            display: 'grid',
-            gap: 4,
-            placeItems: 'center',
-            alignContent: 'center',
-          }}
+          className={[
+            'grid content-center justify-items-center gap-1 rounded-carte px-2 py-carte',
+            'transition-all duration-150 active:translate-y-1 active:shadow-none',
+            enCours === entree.id ? 'animate-rebond bg-safran-clair/40' : 'bg-surface',
+          ].join(' ')}
+          style={{ boxShadow: `0 5px 0 ${enCours === entree.id ? couleur : 'var(--color-craie-creuse)'}` }}
         >
-          <Picto picto={entree.picto} artefact={artefact} taille="2.6rem" />
-          <span style={{ fontSize: 14, lineHeight: 1.2, textAlign: 'center' }}>{entree.fr}</span>
+          <Picto picto={entree.picto} artefact={artefact} taille="min(2.6rem, 11vw)" />
+          <span className="text-center text-sm leading-tight text-encre-douce">{entree.fr}</span>
         </button>
       ))}
     </div>

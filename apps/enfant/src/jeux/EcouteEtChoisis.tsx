@@ -13,6 +13,7 @@ export function EcouteEtChoisis({ lot, artefact, lecteur, onTermine }: Propriete
   const [resultats, setResultats] = useState<ResultatEntree[]>([])
   const [ecartees, setEcartees] = useState<string[]>([])
   const [rate, setRate] = useState(false)
+  const [trouvee, setTrouvee] = useState<string | null>(null)
 
   const cible = lot[index]
 
@@ -25,67 +26,85 @@ export function EcouteEtChoisis({ lot, artefact, lecteur, onTermine }: Propriete
     if (cible) void lecteur.jouer(urlAudio(artefact, cible))
     setEcartees([])
     setRate(false)
+    setTrouvee(null)
   }, [cible, artefact, lecteur])
 
   if (!cible) return null
 
   function repondre(entree: Entree) {
-    if (!cible) return
+    if (!cible || trouvee) return
+
     if (entree.id === cible.id) {
+      setTrouvee(entree.id)
       const suivants = [...resultats, { entreeId: cible.id, reussi: !rate }]
       setResultats(suivants)
-      if (index + 1 >= lot.length) onTermine(suivants)
-      else setIndex(index + 1)
+      // Une courte pause pour que l'enfant voie sa réussite avant l'écran suivant.
+      setTimeout(() => {
+        if (index + 1 >= lot.length) onTermine(suivants)
+        else setIndex(index + 1)
+      }, 620)
       return
     }
-    // L'erreur ne punit pas : on écarte le mauvais choix, on rejoue, on laisse réessayer.
+
+    // L'erreur ne punit pas : on écarte le mauvais choix, on rejoue le son,
+    // et on laisse réessayer sans le moindre signal négatif.
     setRate(true)
     setEcartees((precedentes) => [...precedentes, entree.id])
     void lecteur.jouer(urlAudio(artefact, cible))
   }
 
   return (
-    <main
-      style={{
-        display: 'grid',
-        gap: 20,
-        placeItems: 'center',
-        // alignContent groupe les deux blocs au centre ; sans lui, la grille
-        // répartit ses lignes et laisse le haut-parleur seul en haut de l'écran.
-        alignContent: 'center',
-        padding: 24,
-        minHeight: '100dvh',
-      }}
-    >
+    <main className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col items-center justify-center gap-large px-bloc py-bloc">
+      {/* Barre de progression sans chiffre : elle situe sans mettre la pression. */}
+      <div className="flex w-full max-w-xs gap-1" aria-hidden>
+        {lot.map((_, rang) => (
+          <span
+            key={rang}
+            className={[
+              'h-2 flex-1 rounded-pilule transition-colors',
+              rang < index ? 'bg-joie' : rang === index ? 'bg-accent-vif' : 'bg-craie-creuse',
+            ].join(' ')}
+          />
+        ))}
+      </div>
+
       <button
         type="button"
         onClick={() => lecteur.jouer(urlAudio(artefact, cible))}
-        style={{ fontSize: 64, background: 'none', border: 'none' }}
         aria-label="réécouter"
+        className="grid size-24 place-items-center rounded-pilule bg-accent-vif text-5xl shadow-relief-safran transition-all duration-100 active:translate-y-1.5 active:shadow-none"
       >
         🔊
       </button>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-        {choix.map((entree) => (
-          <button
-            key={entree.id}
-            type="button"
-            onClick={() => repondre(entree)}
-            disabled={ecartees.includes(entree.id)}
-            aria-label={entree.fr}
-            style={{
-              fontSize: 72,
-              width: 140,
-              height: 140,
-              borderRadius: 24,
-              border: '3px solid #e6d9c6',
-              background: '#fff',
-              opacity: ecartees.includes(entree.id) ? 0.25 : 1,
-            }}
-          >
-            <Picto picto={entree.picto} artefact={artefact} taille="4.5rem" />
-          </button>
-        ))}
+
+      <div
+        className="grid w-full gap-carte"
+        style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(9rem, 42vw), 1fr))' }}
+      >
+        {choix.map((entree) => {
+          const ecartee = ecartees.includes(entree.id)
+          const gagnante = trouvee === entree.id
+          return (
+            <button
+              key={entree.id}
+              type="button"
+              onClick={() => repondre(entree)}
+              disabled={ecartee || trouvee !== null}
+              aria-label={entree.fr}
+              className={[
+                'grid aspect-square place-items-center rounded-touche transition-all duration-150',
+                'active:translate-y-1.5 active:shadow-none',
+                gagnante
+                  ? 'animate-rebond bg-joie/15 ring-4 ring-joie shadow-none'
+                  : ecartee
+                    ? 'bg-craie-creuse/60 opacity-35 shadow-none'
+                    : 'bg-surface shadow-relief',
+              ].join(' ')}
+            >
+              <Picto picto={entree.picto} artefact={artefact} taille="min(5.25rem, 24vw)" />
+            </button>
+          )
+        })}
       </div>
     </main>
   )

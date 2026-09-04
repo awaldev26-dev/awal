@@ -1,9 +1,16 @@
 'use client'
 
+import { Touche } from '@/interface/Touche.js'
 import type { Profil } from '@/stockage/magasin.js'
 
 export function Accueil({
-  profil, serie, aFaire, onDemarrer, onEntrainement, onCollection, onChangerProfil,
+  profil,
+  serie,
+  aFaire,
+  onDemarrer,
+  onEntrainement,
+  onCollection,
+  onChangerProfil,
 }: {
   profil: Profil
   serie: number
@@ -13,48 +20,54 @@ export function Accueil({
   onCollection: () => void
   onChangerProfil: () => void
 }) {
+  const fini = aFaire === 0
+
   return (
-    <main style={{ display: 'grid', gap: 28, placeItems: 'center', padding: 24, minHeight: '100dvh' }}>
-      <header style={{ display: 'flex', gap: 12, alignItems: 'center', alignSelf: 'stretch', justifyContent: 'space-between' }}>
-        <button type="button" onClick={onChangerProfil} aria-label="changer de profil" style={{ background: 'none', border: 'none', fontSize: 32 }}>
+    <main className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col px-bloc py-bloc">
+      <header className="flex items-center justify-between">
+        <button
+          type="button"
+          onClick={onChangerProfil}
+          aria-label="changer de profil"
+          className="grid size-14 place-items-center rounded-pilule bg-surface text-3xl shadow-relief transition active:translate-y-1 active:shadow-none"
+        >
           {profil.avatar}
         </button>
-        {serie > 1 ? <span style={{ fontSize: 22 }}>🔥 {serie}</span> : <span />}
+
+        {serie > 1 ? (
+          <span className="flex items-center gap-1 rounded-pilule bg-safran-clair px-4 py-2 text-lg text-encre">
+            🔥 {serie}
+          </span>
+        ) : null}
       </header>
 
-      <button
-        type="button"
-        onClick={onDemarrer}
-        disabled={aFaire === 0}
-        style={{
-          width: 260, height: 160, borderRadius: 32, border: 'none', fontSize: 26,
-          background: aFaire === 0 ? '#e6d9c6' : '#c94f3d', color: '#fff', lineHeight: 1.3,
-        }}
-      >
-        {aFaire === 0 ? <>Session faite !<br />🎉</> : <>Session du jour<br />▶</>}
-      </button>
-
-      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
-        {/* Jamais désactivé : l'imagier est consultable à tout moment, il ne
-            dépend d'aucune progression. */}
+      <div className="flex flex-1 flex-col items-center justify-center gap-large py-large">
         <button
           type="button"
-          onClick={onEntrainement}
-          style={{
-            fontSize: 20, padding: '12px 28px', borderRadius: 16,
-            border: '3px solid #e6d9c6', background: '#fff',
-          }}
+          onClick={onDemarrer}
+          disabled={fini}
+          className={[
+            'grid w-touche place-items-center gap-1 rounded-touche py-large text-center',
+            'transition-all duration-100 active:translate-y-1.5 active:shadow-none',
+            fini
+              ? 'bg-joie text-white shadow-relief'
+              : 'animate-flotte bg-accent text-white shadow-relief-accent',
+          ].join(' ')}
         >
-          Écouter les mots
+          <span className="text-5xl leading-none">{fini ? '🎉' : '▶'}</span>
+          <span className="px-2 text-xl leading-tight">
+            {fini ? 'Session faite !' : 'Session du jour'}
+          </span>
         </button>
 
-        <button
-          type="button"
-          onClick={onCollection}
-          style={{ fontSize: 20, padding: '12px 28px', borderRadius: 16, border: '3px solid #e6d9c6', background: '#fff' }}
-        >
-          Ma collection
-        </button>
+        <div className="grid w-full gap-carte" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(9rem, 1fr))' }}>
+          <Touche ton="safran" onClick={onEntrainement}>
+            🔊 Écouter les mots
+          </Touche>
+          <Touche ton="calme" onClick={onCollection}>
+            ⭐ Ma collection
+          </Touche>
+        </div>
       </div>
     </main>
   )

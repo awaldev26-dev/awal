@@ -1,7 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import { Touche } from '@/interface/Touche.js'
 import { AVATARS, type MagasinProgression, type Profil } from '@/stockage/magasin.js'
+
+const AGES = [5, 6, 7, 8, 9, 10, 11]
 
 export function ChoixProfil({
   magasin,
@@ -31,85 +34,99 @@ export function ChoixProfil({
     setPrenom('')
   }
 
-  if (creation) {
-    return (
-      <main style={{ display: 'grid', gap: 20, placeItems: 'center', padding: 24, minHeight: '100dvh' }}>
-        <h1 style={{ fontSize: 28 }}>Qui joue ?</h1>
-        <input
-          value={prenom}
-          onChange={(evenement) => setPrenom(evenement.target.value)}
-          placeholder="Prénom"
-          style={{ fontSize: 24, padding: 12, textAlign: 'center', borderRadius: 12, border: '2px solid #e6d9c6' }}
-        />
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center', maxWidth: 420 }}>
-          {AVATARS.map((choix) => (
-            <button
-              key={choix}
-              type="button"
-              onClick={() => setAvatar(choix)}
-              aria-label={`avatar ${choix}`}
-              style={{
-                fontSize: 36, width: 64, height: 64, borderRadius: 16, background: '#fff',
-                border: avatar === choix ? '3px solid #c94f3d' : '3px solid #e6d9c6',
-              }}
-            >
-              {choix}
-            </button>
-          ))}
-        </div>
-        <div style={{ display: 'flex', gap: 8 }}>
-          {[5, 6, 7, 8, 9, 10, 11].map((valeur) => (
-            <button
-              key={valeur}
-              type="button"
-              onClick={() => setAge(valeur)}
-              style={{
-                fontSize: 20, width: 48, height: 48, borderRadius: 12, background: '#fff',
-                border: age === valeur ? '3px solid #c94f3d' : '3px solid #e6d9c6',
-              }}
-            >
-              {valeur}
-            </button>
-          ))}
-        </div>
-        <button
-          type="button"
-          onClick={creer}
-          style={{ fontSize: 22, padding: '14px 32px', borderRadius: 16, border: 'none', background: '#c94f3d', color: '#fff' }}
-        >
-          C’est parti
-        </button>
-      </main>
-    )
-  }
-
   return (
-    <main style={{ display: 'grid', gap: 24, placeItems: 'center', padding: 24, minHeight: '100dvh' }}>
-      <h1 style={{ fontSize: 28 }}>Qui joue ?</h1>
-      <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
-        {profils.map((profil) => (
-          <button
-            key={profil.id}
-            type="button"
-            onClick={() => onChoisi(profil)}
-            style={{
-              display: 'grid', placeItems: 'center', gap: 4, width: 120, height: 140,
-              borderRadius: 24, border: '3px solid #e6d9c6', background: '#fff',
-            }}
+    <main className="mx-auto grid min-h-dvh w-full max-w-2xl content-center justify-items-center gap-large px-bloc py-large">
+      <h1 className="animate-apparition text-center text-3xl text-encre">Qui joue&nbsp;?</h1>
+
+      {creation ? (
+        <div className="grid w-full justify-items-center gap-bloc">
+          <input
+            value={prenom}
+            onChange={(evenement) => setPrenom(evenement.target.value)}
+            onKeyDown={(evenement) => evenement.key === 'Enter' && creer()}
+            placeholder="Ton prénom"
+            aria-label="prénom"
+            autoFocus
+            className="w-full max-w-xs rounded-carte border-4 border-craie-creuse bg-surface px-bloc py-3 text-center text-2xl text-encre placeholder:text-encre-douce/50 focus:border-accent-vif focus:outline-none"
+          />
+
+          {/* grid auto-fit : les avatars se répartissent sans jamais déborder,
+              quelle que soit la largeur de l'écran. */}
+          <div
+            className="grid w-full gap-serre"
+            style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(3.5rem, 1fr))' }}
           >
-            <span style={{ fontSize: 56 }}>{profil.avatar}</span>
-            <span style={{ fontSize: 18 }}>{profil.prenom}</span>
-          </button>
-        ))}
-        <button
-          type="button"
-          onClick={() => setCreation(true)}
-          aria-label="ajouter un profil"
-          style={{ width: 120, height: 140, borderRadius: 24, border: '3px dashed #e6d9c6', background: 'none', fontSize: 48 }}
+            {AVATARS.map((choix) => (
+              <button
+                key={choix}
+                type="button"
+                onClick={() => setAvatar(choix)}
+                aria-label={`avatar ${choix}`}
+                aria-pressed={avatar === choix}
+                className={[
+                  'grid aspect-square place-items-center rounded-carte text-3xl transition',
+                  'active:scale-95',
+                  avatar === choix
+                    ? 'bg-safran-clair ring-4 ring-accent-vif'
+                    : 'bg-surface ring-2 ring-craie-creuse',
+                ].join(' ')}
+              >
+                {choix}
+              </button>
+            ))}
+          </div>
+
+          <div className="grid w-full gap-serre" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(2.75rem, 1fr))' }}>
+            {AGES.map((valeur) => (
+              <button
+                key={valeur}
+                type="button"
+                onClick={() => setAge(valeur)}
+                aria-pressed={age === valeur}
+                className={[
+                  'grid aspect-square place-items-center rounded-carte text-xl transition',
+                  'active:scale-95',
+                  age === valeur
+                    ? 'bg-indigo text-white ring-4 ring-indigo-clair'
+                    : 'bg-surface text-encre ring-2 ring-craie-creuse',
+                ].join(' ')}
+              >
+                {valeur}
+              </button>
+            ))}
+          </div>
+
+          <Touche ton="accent" taille="grande" onClick={creer} disabled={prenom.trim().length === 0}>
+            C’est parti&nbsp;!
+          </Touche>
+        </div>
+      ) : (
+        <div
+          className="grid w-full gap-bloc"
+          style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(7rem, 1fr))' }}
         >
-          ＋
-        </button>
-      </div>
+          {profils.map((profil) => (
+            <button
+              key={profil.id}
+              type="button"
+              onClick={() => onChoisi(profil)}
+              className="animate-apparition grid justify-items-center gap-1 rounded-touche bg-surface px-bloc py-bloc shadow-relief transition-all duration-100 active:translate-y-1.5 active:shadow-none"
+            >
+              <span className="text-5xl leading-none">{profil.avatar}</span>
+              <span className="text-lg text-encre">{profil.prenom}</span>
+            </button>
+          ))}
+
+          <button
+            type="button"
+            onClick={() => setCreation(true)}
+            aria-label="ajouter un profil"
+            className="grid place-items-center rounded-touche border-4 border-dashed border-craie-creuse px-bloc py-bloc text-4xl text-encre-douce transition active:scale-95"
+          >
+            ＋
+          </button>
+        </div>
+      )}
     </main>
   )
 }

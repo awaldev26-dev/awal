@@ -1,18 +1,124 @@
-:root {
-  color-scheme: light;
-  --fond: #fdf6ec;
-  --encre: #2b2118;
-  --accent: #c94f3d;
+@import 'tailwindcss';
+
+/**
+ * Jetons de l'app enfant.
+ *
+ * Tout ce qui relève de l'apparence est ici, et nulle part ailleurs. Les noms
+ * disent le rôle — « accent », « surface », « joie » — pour qu'un changement de
+ * palette ne demande pas de renommer une classe.
+ *
+ * La palette vient des tapis et poteries kabyles : safran, terracotta, indigo,
+ * craie. Ce sont des couleurs chaudes et franches, joyeuses sans être
+ * l'arc-en-ciel générique de n'importe quelle app pour enfants.
+ */
+@theme {
+  /* ── Palette kabyle ── */
+  --color-craie: #fdf6ec;
+  --color-craie-creuse: #f4e7d3;
+  --color-safran: #f2a63b;
+  --color-safran-clair: #ffd08a;
+  --color-terracotta: #c9503d;
+  --color-terracotta-clair: #e8836f;
+  --color-indigo: #2d4a7c;
+  --color-indigo-clair: #5b7cb0;
+  --color-olive: #6a8d3f;
+  --color-prune: #7c4a6e;
+
+  /* ── Rôles ── */
+  --color-fond: var(--color-craie);
+  --color-surface: #ffffff;
+  --color-encre: #3a2b1c;
+  --color-encre-douce: #7a6552;
+  --color-accent: var(--color-terracotta);
+  --color-accent-vif: var(--color-safran);
+  --color-joie: var(--color-olive);
+
+  /* ── Rythme ── */
+  --spacing-serre: 0.5rem;
+  --spacing-carte: 0.75rem;
+  --spacing-bloc: 1.25rem;
+  --spacing-large: 2rem;
+
+  /* ── Gabarits des éléments tactiles ──
+     Généreux : un doigt d'enfant vise mal, et rater une cible use la patience.
+     Fluides pour ne jamais déborder d'un écran de téléphone. */
+  --spacing-touche: min(15rem, 68vw);
+  --spacing-vignette: min(6.5rem, 27vw);
+  --spacing-pastille: min(4.5rem, 18vw);
+
+  /* ── Arrondis, francs ── */
+  --radius-carte: 1.25rem;
+  --radius-touche: 1.75rem;
+  --radius-pilule: 9999px;
+
+  /* ── Ombres portées colorées : c'est ce qui donne le relief ── */
+  --shadow-relief: 0 6px 0 var(--color-craie-creuse);
+  --shadow-relief-accent: 0 6px 0 #a03e2e;
+  --shadow-relief-safran: 0 6px 0 #c9821f;
+  --shadow-flottant: 0 10px 24px rgb(58 43 28 / 0.16);
+
+  /* ── Typographie ── */
+  --font-jeu: var(--police-jeu), 'Trebuchet MS', system-ui, sans-serif;
+  --font-mot: var(--police-mot), var(--police-jeu), system-ui, sans-serif;
+
+  /* ── Animations ── */
+  --animate-rebond: rebond 0.28s ease-out;
+  --animate-apparition: apparition 0.32s ease-out both;
+  --animate-flotte: flotte 2.6s ease-in-out infinite;
 }
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body {
-  margin: 0;
-  height: 100%;
-  background: var(--fond);
-  color: var(--encre);
-  font-family: system-ui, -apple-system, sans-serif;
-  /* Un enfant tape partout : la sélection de texte n'apporte que des ennuis. */
-  user-select: none;
-  overscroll-behavior: none;
+
+@keyframes rebond {
+  0% { transform: scale(1); }
+  40% { transform: scale(0.94); }
+  100% { transform: scale(1); }
 }
-button { font: inherit; cursor: pointer; }
+
+@keyframes apparition {
+  0% { opacity: 0; transform: translateY(0.5rem) scale(0.96); }
+  100% { opacity: 1; transform: none; }
+}
+
+@keyframes flotte {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-0.35rem); }
+}
+
+@keyframes tombe {
+  0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(105vh) rotate(720deg); opacity: 0.9; }
+}
+
+@layer base {
+  html {
+    background: var(--color-fond);
+    color: var(--color-encre);
+    font-family: var(--font-jeu);
+    /* Un enfant tape et glisse partout : rien ne doit se sélectionner
+       ni rebondir hors de l'écran. */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    /* La cause du défilement horizontal : un élément trop large suffisait à
+       rendre toute la page glissante. */
+    overflow-x: hidden;
+    overscroll-behavior: none;
+    user-select: none;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  /* Respecte le réglage système : certains enfants sont sensibles au mouvement. */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

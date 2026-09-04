@@ -1,6 +1,24 @@
 import type { ReactNode } from 'react'
+import { Baloo_2, Fredoka } from 'next/font/google'
 import { FournisseurAwal } from './contexte/FournisseurAwal.js'
 import './globals.css'
+
+// Fredoka pour l'interface : très arrondie, franche, lisible de loin.
+const jeu = Fredoka({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--police-jeu',
+  display: 'swap',
+})
+
+// Baloo pour les mots kabyles : arrondie aussi, mais avec des formes plus
+// ouvertes — utile quand on apprend à lire.
+const mot = Baloo_2({
+  subsets: ['latin'],
+  weight: ['500', '600', '700'],
+  variable: '--police-mot',
+  display: 'swap',
+})
 
 export const metadata = {
   title: 'Awal',
@@ -9,7 +27,7 @@ export const metadata = {
 }
 
 export const viewport = {
-  themeColor: '#c94f3d',
+  themeColor: '#c9503d',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
@@ -18,10 +36,8 @@ export const viewport = {
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <html lang="fr">
-      <body>
-        {/* Le fournisseur vit dans le layout : le corpus n'est donc téléchargé
-            qu'une fois pour toute la navigation. */}
+    <html lang="fr" className={`${jeu.variable} ${mot.variable}`}>
+      <body className="min-h-dvh">
         <FournisseurAwal>{children}</FournisseurAwal>
       </body>
     </html>
