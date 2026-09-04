@@ -1,4 +1,4 @@
-const CACHE = 'awal-v9'
+const CACHE = 'awal-v11'
 
 /**
  * Toutes les routes de l'application.
@@ -17,24 +17,70 @@ const ROUTES = [
 ]
 
 /**
- * Fichiers compilés, injectés après le build par outils/precache.mjs — leurs
- * noms portent une empreinte inconnue à l'écriture de ce fichier. Sans eux,
- * une route jamais visitée en ligne resterait inutilisable hors ligne.
+ * Découvre les fichiers compilés en lisant le HTML des routes.
+ *
+ * Leurs noms portent une empreinte inconnue à l'écriture de ce fichier. Les
+ * injecter après le build ne marche pas : l'hébergeur sert le service worker
+ * tel qu'il est dans public/, pas la copie modifiée dans out/. Lire le HTML
+ * rend le préchargement indépendant du pipeline de déploiement.
+ *
+ * Sans ces fichiers, une route jamais visitée en ligne resterait inutilisable
+ * hors ligne — son HTML serait en cache, mais pas le script qui la fait vivre.
  */
-const STATIQUES = []
+async function decouvrirStatiques(routes) {
+  const trouves = new Set()
+
+  await Promise.all(
+    routes.map(async (route) => {
+      try {
+        const reponse = await fetch(route, { cache: 'no-cache' })
+        if (!reponse.ok) return
+        const html = await reponse.text()
+        for (const trouve of html.matchAll(/["'](\/_next\/static\/[^"']+)["']/g)) {
+          trouves.add(trouve[1])
+        }
+      } catch {
+        // Hors ligne à l'installation : on se contentera de ce qu'on a.
+      }
+    }),
+  )
+
+  // Les polices ne figurent pas dans le HTML mais dans les url() des feuilles
+  // de style. Sans elles, la première ouverture hors ligne s'afficherait dans
+  // la police de secours du système.
+  const feuilles = [...trouves].filter((url) => url.endsWith('.css'))
+  await Promise.all(
+    feuilles.map(async (feuille) => {
+      try {
+        const reponse = await fetch(feuille, { cache: 'no-cache' })
+        if (!reponse.ok) return
+        const css = await reponse.text()
+        for (const trouve of css.matchAll(/url\(\s*["']?(\/_next\/static\/[^"')]+)["']?\s*\)/g)) {
+          trouves.add(trouve[1])
+        }
+      } catch {
+        // Idem : l'absence de réseau ne doit pas empêcher l'installation.
+      }
+    }),
+  )
+
+  return [...trouves]
+}
 
 /** Au-delà, on sert le cache et on laisse la requête finir en arrière-plan. */
 const DELAI_RESEAU_MS = 1500
 
 self.addEventListener('install', (evenement) => {
   evenement.waitUntil(
-    caches.open(CACHE).then((cache) =>
+    (async () => {
+      const cache = await caches.open(CACHE)
+      const statiques = await decouvrirStatiques(ROUTES)
       // Une par une plutôt qu'addAll : un échec isolé ne doit pas faire
       // capoter l'installation entière du service worker.
-      Promise.all(
-        [...ROUTES, ...STATIQUES].map((url) => cache.add(url).catch(() => undefined)),
-      ),
-    ),
+      await Promise.all(
+        [...ROUTES, ...statiques].map((url) => cache.add(url).catch(() => undefined)),
+      )
+    })(),
   )
   self.skipWaiting()
 })
