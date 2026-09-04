@@ -6,7 +6,7 @@
  * préchargement, une route jamais visitée en ligne reste inaccessible hors
  * ligne — son HTML est en cache, mais pas le script qui la fait vivre.
  */
-import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import { join, relative } from 'node:path'
 
 const racine = new URL('../apps/enfant/out', import.meta.url).pathname
@@ -17,6 +17,15 @@ function parcourir(dossier) {
     const chemin = join(dossier, nom)
     return statSync(chemin).isDirectory() ? parcourir(chemin) : [chemin]
   })
+}
+
+if (!existsSync(statique)) {
+  console.error(
+    `Dossier introuvable : ${statique}\n` +
+      `Le build a-t-il bien produit son export statique dans « out/ » ?\n` +
+      `Ce script doit tourner après « next build », depuis le dossier de l'app.`,
+  )
+  process.exit(1)
 }
 
 const fichiers = parcourir(statique)

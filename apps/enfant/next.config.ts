@@ -1,9 +1,6 @@
 import type { NextConfig } from 'next'
 
 const config: NextConfig = {
-  // Le build écrit ailleurs que le serveur de développement : lancer les deux
-  // en parallèle écrasait sinon les fichiers servis, et la page perdait son CSS.
-  distDir: process.env.NEXT_DIST_DIR ?? '.next',
   // Un yarn.lock traîne dans le dossier personnel : sans cette ligne, Next le
   // prend pour la racine du projet et le signale à chaque démarrage.
   outputFileTracingRoot: new URL('../..', import.meta.url).pathname,
