@@ -10,3 +10,6 @@ apps/studio/medias/
 apps/enfant/public/audio/
 apps/enfant/public/corpus/
 out/
+
+# Cache de compilation TypeScript.
+*.tsbuildinfo
