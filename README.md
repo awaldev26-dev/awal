@@ -95,16 +95,82 @@ pnpm tsx seed/publier.ts                    # publier une nouvelle version du co
 pnpm tsx seed/audio-remplacement.ts --purger  # effacer les audios synthétiques
 ```
 
-## Passer en production
+## Déployer
 
-1. Créer une base Postgres (Neon ou Supabase) et un bucket R2.
-2. Renseigner les variables R2 et `DATABASE_URL`, passer `STOCKAGE=r2`.
-3. `pnpm db:appliquer && pnpm db:seed` sur la base distante.
-4. Déployer le studio (Vercel) et publier depuis son interface.
-5. Déployer `apps/enfant/out` en statique, avec `NEXT_PUBLIC_URL_CORPUS` pointant sur R2.
+**Le studio n'a pas besoin d'être déployé.** Il ne sert qu'à toi, tourne sur ta
+machine avec son Postgres en Docker, et publie sur R2. Seule l'app enfant part
+en ligne. Cela t'épargne une base distante, une authentification exposée et des
+secrets en production. Le seul renoncement : tu ne peux enregistrer que depuis
+cette machine.
 
-Le studio peut rester sur ta machine si tu préfères : seul l'artefact publié
-doit être accessible aux enfants.
+| Composant | Où | Pourquoi |
+|---|---|---|
+| App enfant | Vercel | c'est elle que les enfants ouvrent |
+| Corpus et audios | R2 | servis à l'app enfant |
+| Studio | ta machine | tu es le seul à l'utiliser |
+| Postgres | Docker local | il ne sert qu'au studio |
+
+### 1. Le bucket R2
+
+Créer le bucket, puis :
+
+- **Settings → Public Development URL** : activer. C'est la valeur de
+  `R2_URL_PUBLIQUE`, **barre oblique finale comprise**.
+- **Settings → CORS Policy** : coller le contenu de `docs/cors-r2.json`, en
+  remplaçant le domaine Vercel par le tien.
+- **Manage API tokens** : créer un jeton *Object Read & Write*. Il donne
+  `R2_ACCESS_KEY_ID` et `R2_SECRET_ACCESS_KEY` ; l'identifiant de compte se lit
+  en haut de la page R2.
+
+Sans la règle CORS, le corpus ne se chargera pas et les audios ne seront pas mis
+en cache — l'app ne démarrera pas, et l'échec du cache sera silencieux.
+
+### 2. Vérifier avant de publier
+
+```bash
+cd apps/studio
+# renseigner STOCKAGE=r2 et les cinq variables R2_* dans .env.local
+set -a && . ./.env.local && set +a
+pnpm tsx seed/verifier-r2.ts
+```
+
+Le script contrôle les variables, l'écriture et la lecture par l'API S3, l'accès
+public, et la règle CORS — y compris l'en-tête `Range`, sans lequel les audios
+ne se mettent pas en cache. Chaque échec indique quoi corriger.
+
+### 3. Publier le corpus sur R2
+
+```bash
+pnpm tsx seed/audio-remplacement.ts --purger   # les placeholders du disque
+pnpm tsx seed/audio-remplacement.ts            # les régénérer sur R2
+pnpm tsx seed/publier.ts
+```
+
+**Bascule sur R2 avant d'enregistrer pour de vrai.** Les audios actuels sont des
+placeholders jetables ; tes vrais enregistrements, non.
+
+### 4. Déployer l'app enfant
+
+Le dépôt doit être sur GitHub pour le déploiement automatique. Pour un premier
+essai sans Git : `cd apps/enfant && npx vercel`.
+
+Dans le projet Vercel :
+
+| Réglage | Valeur |
+|---|---|
+| Root Directory | `apps/enfant` |
+| Framework | Next.js (détecté) |
+| Variable | `NEXT_PUBLIC_URL_CORPUS` = `https://<ton-r2>/corpus/actuel.json` |
+
+Vercel reconnaît `pnpm-workspace.yaml` et résout `@awal/corpus` depuis la
+racine. Une fois l'URL Vercel connue, l'ajouter dans `AllowedOrigins` de la
+règle CORS.
+
+### 5. Ensuite
+
+À chaque séance d'enregistrement : « Publier le corpus » dans le studio suffit.
+L'app déployée récupère la nouvelle version au lancement suivant — elle
+interroge le réseau en premier pour le corpus, précisément pour ça.
 
 ## Routes
 
