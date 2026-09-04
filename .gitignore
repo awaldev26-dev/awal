@@ -13,3 +13,6 @@ out/
 
 # Cache de compilation TypeScript.
 *.tsbuildinfo
+
+# Sortie de build, distincte du .next du serveur de développement.
+.next-build/
