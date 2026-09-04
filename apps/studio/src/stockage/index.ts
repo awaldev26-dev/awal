@@ -1,3 +1,10 @@
+/**
+ * Fabrique de stockage — **côté serveur uniquement**.
+ *
+ * Ce fichier réexporte StockageDisque, qui importe node:fs. Un composant
+ * client qui viendrait y chercher une fonction utilitaire ferait échouer le
+ * build. Pour les pictos, importer directement `./pictos.js`, qui est pur.
+ */
 import type { VerificateurMedias } from '@awal/corpus'
 import { StockageDisque, racineParDefaut } from './disque.js'
 import { StockageR2 } from './r2.js'

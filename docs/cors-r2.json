@@ -2,7 +2,7 @@
   {
     "AllowedOrigins": [
       "http://localhost:3002",
-      "https://REMPLACER-PAR-TON-DOMAINE-VERCEL"
+      "https://awal-enfant.vercel.app"
     ],
     "AllowedMethods": ["GET", "HEAD"],
     "AllowedHeaders": ["range"],

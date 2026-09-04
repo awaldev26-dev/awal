@@ -1,7 +1,78 @@
-:root { color-scheme: light dark; }
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, sans-serif;
-  line-height: 1.5;
+@import 'tailwindcss';
+
+/**
+ * Jetons du studio.
+ *
+ * Tout ce qui relève de l'apparence est déclaré ici, et nulle part ailleurs :
+ * changer une valeur la change dans toute l'application. Les noms disent le
+ * rôle et non la teinte — « surface », « bordure », « accent » — pour qu'un
+ * changement de palette ne demande pas de renommer les classes.
+ *
+ * Chaque jeton devient une classe : --color-surface donne bg-surface,
+ * text-surface, border-surface ; --radius-panneau donne rounded-panneau.
+ */
+@theme {
+  /* ── Surfaces, du fond vers le premier plan ── */
+  --color-fond: #f4f5f7;
+  --color-surface: #ffffff;
+  --color-surface-creuse: #eceef1;
+  --color-surface-active: #e8f0fe;
+
+  /* ── Texte, par importance ── */
+  --color-encre: #1c2430;
+  --color-encre-douce: #5b6674;
+  --color-encre-faible: #8d97a4;
+
+  /* ── Traits ── */
+  --color-bordure: #dde1e7;
+  --color-bordure-forte: #c3cad4;
+
+  /* ── Accent et états ── */
+  --color-accent: #2f6fed;
+  --color-accent-sombre: #2257c4;
+  --color-accent-pale: #dce8ff;
+  --color-succes: #17864b;
+  --color-succes-pale: #dcf3e6;
+  --color-alerte: #b4690e;
+  --color-alerte-pale: #fdf0da;
+  --color-danger: #c0392b;
+  --color-danger-pale: #fce8e6;
+
+  /* ── Rythme vertical et horizontal ── */
+  --spacing-encart: 0.75rem;
+  --spacing-bloc: 1.25rem;
+  --spacing-section: 2rem;
+
+  /* ── Gabarits de la mise en page ── */
+  --spacing-liste: 22rem;
+  --spacing-barre: 3.5rem;
+
+  /* ── Arrondis ── */
+  --radius-champ: 0.5rem;
+  --radius-panneau: 0.75rem;
+  --radius-pilule: 9999px;
+
+  /* ── Ombres, discrètes : c'est un outil de travail ── */
+  --shadow-panneau: 0 1px 2px rgb(28 36 48 / 0.06), 0 1px 3px rgb(28 36 48 / 0.1);
+  --shadow-flottant: 0 4px 12px rgb(28 36 48 / 0.12);
+
+  /* ── Typographie ── */
+  --font-interface: var(--police-interface), system-ui, -apple-system, sans-serif;
+  /* Le kabyle transcrit se lit mieux en mono : « 3 » et « gh » y sont nets. */
+  --font-kabyle: var(--police-kabyle), ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    background: var(--color-fond);
+    color: var(--color-encre);
+    font-family: var(--font-interface);
+  }
+
+  /* Une cible de saisie visible au clavier : on navigue beaucoup à la tabulation
+     quand on enchaîne deux cents entrées. */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
 }

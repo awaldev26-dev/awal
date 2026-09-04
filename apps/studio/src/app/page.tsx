@@ -1,31 +1,28 @@
-import Link from 'next/link'
+import { asc } from 'drizzle-orm'
 import { db } from '@/db/index.js'
-import { entrees, publications } from '@/db/schema.js'
-import { Publication } from './Publication.js'
+import { entrees, publications, themes } from '@/db/schema.js'
+import { creerStockage } from '@/stockage/index.js'
+import { Studio } from './composants/Studio.js'
 
 export const dynamic = 'force-dynamic'
 
-export default async function Accueil() {
-  const [lignes, faites] = await Promise.all([
-    db.select().from(entrees),
+export default async function Page() {
+  const [lignes, listeThemes, faites] = await Promise.all([
+    db.select().from(entrees).orderBy(asc(entrees.ordre), asc(entrees.id)),
+    db.select().from(themes).orderBy(asc(themes.ordre)),
     db.select().from(publications),
   ])
-  const enregistrees = lignes.filter((l) => l.audio).length
-  const derniere = faites.sort((a, b) => b.version - a.version)[0]
 
+  const derniere = faites.map((publication) => publication.version).sort((a, b) => b - a)[0] ?? null
+
+  // Le studio lit ses propres médias par sa route /medias, quel que soit le
+  // stockage : c'est la seule URL valable en développement comme en production.
   return (
-    <main style={{ padding: 24, maxWidth: 560 }}>
-      <h1>Studio Awal</h1>
-      <p>
-        <strong>{enregistrees}</strong> entrées enregistrées sur <strong>{lignes.length}</strong>.
-      </p>
-      <p>
-        {derniere
-          ? `Dernière publication : v${derniere.version}, ${derniere.nbEntrees} entrées.`
-          : 'Jamais publié.'}
-      </p>
-      <p><Link href="/entrees">Saisir et enregistrer →</Link></p>
-      <Publication />
-    </main>
+    <Studio
+      entrees={lignes}
+      themes={listeThemes}
+      derniereVersion={derniere}
+      urlBase="/medias/"
+    />
   )
 }

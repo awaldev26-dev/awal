@@ -1,9 +1,0 @@
-- generic [active] [ref=e1]:
-  - main [ref=e2]:
-    - heading "Qui joue ?" [level=1] [ref=e3]
-    - generic [ref=e26]:
-      - button "🦊 Idir" [ref=e27] [cursor=pointer]:
-        - generic [ref=e28]: 🦊
-        - generic [ref=e29]: Idir
-      - button "ajouter un profil" [ref=e30] [cursor=pointer]: ＋
-  - alert [ref=e25]
