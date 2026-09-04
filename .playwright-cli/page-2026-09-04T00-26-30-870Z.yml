@@ -1,0 +1,11 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - heading "Qui joue ?" [level=1] [ref=e3]
+    - generic [ref=e35]:
+      - button "🦊 Idir" [ref=e36] [cursor=pointer]:
+        - generic [ref=e37]: 🦊
+        - generic [ref=e38]: Idir
+      - button "ajouter un profil" [ref=e39] [cursor=pointer]: ＋
+  - button "Open Next.js Dev Tools" [ref=e31] [cursor=pointer]:
+    - img [ref=e32]
+  - alert [ref=e25]

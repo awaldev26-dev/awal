@@ -1,0 +1,8 @@
+[      17ms] Error: Minified React error #418; visit https://react.dev/errors/418?args[]=HTML&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+    at rD (http://localhost:3002/_next/static/chunks/5174445a-65bcb23bbdc4c8f0.js:1:35055)
+    at oq (http://localhost:3002/_next/static/chunks/5174445a-65bcb23bbdc4c8f0.js:1:84559)
+    at ik (http://localhost:3002/_next/static/chunks/5174445a-65bcb23bbdc4c8f0.js:1:114675)
+    at http://localhost:3002/_next/static/chunks/5174445a-65bcb23bbdc4c8f0.js:1:110723
+    at iu (http://localhost:3002/_next/static/chunks/5174445a-65bcb23bbdc4c8f0.js:1:110824)
+    at iX (http://localhost:3002/_next/static/chunks/5174445a-65bcb23bbdc4c8f0.js:1:132927)
+    at MessagePort.w (http://localhost:3002/_next/static/chunks/385-eb06edfc59167d6f.js:1:131269)

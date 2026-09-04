@@ -1,10 +1,41 @@
-const CACHE = 'awal-v5'
+const CACHE = 'awal-v9'
+
+/**
+ * Toutes les routes de l'application.
+ *
+ * La navigation étant côté client, le HTML de ces pages n'est jamais demandé
+ * en usage normal — donc jamais mis en cache. Sans ce préchargement, recharger
+ * hors ligne sur autre chose que la racine échouerait.
+ */
+const ROUTES = [
+  '/',
+  '/jouer',
+  '/jouer/session',
+  '/jouer/bilan',
+  '/jouer/collection',
+  '/mots',
+]
+
+/**
+ * Fichiers compilés, injectés après le build par outils/precache.mjs — leurs
+ * noms portent une empreinte inconnue à l'écriture de ce fichier. Sans eux,
+ * une route jamais visitée en ligne resterait inutilisable hors ligne.
+ */
+const STATIQUES = []
 
 /** Au-delà, on sert le cache et on laisse la requête finir en arrière-plan. */
 const DELAI_RESEAU_MS = 1500
 
 self.addEventListener('install', (evenement) => {
-  evenement.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(['/'])))
+  evenement.waitUntil(
+    caches.open(CACHE).then((cache) =>
+      // Une par une plutôt qu'addAll : un échec isolé ne doit pas faire
+      // capoter l'installation entière du service worker.
+      Promise.all(
+        [...ROUTES, ...STATIQUES].map((url) => cache.add(url).catch(() => undefined)),
+      ),
+    ),
+  )
   self.skipWaiting()
 })
 
@@ -44,12 +75,22 @@ async function cacheDAbord(requete) {
 
   const reponse = await fetch(requete)
 
-  // Un élément <audio> demande souvent un fragment (en-tête Range) et reçoit un
-  // 206 Partial Content, que l'API Cache refuse de stocker — silencieusement.
-  // On redemande alors la ressource entière, par une requête neuve sans Range.
-  if (reponse.status === 206) {
-    const cache = await caches.open(CACHE)
-    cache.add(new Request(requete.url, { mode: 'cors' })).catch(() => undefined)
+  // Deux réponses que l'API Cache refuse de stocker, toutes deux en silence :
+  //   — le 206 Partial Content, qu'un <audio> obtient en demandant un fragment ;
+  //   — la réponse opaque (type 'opaque', status 0) d'une requête no-cors vers
+  //     une autre origine, ce que fait <audio> pour un fichier sur R2.
+  //
+  // On redemande alors la ressource entière en CORS — la règle du bucket
+  // l'autorise — et on sert cette réponse-là plutôt que l'originale : elle est
+  // à la fois lisible par l'élément audio et stockable dans le cache.
+  if (reponse.status === 206 || reponse.type === 'opaque' || reponse.status === 0) {
+    try {
+      const complete = await fetch(requete.url, { mode: 'cors' })
+      if (complete.ok) return mettreEnCache(new Request(requete.url), complete)
+    } catch {
+      // Pas de CORS sur cette origine : on se rabat sur la réponse d'origine,
+      // jouable mais non mise en cache.
+    }
     return reponse
   }
 
@@ -65,7 +106,9 @@ async function cacheDAbord(requete) {
  * surtout on ne dépend plus d'un réseau qui peut pendre.
  */
 async function cachePuisReseau(requete) {
-  const enCache = await caches.match(requete)
+  // ignoreSearch : « /mots?theme=les-animaux » doit trouver « /mots » en cache.
+  // Le paramètre est lu côté client, le HTML servi est le même.
+  const enCache = await caches.match(requete, { ignoreSearch: true })
   const reseau = fetch(requete)
     .then((reponse) => mettreEnCache(requete, reponse))
     .catch(() => undefined)

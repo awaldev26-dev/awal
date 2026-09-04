@@ -1,0 +1,23 @@
+- main [ref=e2]:
+  - heading "Qui joue ?" [level=1] [ref=e3]
+  - textbox "Prénom" [ref=e4]
+  - generic [ref=e5]:
+    - button "avatar 🦊" [ref=e6]: 🦊
+    - button "avatar 🐢" [ref=e7]: 🐢
+    - button "avatar 🦁" [ref=e8]: 🦁
+    - button "avatar 🐝" [ref=e9]: 🐝
+    - button "avatar 🦋" [ref=e10]: 🦋
+    - button "avatar 🐬" [ref=e11]: 🐬
+    - button "avatar 🦉" [ref=e12]: 🦉
+    - button "avatar 🐿️" [ref=e13]: 🐿️
+    - button "avatar 🦔" [ref=e14]: 🦔
+    - button "avatar 🐧" [ref=e15]: 🐧
+  - generic [ref=e16]:
+    - button "5" [ref=e17]
+    - button "6" [ref=e18]
+    - button "7" [ref=e19]
+    - button "8" [ref=e20]
+    - button "9" [ref=e21]
+    - button "10" [ref=e22]
+    - button "11" [ref=e23]
+  - button "C’est parti" [ref=e24]

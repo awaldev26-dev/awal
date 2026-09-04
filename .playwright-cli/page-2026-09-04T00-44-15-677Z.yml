@@ -1,0 +1,55 @@
+- generic [active] [ref=e1]:
+  - alert [ref=e2]
+  - main [ref=e3]:
+    - generic [ref=e4]:
+      - button "retour" [ref=e5] [cursor=pointer]: ←
+      - heading "Écouter les mots" [level=1] [ref=e6]
+    - generic [ref=e7]:
+      - button "👫 La famille 19 mots" [ref=e8] [cursor=pointer]:
+        - generic [ref=e9]: 👫
+        - generic [ref=e10]: La famille
+        - generic [ref=e11]: 19 mots
+      - button "🧍 Le corps 18 mots" [ref=e12] [cursor=pointer]:
+        - generic [ref=e13]: 🧍
+        - generic [ref=e14]: Le corps
+        - generic [ref=e15]: 18 mots
+      - button "🐾 Les animaux 20 mots" [ref=e16] [cursor=pointer]:
+        - generic [ref=e17]: 🐾
+        - generic [ref=e18]: Les animaux
+        - generic [ref=e19]: 20 mots
+      - button "🍽 Manger et boire 23 mots" [ref=e20] [cursor=pointer]:
+        - generic [ref=e21]: 🍽
+        - generic [ref=e22]: Manger et boire
+        - generic [ref=e23]: 23 mots
+      - button "🎨 Les couleurs 5 mots" [ref=e24] [cursor=pointer]:
+        - generic [ref=e25]: 🎨
+        - generic [ref=e26]: Les couleurs
+        - generic [ref=e27]: 5 mots
+      - button "🔢 Les nombres 10 mots" [ref=e28] [cursor=pointer]:
+        - generic [ref=e29]: 🔢
+        - generic [ref=e30]: Les nombres
+        - generic [ref=e31]: 10 mots
+      - button "🏠 La maison 10 mots" [ref=e32] [cursor=pointer]:
+        - generic [ref=e33]: 🏠
+        - generic [ref=e34]: La maison
+        - generic [ref=e35]: 10 mots
+      - button "🌍 Dehors et le temps 26 mots" [ref=e36] [cursor=pointer]:
+        - generic [ref=e37]: 🌍
+        - generic [ref=e38]: Dehors et le temps
+        - generic [ref=e39]: 26 mots
+      - button "👕 Les vêtements 7 mots" [ref=e40] [cursor=pointer]:
+        - generic [ref=e41]: 👕
+        - generic [ref=e42]: Les vêtements
+        - generic [ref=e43]: 7 mots
+      - button "🏃 Les verbes 54 mots" [ref=e44] [cursor=pointer]:
+        - generic [ref=e45]: 🏃
+        - generic [ref=e46]: Les verbes
+        - generic [ref=e47]: 54 mots
+      - button "💬 Politesse et mots-outils 21 mots" [ref=e48] [cursor=pointer]:
+        - generic [ref=e49]: 💬
+        - generic [ref=e50]: Politesse et mots-outils
+        - generic [ref=e51]: 21 mots
+      - button "🗨 Phrases 30 phrases" [ref=e52] [cursor=pointer]:
+        - generic [ref=e53]: 🗨
+        - generic [ref=e54]: Phrases
+        - generic [ref=e55]: 30 phrases

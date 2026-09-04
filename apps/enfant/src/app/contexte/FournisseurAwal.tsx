@@ -68,6 +68,10 @@ export function FournisseurAwal({ children }: { children: ReactNode }) {
   }, [])
 
   useEffect(() => {
+    // Pas de service worker en développement : Next y sert des fichiers dont
+    // l'URL change à chaque démarrage, ce qui rend le cache inopérant et, pire,
+    // masque les modifications de code derrière une version périmée.
+    if (process.env.NODE_ENV !== 'production') return
     if ('serviceWorker' in navigator) {
       void navigator.serviceWorker.register('/sw.js').catch(() => undefined)
     }
