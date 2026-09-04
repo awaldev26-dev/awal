@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import type { Artefact, Entree, Theme } from '@awal/corpus'
 import type { Lecteur } from '@/audio/lecteur.js'
 import { urlAudio } from '@/corpus/charger.js'
+import { BoutonRetour } from '@/interface/BoutonRetour.js'
 import { Picto } from '@/jeux/Picto.js'
 
 /**
@@ -46,14 +47,7 @@ export function Imagier({
   return (
     <main className="mx-auto w-full max-w-3xl px-bloc pt-carte pb-large">
       <header className="flex items-center gap-carte">
-        <button
-          type="button"
-          onClick={retour}
-          aria-label="retour"
-          className="grid size-12 shrink-0 place-items-center rounded-pilule bg-surface text-2xl shadow-relief transition active:translate-y-1 active:shadow-none"
-        >
-          ←
-        </button>
+        <BoutonRetour onClick={retour} />
         {choisi ? (
           <h1
             className="flex min-w-0 items-center gap-2 font-mot text-2xl"
@@ -106,11 +100,17 @@ function ListeThemes({
             key={theme.id}
             type="button"
             onClick={() => onChoisir(theme)}
-            className="grid content-center justify-items-center gap-1 rounded-touche bg-surface px-bloc py-bloc transition-all duration-100 active:translate-y-1.5 active:shadow-none"
-            style={{ boxShadow: `0 6px 0 ${theme.couleur}` }}
+            className="grid content-center justify-items-center gap-1 rounded-touche bg-surface px-bloc py-bloc transition-transform duration-100 active:scale-[0.97]"
+            // Aura de la couleur du thème : c'est elle qui identifie la tuile,
+            // sans le contour net qui faisait « formulaire ».
+            style={{ boxShadow: `0 0 22px 5px ${theme.couleur}4d` }}
           >
             <Picto picto={theme.picto} artefact={artefact} taille="2.75rem" />
-            <span className="text-center leading-tight text-encre">{theme.nom}</span>
+            {/* Le nom porte la couleur du thème : c'est ce qui l'identifie,
+                maintenant que le contour net a disparu. */}
+            <span className="text-center leading-tight" style={{ color: theme.couleur }}>
+              {theme.nom}
+            </span>
             <span className="text-sm text-encre-douce">
               {nombre} {unite}
             </span>
@@ -153,10 +153,15 @@ function Cartes({
           onClick={() => ecouter(entree)}
           className={[
             'grid content-center justify-items-center gap-1 rounded-carte px-2 py-carte',
-            'transition-all duration-150 active:translate-y-1 active:shadow-none',
+            'transition-transform duration-150 active:scale-[0.97]',
             enCours === entree.id ? 'animate-rebond bg-safran-clair/40' : 'bg-surface',
           ].join(' ')}
-          style={{ boxShadow: `0 5px 0 ${enCours === entree.id ? couleur : 'var(--color-craie-creuse)'}` }}
+          style={{
+            boxShadow:
+              enCours === entree.id
+                ? `0 0 22px 4px ${couleur}55`
+                : '0 0 14px 2px rgb(58 43 28 / 0.07)',
+          }}
         >
           <Picto picto={entree.picto} artefact={artefact} taille="min(2.6rem, 11vw)" />
           <span className="text-center text-sm leading-tight text-encre-douce">{entree.fr}</span>

@@ -3,6 +3,7 @@
 import type { Artefact } from '@awal/corpus'
 import { estAcquise } from '@/moteur/leitner.js'
 import type { Progression } from '@/moteur/types.js'
+import { BoutonRetour } from '@/interface/BoutonRetour.js'
 import { Picto } from '@/jeux/Picto.js'
 
 export function Collection({
@@ -16,14 +17,7 @@ export function Collection({
 }) {
   return (
     <main className="mx-auto w-full max-w-3xl px-bloc pt-carte pb-large">
-      <button
-        type="button"
-        onClick={onRetour}
-        aria-label="retour"
-        className="sticky top-carte z-10 grid size-12 place-items-center rounded-pilule bg-surface text-2xl shadow-relief transition active:translate-y-1 active:shadow-none"
-      >
-        ←
-      </button>
+      <BoutonRetour onClick={onRetour} className="sticky top-carte z-10" />
 
       {artefact.themes.map((theme) => {
         const duTheme = artefact.entrees.filter((entree) => entree.themes.includes(theme.id))
@@ -66,11 +60,11 @@ export function Collection({
                     title={gagnee ? entree.kabyle : undefined}
                     className={[
                       'grid aspect-square place-items-center rounded-carte transition',
-                      gagnee
-                        ? 'bg-surface shadow-relief'
-                        : 'bg-craie-creuse/70 opacity-40 grayscale',
+                      gagnee ? 'bg-surface' : 'bg-craie-creuse/70 opacity-40 grayscale',
                     ].join(' ')}
-                    style={gagnee ? { boxShadow: `0 4px 0 ${theme.couleur}55` } : undefined}
+                    style={
+                      gagnee ? { boxShadow: `0 0 14px 2px ${theme.couleur}3d` } : undefined
+                    }
                   >
                     <Picto picto={entree.picto} artefact={artefact} taille="min(2rem, 7vw)" />
                   </div>

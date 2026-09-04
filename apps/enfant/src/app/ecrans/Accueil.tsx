@@ -29,7 +29,7 @@ export function Accueil({
           type="button"
           onClick={onChangerProfil}
           aria-label="changer de profil"
-          className="grid size-14 place-items-center rounded-pilule bg-surface text-3xl shadow-relief transition active:translate-y-1 active:shadow-none"
+          className="grid size-14 place-items-center rounded-pilule bg-surface text-3xl shadow-halo transition-transform active:scale-[0.95]"
         >
           {profil.avatar}
         </button>
@@ -48,10 +48,10 @@ export function Accueil({
           disabled={fini}
           className={[
             'grid w-touche place-items-center gap-1 rounded-touche py-large text-center',
-            'transition-all duration-100 active:translate-y-1.5 active:shadow-none',
+            'transition-transform duration-100 active:scale-[0.97]',
             fini
-              ? 'bg-joie text-white shadow-relief'
-              : 'animate-flotte bg-accent text-white shadow-relief-accent',
+              ? 'bg-joie text-white'
+              : 'animate-flotte bg-accent text-white ',
           ].join(' ')}
         >
           <span className="text-5xl leading-none">{fini ? '🎉' : '▶'}</span>

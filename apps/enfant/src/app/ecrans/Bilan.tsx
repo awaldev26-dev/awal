@@ -42,7 +42,7 @@ export function Bilan({
           {acquises.slice(0, 5).map((entree, rang) => (
             <span
               key={entree.id}
-              className="animate-apparition grid w-pastille place-items-center rounded-carte bg-surface py-3 shadow-relief"
+              className="animate-apparition grid w-pastille place-items-center rounded-carte bg-surface py-3 shadow-halo"
               style={{ animationDelay: `${rang * 90}ms` }}
             >
               <Picto picto={entree.picto} artefact={artefact} taille="2.5rem" />

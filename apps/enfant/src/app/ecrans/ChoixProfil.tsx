@@ -47,7 +47,7 @@ export function ChoixProfil({
             placeholder="Ton prénom"
             aria-label="prénom"
             autoFocus
-            className="w-full max-w-xs rounded-carte border-4 border-craie-creuse bg-surface px-bloc py-3 text-center text-2xl text-encre placeholder:text-encre-douce/50 focus:border-accent-vif focus:outline-none"
+            className="w-full max-w-xs rounded-carte bg-surface shadow-halo px-bloc py-3 text-center text-2xl text-encre placeholder:text-encre-douce/50 focus:shadow-halo-fort focus:outline-none"
           />
 
           {/* grid auto-fit : les avatars se répartissent sans jamais déborder,
@@ -67,8 +67,8 @@ export function ChoixProfil({
                   'grid aspect-square place-items-center rounded-carte text-3xl transition',
                   'active:scale-95',
                   avatar === choix
-                    ? 'bg-safran-clair ring-4 ring-accent-vif'
-                    : 'bg-surface ring-2 ring-craie-creuse',
+                    ? 'bg-safran-clair shadow-halo-fort'
+                    : 'bg-surface shadow-halo',
                 ].join(' ')}
               >
                 {choix}
@@ -87,8 +87,8 @@ export function ChoixProfil({
                   'grid aspect-square place-items-center rounded-carte text-xl transition',
                   'active:scale-95',
                   age === valeur
-                    ? 'bg-indigo text-white ring-4 ring-indigo-clair'
-                    : 'bg-surface text-encre ring-2 ring-craie-creuse',
+                    ? 'bg-indigo text-white shadow-halo-fort'
+                    : 'bg-surface text-encre shadow-halo',
                 ].join(' ')}
               >
                 {valeur}
@@ -110,7 +110,7 @@ export function ChoixProfil({
               key={profil.id}
               type="button"
               onClick={() => onChoisi(profil)}
-              className="animate-apparition grid justify-items-center gap-1 rounded-touche bg-surface px-bloc py-bloc shadow-relief transition-all duration-100 active:translate-y-1.5 active:shadow-none"
+              className="animate-apparition grid justify-items-center gap-1 rounded-touche bg-surface px-bloc py-bloc shadow-halo transition-transform duration-100 active:scale-[0.97]"
             >
               <span className="text-5xl leading-none">{profil.avatar}</span>
               <span className="text-lg text-encre">{profil.prenom}</span>
@@ -121,9 +121,21 @@ export function ChoixProfil({
             type="button"
             onClick={() => setCreation(true)}
             aria-label="ajouter un profil"
-            className="grid place-items-center rounded-touche border-4 border-dashed border-craie-creuse px-bloc py-bloc text-4xl text-encre-douce transition active:scale-95"
+            className="grid place-items-center rounded-touche border-4 border-dashed border-craie-creuse px-bloc py-bloc text-encre-douce transition-transform active:scale-95"
           >
-            ＋
+            {/* Un tracé plutôt que le caractère « ＋ », qui n'est pas centré
+                dans sa boîte de glyphe. */}
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden
+              className="size-9"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            >
+              <path d="M12 5v14M5 12h14" />
+            </svg>
           </button>
         </div>
       )}

@@ -47,15 +47,21 @@
   --spacing-pastille: min(4.5rem, 18vw);
 
   /* ── Arrondis, francs ── */
-  --radius-carte: 1.25rem;
-  --radius-touche: 1.75rem;
+  --radius-carte: 1.5rem;
+  --radius-touche: 2.25rem;
   --radius-pilule: 9999px;
 
-  /* ── Ombres portées colorées : c'est ce qui donne le relief ── */
-  --shadow-relief: 0 6px 0 var(--color-craie-creuse);
-  --shadow-relief-accent: 0 6px 0 #a03e2e;
-  --shadow-relief-safran: 0 6px 0 #c9821f;
-  --shadow-flottant: 0 10px 24px rgb(58 43 28 / 0.16);
+  /* ── Profondeur ──
+     Un halo diffus autour de la tuile entière, pas une ombre portée sous elle :
+     l'ombre dure vers le bas simulait un bouton en relief, ce qui a vieilli.
+     Le halo se répand dans toutes les directions et reste discret — il détache
+     la tuile du fond sans prétendre qu'elle est bombée. */
+  --shadow-halo: 0 0 18px 2px rgb(58 43 28 / 0.09);
+  --shadow-halo-fort: 0 0 26px 4px rgb(58 43 28 / 0.14);
+  --shadow-flottant: 0 0 32px 6px rgb(58 43 28 / 0.16);
+
+  /* Contour très pâle, sous le halo : il rattrape les fonds clairs. */
+  --color-contour: #f2e7d6;
 
   /* ── Typographie ── */
   --font-jeu: var(--police-jeu), 'Trebuchet MS', system-ui, sans-serif;

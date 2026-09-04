@@ -72,7 +72,7 @@ export function EcouteEtChoisis({ lot, artefact, lecteur, onTermine }: Propriete
         type="button"
         onClick={() => lecteur.jouer(urlAudio(artefact, cible))}
         aria-label="réécouter"
-        className="grid size-24 place-items-center rounded-pilule bg-accent-vif text-5xl shadow-relief-safran transition-all duration-100 active:translate-y-1.5 active:shadow-none"
+        className="grid size-24 place-items-center rounded-pilule bg-accent-vif text-5xl  transition-transform duration-100 active:scale-[0.97]"
       >
         🔊
       </button>
@@ -93,12 +93,12 @@ export function EcouteEtChoisis({ lot, artefact, lecteur, onTermine }: Propriete
               aria-label={entree.fr}
               className={[
                 'grid aspect-square place-items-center rounded-touche transition-all duration-150',
-                'active:translate-y-1.5 active:shadow-none',
+                'active:scale-[0.97]',
                 gagnante
                   ? 'animate-rebond bg-joie/15 ring-4 ring-joie shadow-none'
                   : ecartee
                     ? 'bg-craie-creuse/60 opacity-35 shadow-none'
-                    : 'bg-surface shadow-relief',
+                    : 'bg-surface shadow-halo',
               ].join(' ')}
             >
               <Picto picto={entree.picto} artefact={artefact} taille="min(5.25rem, 24vw)" />
