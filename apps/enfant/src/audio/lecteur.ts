@@ -26,6 +26,10 @@ export class Lecteur {
           new Promise<void>((resoudre) => {
             if (this.cache.has(url)) return resoudre()
             const audio = new Audio()
+            // Sans crossOrigin, une requête média vers une autre origine part
+            // en no-cors et contourne le service worker : le fichier se lit,
+            // mais ne se met jamais en cache — donc pas de son hors ligne.
+            audio.crossOrigin = 'anonymous'
             audio.preload = 'auto'
             const fini = () => resoudre()
             audio.addEventListener('canplaythrough', fini, { once: true })
@@ -41,7 +45,9 @@ export class Lecteur {
   async jouer(url: string): Promise<void> {
     let audio = this.cache.get(url)
     if (!audio) {
-      audio = new Audio(url)
+      audio = new Audio()
+      audio.crossOrigin = 'anonymous'
+      audio.src = url
       this.cache.set(url, audio)
     }
     audio.currentTime = 0

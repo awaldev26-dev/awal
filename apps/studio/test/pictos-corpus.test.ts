@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { extraireCorpus } from '../seed/extraire.js'
-import { COULEUR_PAR_THEME, PICTOS, PICTO_PAR_THEME, pictoPour } from '../seed/pictos.js'
+import { extraireCorpus } from '../seed/extraire'
+import { COULEUR_PAR_THEME, PICTOS, PICTO_PAR_THEME, pictoPour } from '../seed/pictos'
 import { pictoValide } from '@awal/corpus'
 
 const { themes, entrees } = extraireCorpus(

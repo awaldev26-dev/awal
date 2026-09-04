@@ -1,6 +1,6 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, join, relative, resolve } from 'node:path'
-import type { StockageMedias } from './types.js'
+import type { StockageMedias } from './types'
 
 /** Stockage sur disque, pour le développement et les tests. */
 export class StockageDisque implements StockageMedias {

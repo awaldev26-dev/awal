@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   BOITE_ACQUISE, DELAIS_JOURS, NB_BOITES,
   apresReponse, estAcquise, estDue, jour, nouvelEtat,
-} from '@/moteur/leitner.js'
+} from '@/moteur/leitner'
 
 const LUNDI = new Date('2026-09-07T08:00:00.000Z')
 const LUNDI_SOIR = new Date('2026-09-07T22:30:00.000Z')

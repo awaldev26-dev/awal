@@ -1,4 +1,4 @@
-import type { EtatEntree } from './types.js'
+import type { EtatEntree } from './types'
 
 export const NB_BOITES = 5
 

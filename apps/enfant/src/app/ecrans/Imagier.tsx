@@ -2,10 +2,10 @@
 
 import { useMemo, useState } from 'react'
 import type { Artefact, Entree, Theme } from '@awal/corpus'
-import type { Lecteur } from '@/audio/lecteur.js'
-import { urlAudio } from '@/corpus/charger.js'
-import { BoutonRetour } from '@/interface/BoutonRetour.js'
-import { Picto } from '@/jeux/Picto.js'
+import type { Lecteur } from '@/audio/lecteur'
+import { urlAudio } from '@/corpus/charger'
+import { BoutonRetour } from '@/interface/BoutonRetour'
+import { Picto } from '@/jeux/Picto'
 
 /**
  * Imagier consultable, en deux temps : les thèmes, puis les cartes du thème

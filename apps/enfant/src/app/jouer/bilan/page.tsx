@@ -3,10 +3,10 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Entree } from '@awal/corpus'
-import { Attente } from '../../contexte/Attente.js'
-import { useAwal } from '../../contexte/FournisseurAwal.js'
-import { Bilan } from '../../ecrans/Bilan.js'
-import { estAcquise } from '@/moteur/leitner.js'
+import { Attente } from '../../contexte/Attente'
+import { useAwal } from '../../contexte/FournisseurAwal'
+import { Bilan } from '../../ecrans/Bilan'
+import { estAcquise } from '@/moteur/leitner'
 
 export default function PageBilan() {
   const router = useRouter()

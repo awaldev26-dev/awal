@@ -14,9 +14,9 @@ import { mkdir, readFile, rm } from 'node:fs/promises'
 import { join } from 'node:path'
 import { promisify } from 'node:util'
 import { eq, isNull, like } from 'drizzle-orm'
-import { db } from '../src/db/index.js'
-import { entrees } from '../src/db/schema.js'
-import { creerStockage } from '../src/stockage/index.js'
+import { db } from '../src/db/index'
+import { entrees } from '../src/db/schema'
+import { creerStockage } from '../src/stockage/index'
 
 const executer = promisify(execFile)
 const MARQUE = '-remplacement'

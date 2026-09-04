@@ -1,6 +1,6 @@
 'use client'
 
-import type { LigneEntree } from '@/db/schema.js'
+import type { LigneEntree } from '@/db/schema'
 import { analyserPicto, emojiDepuisPicto } from '@awal/corpus'
 
 /** Ce qu'on veut voir d'un coup d'œil : enregistré, à valider, ou rien. */

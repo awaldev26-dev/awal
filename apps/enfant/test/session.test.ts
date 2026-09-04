@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import type { Entree } from '@awal/corpus'
-import { MAX_PHRASES_NOUVELLES, OPTIONS_PAR_AGE, appliquerResultats, composerSession, serie } from '@/moteur/session.js'
-import { progressionVide, type Progression } from '@/moteur/types.js'
-import { jour } from '@/moteur/leitner.js'
+import { MAX_PHRASES_NOUVELLES, OPTIONS_PAR_AGE, appliquerResultats, composerSession, serie } from '@/moteur/session'
+import { progressionVide, type Progression } from '@/moteur/types'
+import { jour } from '@/moteur/leitner'
 
 const LUNDI = new Date('2026-09-07T08:00:00.000Z')
 

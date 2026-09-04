@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { MagasinLocal } from '@/stockage/local.js'
-import { progressionVide } from '@/moteur/types.js'
+import { MagasinLocal } from '@/stockage/local'
+import { progressionVide } from '@/moteur/types'
 
 const idir = { id: 'idir', prenom: 'Idir', avatar: '🦊', age: 6 }
 

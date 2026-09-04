@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { SLUG } from './entree.js'
+import { SLUG } from './entree'
 
 export const schemaTheme = z.object({
   id: z.string().regex(SLUG, 'id : minuscules, chiffres et tirets uniquement'),

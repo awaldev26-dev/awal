@@ -6,13 +6,13 @@
  * build. Pour les pictos, importer directement `./pictos.js`, qui est pur.
  */
 import { clePictoImage, pictoValide, type VerificateurMedias } from '@awal/corpus'
-import { StockageDisque, racineParDefaut } from './disque.js'
-import { StockageR2 } from './r2.js'
-import type { StockageMedias } from './types.js'
+import { StockageDisque, racineParDefaut } from './disque'
+import { StockageR2 } from './r2'
+import type { StockageMedias } from './types'
 
-export * from './types.js'
-export { StockageDisque } from './disque.js'
-export { StockageR2 } from './r2.js'
+export * from './types'
+export { StockageDisque } from './disque'
+export { StockageR2 } from './r2'
 
 function exige(nom: string): string {
   const valeur = process.env[nom]

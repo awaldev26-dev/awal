@@ -2,12 +2,12 @@
 
 import { revalidatePath } from 'next/cache'
 import { eq } from 'drizzle-orm'
-import { db } from '@/db/index.js'
-import { entrees } from '@/db/schema.js'
-import { creerStockage } from '@/stockage/index.js'
+import { db } from '@/db/index'
+import { entrees } from '@/db/schema'
+import { creerStockage } from '@/stockage/index'
 import { pictoValide } from '@awal/corpus'
-import { publierDepuisBase } from '@/publication/depuisBase.js'
-import type { ResultatPublication } from '@/publication/publier.js'
+import { publierDepuisBase } from '@/publication/depuisBase'
+import type { ResultatPublication } from '@/publication/publier'
 
 export async function enregistrerEntree(donnees: FormData): Promise<void> {
   const id = String(donnees.get('id'))

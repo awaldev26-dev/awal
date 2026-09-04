@@ -1,12 +1,12 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import type { LigneEntree } from '@/db/schema.js'
+import type { LigneEntree } from '@/db/schema'
 import { analyserPicto, emojiDepuisPicto } from '@awal/corpus'
-import { enregistrerEntree } from '../actions.js'
-import { Champ, classesChamp } from './Champ.js'
-import { ChoixPicto } from './ChoixPicto.js'
-import { Enregistreur } from './Enregistreur.js'
+import { enregistrerEntree } from '../actions'
+import { Champ, classesChamp } from './Champ'
+import { ChoixPicto } from './ChoixPicto'
+import { Enregistreur } from './Enregistreur'
 
 /** Affiche l'illustration, qu'elle soit un emoji ou une image. */
 function Vignette({ picto, urlBase }: { picto: string; urlBase: string }) {

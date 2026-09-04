@@ -1,10 +1,10 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { sql } from 'drizzle-orm'
-import { db } from '../src/db/index.js'
-import { entrees, themes } from '../src/db/schema.js'
-import { extraireCorpus } from './extraire.js'
-import { COULEUR_PAR_THEME, PICTO_PAR_THEME, pictoPour } from './pictos.js'
+import { db } from '../src/db/index'
+import { entrees, themes } from '../src/db/schema'
+import { extraireCorpus } from './extraire'
+import { COULEUR_PAR_THEME, PICTO_PAR_THEME, pictoPour } from './pictos'
 
 const markdown = readFileSync(join(import.meta.dirname, '../../../docs/corpus-v1.md'), 'utf8')
 const corpus = extraireCorpus(markdown)

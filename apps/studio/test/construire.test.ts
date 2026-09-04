@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { construireArtefact, EntreeIncomplete } from '@/publication/construire.js'
-import type { LigneEntree, LigneTheme } from '@/db/schema.js'
+import { construireArtefact, EntreeIncomplete } from '@/publication/construire'
+import type { LigneEntree, LigneTheme } from '@/db/schema'
 
 const theme: LigneTheme = {
   id: 'les-animaux', nom: 'Les animaux', picto: 'openmoji:1F408', couleur: '#3d7ec9', ordre: 0,

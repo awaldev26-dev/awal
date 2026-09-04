@@ -1,9 +1,9 @@
 'use client'
 
 import type { Artefact, Entree } from '@awal/corpus'
-import { Confettis } from '@/interface/Confettis.js'
-import { Touche } from '@/interface/Touche.js'
-import { Picto } from '@/jeux/Picto.js'
+import { Confettis } from '@/interface/Confettis'
+import { Touche } from '@/interface/Touche'
+import { Picto } from '@/jeux/Picto'
 
 export function Bilan({
   acquises,

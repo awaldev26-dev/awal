@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { corpusMinimal } from '../fixtures/corpus-minimal.js'
-import { schemaArtefact } from '../src/artefact.js'
-import { validerStructure } from '../src/validation.js'
+import { corpusMinimal } from '../fixtures/corpus-minimal'
+import { schemaArtefact } from '../src/artefact'
+import { validerStructure } from '../src/validation'
 
 describe('corpusMinimal', () => {
   it('est conforme au schéma', () => {

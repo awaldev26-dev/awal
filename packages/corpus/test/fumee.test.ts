@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { VERSION_CONTRAT } from '../src/index.js'
+import { VERSION_CONTRAT } from '../src/index'
 
 describe('paquet corpus', () => {
   it('expose la version du contrat', () => {

@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { NOM_COOKIE, creerSession } from '@/auth/session.js'
+import { NOM_COOKIE, creerSession } from '@/auth/session'
 
 export async function seConnecter(_etat: string | null, donnees: FormData): Promise<string | null> {
   const attendu = process.env.STUDIO_MOT_DE_PASSE

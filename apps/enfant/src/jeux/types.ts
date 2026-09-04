@@ -1,6 +1,6 @@
 import type { Artefact, Entree } from '@awal/corpus'
-import type { Lecteur } from '@/audio/lecteur.js'
-import type { ResultatEntree } from '@/moteur/types.js'
+import type { Lecteur } from '@/audio/lecteur'
+import type { ResultatEntree } from '@/moteur/types'
 
 /**
  * Contrat commun à toutes les activités : elles reçoivent un lot et rendent,

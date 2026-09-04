@@ -10,12 +10,12 @@ import {
   type ReactNode,
 } from 'react'
 import type { Artefact, Entree } from '@awal/corpus'
-import { Lecteur } from '@/audio/lecteur.js'
-import { chargerCorpus } from '@/corpus/charger.js'
-import { appliquerResultats } from '@/moteur/session.js'
-import type { Progression, ResultatEntree } from '@/moteur/types.js'
-import { MagasinLocal } from '@/stockage/local.js'
-import type { Profil } from '@/stockage/magasin.js'
+import { Lecteur } from '@/audio/lecteur'
+import { chargerCorpus } from '@/corpus/charger'
+import { appliquerResultats } from '@/moteur/session'
+import type { Progression, ResultatEntree } from '@/moteur/types'
+import { MagasinLocal } from '@/stockage/local'
+import type { Profil } from '@/stockage/magasin'
 
 interface ValeurAwal {
   artefact: Artefact | null

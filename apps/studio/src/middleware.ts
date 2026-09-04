@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { NOM_COOKIE, verifierSession } from './auth/session.js'
+import { NOM_COOKIE, verifierSession } from './auth/session'
 
 export async function middleware(requete: NextRequest) {
   if (await verifierSession(requete.cookies.get(NOM_COOKIE)?.value)) {

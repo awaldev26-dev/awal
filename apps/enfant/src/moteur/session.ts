@@ -1,7 +1,7 @@
 import type { Entree } from '@awal/corpus'
-import { apresReponse, estDue, jour, nouvelEtat } from './leitner.js'
-import { phraseDebloquee } from './phrases.js'
-import type { Progression, ResultatEntree } from './types.js'
+import { apresReponse, estDue, jour, nouvelEtat } from './leitner'
+import { phraseDebloquee } from './phrases'
+import type { Progression, ResultatEntree } from './types'
 
 export interface OptionsSession {
   /** Nombre maximal d'entrées dans une session. Vise 5 à 8 minutes de jeu. */

@@ -1,10 +1,10 @@
 'use client'
 
 import type { Artefact } from '@awal/corpus'
-import { estAcquise } from '@/moteur/leitner.js'
-import type { Progression } from '@/moteur/types.js'
-import { BoutonRetour } from '@/interface/BoutonRetour.js'
-import { Picto } from '@/jeux/Picto.js'
+import { estAcquise } from '@/moteur/leitner'
+import type { Progression } from '@/moteur/types'
+import { BoutonRetour } from '@/interface/BoutonRetour'
+import { Picto } from '@/jeux/Picto'
 
 export function Collection({
   artefact,

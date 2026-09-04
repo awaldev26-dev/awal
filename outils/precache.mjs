@@ -29,7 +29,9 @@ if (!existsSync(statique)) {
 }
 
 const fichiers = parcourir(statique)
-  .filter((chemin) => chemin.endsWith('.js') || chemin.endsWith('.css'))
+  // Les polices comptent autant que le script : sans elles, la première
+  // ouverture hors ligne s'afficherait dans la police de secours du système.
+  .filter((chemin) => /\.(js|css|woff2?)$/.test(chemin))
   .map((chemin) => '/' + relative(racine, chemin))
   .sort()
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { televerserAudio } from '../actions.js'
+import { televerserAudio } from '../actions'
 
 type Etat = 'pret' | 'enregistre' | 'envoi'
 

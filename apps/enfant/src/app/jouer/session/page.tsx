@@ -2,9 +2,9 @@
 
 import { useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { Attente } from '../../contexte/Attente.js'
-import { useAwal } from '../../contexte/FournisseurAwal.js'
-import { EcouteEtChoisis } from '@/jeux/EcouteEtChoisis.js'
+import { Attente } from '../../contexte/Attente'
+import { useAwal } from '../../contexte/FournisseurAwal'
+import { EcouteEtChoisis } from '@/jeux/EcouteEtChoisis'
 
 export default function PageSession() {
   const router = useRouter()

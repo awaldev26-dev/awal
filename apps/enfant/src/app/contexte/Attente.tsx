@@ -1,7 +1,7 @@
 'use client'
 
 import type { ReactNode } from 'react'
-import { useAwal } from './FournisseurAwal.js'
+import { useAwal } from './FournisseurAwal'
 
 /**
  * Barrière commune aux routes qui ont besoin du corpus : elle évite que chaque

@@ -2,11 +2,11 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import type { Entree } from '@awal/corpus'
-import { urlAudio } from '@/corpus/charger.js'
-import type { ResultatEntree } from '@/moteur/types.js'
-import { choisirDistracteurs, melanger } from './choisirDistracteurs.js'
-import { Picto } from './Picto.js'
-import type { ProprietesJeu } from './types.js'
+import { urlAudio } from '@/corpus/charger'
+import type { ResultatEntree } from '@/moteur/types'
+import { choisirDistracteurs, melanger } from './choisirDistracteurs'
+import { Picto } from './Picto'
+import type { ProprietesJeu } from './types'
 
 export function EcouteEtChoisis({ lot, artefact, lecteur, onTermine }: ProprietesJeu) {
   const [index, setIndex] = useState(0)

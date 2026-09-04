@@ -1,5 +1,5 @@
-import { progressionVide, type Progression } from '@/moteur/types.js'
-import type { MagasinProgression, Profil } from './magasin.js'
+import { progressionVide, type Progression } from '@/moteur/types'
+import type { MagasinProgression, Profil } from './magasin'
 
 const CLE_PROFILS = 'awal.profils'
 const CLE_PROFIL_ACTIF = 'awal.profilActif'

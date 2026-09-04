@@ -1,8 +1,8 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { ChoixProfil } from './ecrans/ChoixProfil.js'
-import { useAwal, useMagasin } from './contexte/FournisseurAwal.js'
+import { ChoixProfil } from './ecrans/ChoixProfil'
+import { useAwal, useMagasin } from './contexte/FournisseurAwal'
 
 export default function PageProfils() {
   const router = useRouter()

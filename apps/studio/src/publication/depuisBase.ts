@@ -1,10 +1,10 @@
 import { asc } from 'drizzle-orm'
-import { db } from '@/db/index.js'
-import { entrees, publications, themes } from '@/db/schema.js'
-import { creerStockage } from '@/stockage/index.js'
-import { construireArtefact } from './construire.js'
-import { ecarterPhrasesOrphelines } from './phrases.js'
-import { publierArtefact, type ResultatPublication } from './publier.js'
+import { db } from '@/db/index'
+import { entrees, publications, themes } from '@/db/schema'
+import { creerStockage } from '@/stockage/index'
+import { construireArtefact } from './construire'
+import { ecarterPhrasesOrphelines } from './phrases'
+import { publierArtefact, type ResultatPublication } from './publier'
 
 /**
  * Lit la base, construit l'artefact et le publie. Vit ici plutôt que dans

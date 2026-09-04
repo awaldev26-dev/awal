@@ -1,5 +1,5 @@
 import { schemaArtefact, type Artefact } from '@awal/corpus'
-import type { LigneEntree, LigneTheme } from '@/db/schema.js'
+import type { LigneEntree, LigneTheme } from '@/db/schema'
 
 /** Une entrée en base n'est pas encore publiable — le plus souvent parce qu'elle n'a pas d'audio. */
 export class EntreeIncomplete extends Error {

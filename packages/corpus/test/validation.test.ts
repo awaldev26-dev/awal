@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { schemaArtefact } from '../src/artefact.js'
-import { validerStructure } from '../src/validation.js'
-import type { Artefact } from '../src/artefact.js'
+import { schemaArtefact } from '../src/artefact'
+import { validerStructure } from '../src/validation'
+import type { Artefact } from '../src/artefact'
 
 function construire(entrees: unknown[], themesIds = ['manger-et-boire']): Artefact {
   return schemaArtefact.parse({

@@ -3,8 +3,8 @@ import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { schemaArtefact, type Artefact } from '@awal/corpus'
-import { StockageDisque } from '@/stockage/disque.js'
-import { CLE_ACTUEL, publierArtefact } from '@/publication/publier.js'
+import { StockageDisque } from '@/stockage/disque'
+import { CLE_ACTUEL, publierArtefact } from '@/publication/publier'
 
 const racines: string[] = []
 

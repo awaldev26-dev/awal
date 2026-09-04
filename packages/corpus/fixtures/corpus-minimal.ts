@@ -1,5 +1,5 @@
-import { schemaArtefact } from '../src/artefact.js'
-import type { Artefact } from '../src/artefact.js'
+import { schemaArtefact } from '../src/artefact'
+import type { Artefact } from '../src/artefact'
 
 /**
  * Corpus valide minimal, partagé par les tests du studio et de l'app enfant.

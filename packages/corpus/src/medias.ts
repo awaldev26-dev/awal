@@ -1,5 +1,5 @@
-import type { Artefact } from './artefact.js'
-import type { ProblemeValidation } from './validation.js'
+import type { Artefact } from './artefact'
+import type { ProblemeValidation } from './validation'
 
 /**
  * Accès aux médias, injecté par l'appelant. Le paquet corpus ne fait aucun I/O :

@@ -2,11 +2,11 @@
 
 import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import type { LigneEntree, LigneTheme } from '@/db/schema.js'
-import { BarreHaut } from './BarreHaut.js'
-import { Editeur } from './Editeur.js'
-import { Liste } from './Liste.js'
-import { classesChamp } from './Champ.js'
+import type { LigneEntree, LigneTheme } from '@/db/schema'
+import { BarreHaut } from './BarreHaut'
+import { Editeur } from './Editeur'
+import { Liste } from './Liste'
+import { classesChamp } from './Champ'
 
 type Filtre = 'tout' | 'sans-audio' | 'synthese' | 'a-valider'
 

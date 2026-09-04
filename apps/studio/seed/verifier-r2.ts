@@ -9,7 +9,7 @@
  *   pnpm tsx seed/verifier-r2.ts
  */
 import { DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3'
-import { StockageR2 } from '../src/stockage/r2.js'
+import { StockageR2 } from '../src/stockage/r2'
 
 const OBLIGATOIRES = [
   'R2_ACCOUNT_ID',

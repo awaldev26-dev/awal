@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { corpusMinimal } from '@awal/corpus/fixtures'
-import { chargerCorpus, urlAudio } from '@/corpus/charger.js'
+import { chargerCorpus, urlAudio } from '@/corpus/charger'
 
 describe('chargerCorpus', () => {
   it('valide et renvoie un artefact conforme', async () => {

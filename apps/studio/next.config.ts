@@ -6,15 +6,10 @@ const config: NextConfig = {
   outputFileTracingRoot: new URL('../..', import.meta.url).pathname,
   transpilePackages: ['@awal/corpus'],
   serverExternalPackages: ['postgres'],
-  webpack: (config) => {
-    // Le monorepo importe en « ./x.js » des fichiers sources « ./x.ts ».
-    // tsc et Vitest le résolvent seuls ; webpack a besoin qu'on le lui dise.
-    config.resolve.extensionAlias = {
-      '.js': ['.ts', '.tsx', '.js'],
-      '.jsx': ['.tsx', '.jsx'],
-    }
-    return config
-  },
+  // Turbopack, activé par défaut depuis Next 16. Aucune option n'est
+  // nécessaire : les imports internes n'ont plus d'extension, il n'y a donc
+  // plus rien à réécrire — c'était le rôle de l'ancienne config webpack.
+  turbopack: {},
 }
 
 export default config

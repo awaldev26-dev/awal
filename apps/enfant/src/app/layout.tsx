@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { Baloo_2, Fredoka } from 'next/font/google'
-import { FournisseurAwal } from './contexte/FournisseurAwal.js'
+import { FournisseurAwal } from './contexte/FournisseurAwal'
 import './globals.css'
 
 // Fredoka pour l'interface : très arrondie, franche, lisible de loin.

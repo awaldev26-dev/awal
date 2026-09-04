@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { schemaArtefact } from '../src/artefact.js'
-import { validerMedias } from '../src/medias.js'
-import type { VerificateurMedias } from '../src/medias.js'
-import type { Artefact } from '../src/artefact.js'
+import { schemaArtefact } from '../src/artefact'
+import { validerMedias } from '../src/medias'
+import type { VerificateurMedias } from '../src/medias'
+import type { Artefact } from '../src/artefact'
 
 function construire(ids: string[]): Artefact {
   return schemaArtefact.parse({

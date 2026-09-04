@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { entrees, themes, publications } from '@/db/schema.js'
+import { entrees, themes, publications } from '@/db/schema'
 
 describe('schéma de base', () => {
   it('déclare les colonnes d’une entrée', () => {

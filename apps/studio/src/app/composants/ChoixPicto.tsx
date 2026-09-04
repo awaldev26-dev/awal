@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { analyserPicto, emojiDepuisPicto, pictoDepuisEmoji } from '@awal/corpus'
-import { definirPictoEmoji, televerserPicto } from '../actions.js'
+import { definirPictoEmoji, televerserPicto } from '../actions'
 
 /** Côté du carré dans lequel l'image est recadrée avant envoi. */
 const COTE = 256

@@ -1,7 +1,7 @@
 'use client'
 
-import { Touche } from '@/interface/Touche.js'
-import type { Profil } from '@/stockage/magasin.js'
+import { Touche } from '@/interface/Touche'
+import type { Profil } from '@/stockage/magasin'
 
 export function Accueil({
   profil,

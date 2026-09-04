@@ -1,6 +1,6 @@
 import { z } from 'zod'
-import { schemaEntree } from './entree.js'
-import { schemaTheme } from './theme.js'
+import { schemaEntree } from './entree'
+import { schemaTheme } from './theme'
 
 /**
  * Artefact publié par le studio et consommé par l'app enfant.

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { analyserPicto, clePictoImage, emojiDepuisPicto, pictoDepuisEmoji, pictoValide } from '../src/picto.js'
+import { analyserPicto, clePictoImage, emojiDepuisPicto, pictoDepuisEmoji, pictoValide } from '../src/picto'
 
 describe('analyserPicto', () => {
   it('reconnaît un emoji', () => {

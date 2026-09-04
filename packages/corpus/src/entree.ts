@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { pictoValide } from './picto.js'
+import { pictoValide } from './picto'
 
 /** Slug stable : minuscules, chiffres, tirets. Jamais renommé après publication. */
 export const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { extraireCorpus, motsContenus, versSlug } from '../seed/extraire.js'
+import { extraireCorpus, motsContenus, versSlug } from '../seed/extraire'
 
 const markdown = readFileSync(
   join(import.meta.dirname, '../../../docs/corpus-v1.md'),

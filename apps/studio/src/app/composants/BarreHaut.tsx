@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { lancerPublication } from '../actions.js'
-import type { ResultatPublication } from '@/publication/publier.js'
+import { lancerPublication } from '../actions'
+import type { ResultatPublication } from '@/publication/publier'
 
 export function BarreHaut({
   enregistrees,

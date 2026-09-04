@@ -1,4 +1,4 @@
-import type { Progression } from '@/moteur/types.js'
+import type { Progression } from '@/moteur/types'
 
 export interface Profil {
   id: string

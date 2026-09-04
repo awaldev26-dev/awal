@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { schemaTheme } from '../src/theme.js'
-import { schemaArtefact } from '../src/artefact.js'
+import { schemaTheme } from '../src/theme'
+import { schemaArtefact } from '../src/artefact'
 
 const theme = {
   id: 'manger-et-boire',

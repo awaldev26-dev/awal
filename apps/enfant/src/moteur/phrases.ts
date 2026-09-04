@@ -1,5 +1,5 @@
 import type { Entree } from '@awal/corpus'
-import type { Progression } from './types.js'
+import type { Progression } from './types'
 
 /**
  * Boîte à partir de laquelle un mot est considéré comme connu, donc utilisable

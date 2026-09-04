@@ -1,7 +1,7 @@
 'use client'
 
 import { useActionState } from 'react'
-import { seConnecter } from './actions.js'
+import { seConnecter } from './actions'
 
 export default function Connexion() {
   const [erreur, action, enCours] = useActionState(seConnecter, null)

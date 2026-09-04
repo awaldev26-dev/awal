@@ -1,4 +1,4 @@
-import type { Artefact } from './artefact.js'
+import type { Artefact } from './artefact'
 
 export type CodeProbleme =
   | 'id-duplique'

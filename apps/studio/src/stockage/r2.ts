@@ -1,5 +1,5 @@
 import { GetObjectCommand, HeadObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
-import type { StockageMedias } from './types.js'
+import type { StockageMedias } from './types'
 
 /** R2 parle le protocole S3 : un client S3 pointé sur l'endpoint du compte suffit. */
 export class StockageR2 implements StockageMedias {

@@ -1,4 +1,4 @@
-import { creerStockage } from '@/stockage/index.js'
+import { creerStockage } from '@/stockage/index'
 
 /**
  * Types servis, déduits de l'extension.

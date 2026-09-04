@@ -2,8 +2,8 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { StockageDisque } from '@/stockage/disque.js'
-import { creerVerificateur } from '@/stockage/index.js'
+import { StockageDisque } from '@/stockage/disque'
+import { creerVerificateur } from '@/stockage/index'
 
 const racines: string[] = []
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { schemaEntree } from '../src/entree.js'
+import { schemaEntree } from '../src/entree'
 
 const entreeValide = {
   id: 'aghroum',

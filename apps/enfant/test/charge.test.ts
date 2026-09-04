@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import type { Entree } from '@awal/corpus'
-import { appliquerResultats, composerSession } from '@/moteur/session.js'
-import { estDue } from '@/moteur/leitner.js'
-import { progressionVide, type Progression } from '@/moteur/types.js'
+import { appliquerResultats, composerSession } from '@/moteur/session'
+import { estDue } from '@/moteur/leitner'
+import { progressionVide, type Progression } from '@/moteur/types'
 
 function corpus(taille: number): Entree[] {
   return Array.from({ length: taille }, (_, i) => ({

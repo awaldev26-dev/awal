@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { Entree } from '@awal/corpus'
-import { choisirDistracteurs } from '@/jeux/choisirDistracteurs.js'
+import { choisirDistracteurs } from '@/jeux/choisirDistracteurs'
 
 function e(id: string, theme: string): Entree {
   return {

@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Touche } from '@/interface/Touche.js'
-import { AVATARS, type MagasinProgression, type Profil } from '@/stockage/magasin.js'
+import { Touche } from '@/interface/Touche'
+import { AVATARS, type MagasinProgression, type Profil } from '@/stockage/magasin'
 
 const AGES = [5, 6, 7, 8, 9, 10, 11]
 

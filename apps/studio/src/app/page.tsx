@@ -1,8 +1,8 @@
 import { asc } from 'drizzle-orm'
-import { db } from '@/db/index.js'
-import { entrees, publications, themes } from '@/db/schema.js'
-import { creerStockage } from '@/stockage/index.js'
-import { Studio } from './composants/Studio.js'
+import { db } from '@/db/index'
+import { entrees, publications, themes } from '@/db/schema'
+import { creerStockage } from '@/stockage/index'
+import { Studio } from './composants/Studio'
 
 export const dynamic = 'force-dynamic'
 

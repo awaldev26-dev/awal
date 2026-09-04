@@ -2,9 +2,9 @@
 
 import { Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Attente } from '../contexte/Attente.js'
-import { useAwal } from '../contexte/FournisseurAwal.js'
-import { Imagier } from '../ecrans/Imagier.js'
+import { Attente } from '../contexte/Attente'
+import { useAwal } from '../contexte/FournisseurAwal'
+import { Imagier } from '../ecrans/Imagier'
 
 /**
  * Le thème passe par un paramètre de requête plutôt qu'une route `/mots/[theme]` :

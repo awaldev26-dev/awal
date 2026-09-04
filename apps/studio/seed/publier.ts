@@ -1,4 +1,4 @@
-import { publierDepuisBase } from '../src/publication/depuisBase.js'
+import { publierDepuisBase } from '../src/publication/depuisBase'
 
 const resultat = await publierDepuisBase()
 if (resultat.ok) {

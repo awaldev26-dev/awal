@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest'
-import { creerSession, verifierSession, NOM_COOKIE } from '@/auth/session.js'
+import { creerSession, verifierSession, NOM_COOKIE } from '@/auth/session'
 
 beforeAll(() => {
   process.env.SESSION_SECRET = 'secret-de-test-suffisamment-long-pour-hs256'

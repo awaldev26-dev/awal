@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { ecarterPhrasesOrphelines } from '@/publication/phrases.js'
-import type { LigneEntree } from '@/db/schema.js'
+import { ecarterPhrasesOrphelines } from '@/publication/phrases'
+import type { LigneEntree } from '@/db/schema'
 
 function ligne(id: string, contient: string[] = [], type = 'mot'): LigneEntree {
   return {

@@ -4,8 +4,8 @@ import {
   type Artefact,
   type ProblemeValidation,
 } from '@awal/corpus'
-import { creerVerificateur } from '@/stockage/index.js'
-import type { StockageMedias } from '@/stockage/types.js'
+import { creerVerificateur } from '@/stockage/index'
+import type { StockageMedias } from '@/stockage/types'
 
 /** Fichier que l'app enfant interroge. Écrasé à chaque publication. */
 export const CLE_ACTUEL = 'corpus/actuel.json'

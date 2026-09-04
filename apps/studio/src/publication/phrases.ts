@@ -1,4 +1,4 @@
-import type { LigneEntree } from '@/db/schema.js'
+import type { LigneEntree } from '@/db/schema'
 
 /**
  * Écarte les phrases dont tous les mots ne sont pas publiés.

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { Entree } from '@awal/corpus'
-import { BOITE_MOT_CONNU, phraseDebloquee } from '@/moteur/phrases.js'
-import { progressionVide, type Progression } from '@/moteur/types.js'
+import { BOITE_MOT_CONNU, phraseDebloquee } from '@/moteur/phrases'
+import { progressionVide, type Progression } from '@/moteur/types'
 
 function mot(id: string): Entree {
   return {
