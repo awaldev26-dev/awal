@@ -1,7 +1,25 @@
 import { randomBytes, scrypt, timingSafeEqual } from 'node:crypto'
-import { promisify } from 'node:util'
 
-const deriver = promisify(scrypt)
+/**
+ * Enveloppe scrypt en promesse.
+ *
+ * Écrit à la main plutôt qu'avec `promisify` : celui-ci ne conserve qu'une des
+ * surcharges de scrypt et rejette la variante qui accepte des options, alors
+ * que ce sont précisément elles qui règlent le coût du calcul.
+ */
+function deriver(
+  motDePasse: string,
+  sel: Buffer,
+  longueur: number,
+  options: { N: number; r: number; p: number; maxmem: number },
+): Promise<Buffer> {
+  return new Promise((resoudre, rejeter) => {
+    scrypt(motDePasse, sel, longueur, options, (erreur, resultat) => {
+      if (erreur) rejeter(erreur)
+      else resoudre(resultat)
+    })
+  })
+}
 
 /**
  * Coût du calcul. N=32768 demande environ cent millisecondes et trente
@@ -36,12 +54,12 @@ const MEMOIRE_MAX = 64 * 1024 * 1024
  */
 export async function hacher(motDePasse: string): Promise<string> {
   const sel = randomBytes(16)
-  const hachage = (await deriver(motDePasse, sel, LONGUEUR, {
+  const hachage = await deriver(motDePasse, sel, LONGUEUR, {
     N: COUT,
     r: BLOC,
     p: PARALLELISME,
     maxmem: MEMOIRE_MAX,
-  })) as Buffer
+  })
   return ['scrypt', COUT, sel.toString('hex'), hachage.toString('hex')].join(':')
 }
 
@@ -67,12 +85,12 @@ export async function verifier(saisie: string, empreinte: string): Promise<boole
   if (sel.length === 0 || attendu.length !== LONGUEUR) return false
 
   try {
-    const calcule = (await deriver(saisie, sel, LONGUEUR, {
+    const calcule = await deriver(saisie, sel, LONGUEUR, {
       N: cout,
       r: BLOC,
       p: PARALLELISME,
       maxmem: MEMOIRE_MAX,
-    })) as Buffer
+    })
     return timingSafeEqual(calcule, attendu)
   } catch {
     return false
