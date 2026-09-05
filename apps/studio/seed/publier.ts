@@ -1,6 +1,6 @@
-import { publierDepuisBase } from '../src/publication/depuisBase'
+import { publierDepuisDepot } from '../src/publication/depuisDepot'
 
-const resultat = await publierDepuisBase()
+const resultat = await publierDepuisDepot()
 if (resultat.ok) {
   console.log(`Publié en v${resultat.version} → ${resultat.cle}`)
 } else {

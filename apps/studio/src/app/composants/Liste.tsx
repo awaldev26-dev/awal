@@ -1,10 +1,10 @@
 'use client'
 
-import type { LigneEntree } from '@/db/schema'
+import type { EntreeSource } from '@/depot/types'
 import { analyserPicto, emojiDepuisPicto } from '@awal/corpus'
 
 /** Ce qu'on veut voir d'un coup d'œil : enregistré, à valider, ou rien. */
-function Etat({ ligne }: { ligne: LigneEntree }) {
+function Etat({ ligne }: { ligne: EntreeSource }) {
   if (!ligne.audio) {
     return <span className="text-xs text-encre-faible">—</span>
   }
@@ -20,7 +20,7 @@ export function Liste({
   urlBase,
   onSelectionner,
 }: {
-  lignes: LigneEntree[]
+  lignes: EntreeSource[]
   selection: string | null
   urlBase: string
   onSelectionner: (id: string) => void

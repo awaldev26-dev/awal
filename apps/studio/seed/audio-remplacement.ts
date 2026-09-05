@@ -13,9 +13,7 @@ import { execFile } from 'node:child_process'
 import { mkdir, readFile, rm } from 'node:fs/promises'
 import { join } from 'node:path'
 import { promisify } from 'node:util'
-import { eq, isNull, like } from 'drizzle-orm'
-import { db } from '../src/db/index'
-import { entrees } from '../src/db/schema'
+import { lireDepot, ecrireDepot, modifierEntree } from '../src/depot/depot'
 import { creerStockage } from '../src/stockage/index'
 
 const executer = promisify(execFile)
@@ -23,7 +21,11 @@ const MARQUE = '-remplacement'
 const stockage = creerStockage()
 
 if (process.argv.includes('--purger')) {
-  await db.update(entrees).set({ audio: null }).where(like(entrees.audio, `%${MARQUE}%`))
+  const depot = await lireDepot(stockage)
+  const purge = depot.entrees.map((entree) =>
+    entree.audio?.includes(MARQUE) ? { ...entree, audio: null } : entree,
+  )
+  await ecrireDepot(stockage, { ...depot, entrees: purge })
   await rm(join(process.cwd(), process.env.STOCKAGE_DISQUE_RACINE ?? './medias', 'audio'), {
     recursive: true,
     force: true,
@@ -32,7 +34,8 @@ if (process.argv.includes('--purger')) {
   process.exit(0)
 }
 
-const aFaire = await db.select().from(entrees).where(isNull(entrees.audio))
+const depart = await lireDepot(stockage)
+const aFaire = depart.entrees.filter((entree) => entree.audio === null)
 console.log(`${aFaire.length} entrées sans audio.`)
 
 const temporaire = join(process.cwd(), '.audio-temp')
@@ -72,7 +75,7 @@ for (const entree of aFaire) {
 
   const cle = `audio/${entree.id}${MARQUE}.wav`
   await stockage.ecrire(cle, new Uint8Array(await readFile(chemin)), 'audio/wav')
-  await db.update(entrees).set({ audio: cle }).where(eq(entrees.id, entree.id))
+  await modifierEntree(stockage, entree.id, (courante) => ({ ...courante, audio: cle }))
 
   faits += 1
   if (faits % 25 === 0) {

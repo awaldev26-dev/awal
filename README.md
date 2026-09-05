@@ -36,12 +36,9 @@ c'est ce qui la rend instantanée, hors-ligne et increvable.
 ```bash
 pnpm install
 
-# Base de données locale
 cd apps/studio
 cp .env.example .env.local          # puis renseigner STUDIO_MOT_DE_PASSE
-docker compose up -d
-pnpm db:appliquer                   # crée les tables
-pnpm db:seed                        # insère les 213 entrées
+pnpm seed                           # écrit corpus/source.json dans le stockage
 
 # Audios de remplacement, pour tout essayer sans avoir enregistré
 pnpm tsx seed/audio-remplacement.ts
@@ -66,7 +63,6 @@ L'app enfant n'en a qu'une, et elle est facultative.
 
 | Variable | Rôle |
 |---|---|
-| `DATABASE_URL` | Postgres. En local, celui du `docker compose`. En production, la chaîne fournie par Neon ou Supabase. |
 | `STUDIO_MOT_DE_PASSE` | mot de passe unique d'accès au studio. Il n'y a pas d'autre utilisateur. |
 | `SESSION_SECRET` | clé de signature du cookie. Générer avec `openssl rand -base64 32`. |
 | `STOCKAGE` | `disque` en développement, `r2` en production. |
@@ -76,6 +72,7 @@ L'app enfant n'en a qu'une, et elle est facultative.
 | `R2_ACCESS_KEY_ID` / `R2_SECRET_ACCESS_KEY` | R2 → *Manage API tokens*. |
 | `R2_BUCKET` | nom du bucket, par exemple `awal-medias`. |
 | `R2_URL_PUBLIQUE` | URL publique du bucket, **barre finale comprise**. C'est par elle que l'app enfant chargera les audios. |
+| `STUDIO_URL_MEDIAS` | Où le studio va chercher les médias qu'il affiche. Vide en local — ils passent par sa route `/medias`. En production, l'URL publique du bucket. |
 
 ### `apps/enfant/.env.local` (facultatif)
 
@@ -91,24 +88,43 @@ pnpm typecheck                              # tous les paquets
 pnpm --filter enfant build                  # export statique dans apps/enfant/out
 
 cd apps/studio
+pnpm seed                                   # (re)construire la source depuis docs/corpus-v1.md
 pnpm tsx seed/publier.ts                    # publier une nouvelle version du corpus
+pnpm tsx seed/verifier-r2.ts                # contrôler la configuration du stockage
 pnpm tsx seed/audio-remplacement.ts --purger  # effacer les audios synthétiques
 ```
 
+`pnpm seed` est sans danger sur un corpus déjà enregistré : il rafraîchit l'ordre
+et les pictos par défaut, mais préserve le kabyle, le français, les notes et
+**tous les enregistrements**.
+
 ## Déployer
 
-**Le studio n'a pas besoin d'être déployé.** Il ne sert qu'à toi, tourne sur ta
-machine avec son Postgres en Docker, et publie sur R2. Seule l'app enfant part
-en ligne. Cela t'épargne une base distante, une authentification exposée et des
-secrets en production. Le seul renoncement : tu ne peux enregistrer que depuis
-cette machine.
+**Le studio se déploie comme l'app enfant.** Il n'a besoin d'aucun service
+local : la source du corpus, les audios et les images vivent tous dans le
+stockage. Le déployer permet d'enregistrer depuis n'importe quel appareil — un
+téléphone tenu près de la bouche vaut mieux qu'un micro d'ordinateur portable.
+
+Il reste protégé par un mot de passe unique, qui doit donc être solide dès lors
+qu'il est exposé sur internet.
 
 | Composant | Où | Pourquoi |
 |---|---|---|
 | App enfant | Vercel | c'est elle que les enfants ouvrent |
-| Corpus et audios | R2 | servis à l'app enfant |
-| Studio | ta machine | tu es le seul à l'utiliser |
-| Postgres | Docker local | il ne sert qu'au studio |
+| Corpus, audios, source | R2 | servis à l'app enfant et édités par le studio |
+| Studio | Vercel ou ta machine | il n'a plus besoin d'aucun service local |
+
+**Il n'y a pas de base de données.** La source de vérité du corpus est le fichier
+`corpus/source.json` dans le stockage, à côté des médias. Postgres avait été
+retenu au départ, mais aucune de ses capacités n'était utilisée : dix requêtes
+dans tout le code, aucune jointure, aucune transaction, pour deux cent soixante
+lignes modifiées par une seule personne. Un fichier évite un service à
+provisionner, ses réveils à froid sur les offres gratuites, et se sauvegarde par
+les versions du stockage.
+
+Le studio lit ce fichier au chargement et le réécrit à chaque modification. La
+publication en produit un second, `corpus/actuel.json`, validé, que l'app enfant
+consomme — la source, elle, ne lui est jamais servie.
 
 ### 1. Le bucket R2
 
@@ -241,8 +257,7 @@ la prononciation. C'est tout : pas de jeu, pas de score, pas de progression — 
 ne peut pas s'y tromper. C'est un dictionnaire visuel, pas un second exercice.
 
 L'ordre des cartes suit celui de `docs/corpus-v1.md`, qui est un choix éditorial
-— les mots les plus courants d'abord. La colonne `ordre` en base le fige, sinon
-Postgres rendrait les lignes dans un ordre arbitraire.
+— les mots les plus courants d'abord. Le champ `ordre` de chaque entrée le fige.
 
 ## Ce qui n'est pas encore fait
 

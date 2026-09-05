@@ -1,4 +1,4 @@
-import type { LigneEntree } from '@/db/schema'
+import type { EntreeSource } from '@/depot/types'
 
 /**
  * Écarte les phrases dont tous les mots ne sont pas publiés.
@@ -10,7 +10,7 @@ import type { LigneEntree } from '@/db/schema'
  * Vit dans son propre module, sans dépendance à la connexion : une fonction
  * pure ne doit pas être rendue intestable par le voisinage.
  */
-export function ecarterPhrasesOrphelines(lignes: LigneEntree[]): LigneEntree[] {
+export function ecarterPhrasesOrphelines(lignes: EntreeSource[]): EntreeSource[] {
   const presents = new Set(lignes.map((ligne) => ligne.id))
   return lignes.filter((ligne) => ligne.contient.every((id) => presents.has(id)))
 }

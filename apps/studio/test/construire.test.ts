@@ -1,17 +1,17 @@
 import { describe, expect, it } from 'vitest'
 import { construireArtefact, EntreeIncomplete } from '@/publication/construire'
-import type { LigneEntree, LigneTheme } from '@/db/schema'
+import type { EntreeSource, ThemeSource } from '@/depot/types'
 
-const theme: LigneTheme = {
+const theme: ThemeSource = {
   id: 'les-animaux', nom: 'Les animaux', picto: 'openmoji:1F408', couleur: '#3d7ec9', ordre: 0,
 }
 
-function ligne(reste: Partial<LigneEntree> = {}): LigneEntree {
+function ligne(reste: Partial<EntreeSource> = {}): EntreeSource {
   return {
-    id: 'amchich', type: 'mot', kabyle: 'amchich', kabyleStd: null, fr: 'le chat',
+    id: 'amchich', type: 'mot' as const, kabyle: 'amchich', kabyleStd: null, fr: 'le chat',
     audio: 'audio/amchich.webm', variante: 'kabyle-nord', picto: 'openmoji:1F408',
     themes: ['les-animaux'], niveau: 1, pluriel: null, contient: [], notes: '',
-    aValider: true, ordre: 0, creeLe: new Date('2026-09-01T18:00:00.000Z'), ...reste,
+    aValider: true, ordre: 0, ...reste,
   }
 }
 
@@ -61,7 +61,7 @@ describe('construireArtefact', () => {
   })
 
   it('trie les thèmes par ordre', () => {
-    const second: LigneTheme = { ...theme, id: 'manger', nom: 'Manger', ordre: -1 }
+    const second: ThemeSource = { ...theme, id: 'manger', nom: 'Manger', ordre: -1 }
     const artefact = construireArtefact(
       [ligne({ themes: ['les-animaux'] })], [theme, second], options,
     )

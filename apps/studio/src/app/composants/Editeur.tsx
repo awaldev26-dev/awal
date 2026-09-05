@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import type { LigneEntree } from '@/db/schema'
+import type { EntreeSource } from '@/depot/types'
 import { analyserPicto, emojiDepuisPicto } from '@awal/corpus'
 import { enregistrerEntree } from '../actions'
 import { Champ, classesChamp } from './Champ'
@@ -33,7 +33,7 @@ export function Editeur({
   onSuivant,
   onModifie,
 }: {
-  ligne: LigneEntree
+  ligne: EntreeSource
   urlBase: string
   position: number
   total: number

@@ -1,13 +1,16 @@
 import { describe, expect, it } from 'vitest'
 import { ecarterPhrasesOrphelines } from '@/publication/phrases'
-import type { LigneEntree } from '@/db/schema'
+import type { EntreeSource } from '@/depot/types'
 
-function ligne(id: string, contient: string[] = [], type = 'mot'): LigneEntree {
+function ligne(
+  id: string,
+  contient: string[] = [],
+  type: 'mot' | 'phrase' = 'mot',
+): EntreeSource {
   return {
     id, type, kabyle: id, kabyleStd: null, fr: id, audio: `audio/${id}.wav`,
     variante: 'kabyle-nord', picto: 'openmoji:1F35E', themes: ['t'], niveau: 1,
     pluriel: null, contient, notes: '', aValider: false, ordre: 0,
-    creeLe: new Date('2026-09-01T00:00:00.000Z'),
   }
 }
 

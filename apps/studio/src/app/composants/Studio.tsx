@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import type { LigneEntree, LigneTheme } from '@/db/schema'
+import type { EntreeSource, ThemeSource } from '@/depot/types'
 import { BarreHaut } from './BarreHaut'
 import { Editeur } from './Editeur'
 import { Liste } from './Liste'
@@ -17,7 +17,7 @@ const FILTRES: { cle: Filtre; nom: string }[] = [
   { cle: 'a-valider', nom: 'À valider' },
 ]
 
-function correspond(ligne: LigneEntree, filtre: Filtre): boolean {
+function correspond(ligne: EntreeSource, filtre: Filtre): boolean {
   if (filtre === 'sans-audio') return ligne.audio === null
   if (filtre === 'synthese') return ligne.audio?.includes('remplacement') ?? false
   if (filtre === 'a-valider') return ligne.aValider
@@ -30,8 +30,8 @@ export function Studio({
   derniereVersion,
   urlBase,
 }: {
-  entrees: LigneEntree[]
-  themes: LigneTheme[]
+  entrees: EntreeSource[]
+  themes: ThemeSource[]
   derniereVersion: number | null
   urlBase: string
 }) {

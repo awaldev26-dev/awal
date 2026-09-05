@@ -1,5 +1,5 @@
 import { schemaArtefact, type Artefact } from '@awal/corpus'
-import type { LigneEntree, LigneTheme } from '@/db/schema'
+import type { EntreeSource, ThemeSource } from '@/depot/types'
 
 /** Une entrée en base n'est pas encore publiable — le plus souvent parce qu'elle n'a pas d'audio. */
 export class EntreeIncomplete extends Error {
@@ -23,8 +23,8 @@ export interface OptionsArtefact {
  * Pure : ne lit rien, ce qui la rend testable sans Postgres.
  */
 export function construireArtefact(
-  entrees: LigneEntree[],
-  themes: LigneTheme[],
+  entrees: EntreeSource[],
+  themes: ThemeSource[],
   options: OptionsArtefact,
 ): Artefact {
   return schemaArtefact.parse({
