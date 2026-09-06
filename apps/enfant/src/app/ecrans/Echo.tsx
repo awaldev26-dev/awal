@@ -25,6 +25,18 @@ import { Touche } from '@/interface/Touche'
 type Etat = 'pret' | 'enregistre' | 'compare'
 
 /**
+ * Silence entre le modèle et la voix de l'enfant.
+ *
+ * Depuis que les deux prises sortent au même volume, elles s'enchaînaient sans
+ * frontière audible : on ne savait plus où l'une finissait. Un demi-mot de
+ * silence sépare sans laisser le souvenir du modèle s'effacer — c'est ce
+ * souvenir qu'on compare.
+ */
+const PAUSE_ENTRE_MS = 500
+
+const attendre = (ms: number) => new Promise((resoudre) => setTimeout(resoudre, ms))
+
+/**
  * Prise non mise à niveau, jouée telle quelle.
  *
  * Emprunté quand le décodage échoue : une comparaison de volumes vaut mieux
@@ -195,6 +207,9 @@ function Exercice({
   async function comparer() {
     setJoue('modele')
     await jouerJusquAuBout(urlModele)
+    // Les boutons restent désactivés pendant le silence : les réactiver le
+    // temps d'une demi-seconde les ferait clignoter.
+    await attendre(PAUSE_ENTRE_MS)
     setJoue('moi')
     await prise.current?.jouer()
     setJoue(null)
