@@ -41,6 +41,7 @@ export default function PageJouer() {
             router.push('/jouer/session')
           }}
           onEntrainement={() => router.push('/mots')}
+          onEcho={() => router.push('/echo')}
           onCollection={() => router.push('/jouer/collection')}
           onChangerProfil={() => router.push('/')}
         />

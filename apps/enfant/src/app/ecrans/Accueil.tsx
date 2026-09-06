@@ -9,6 +9,7 @@ export function Accueil({
   aFaire,
   onDemarrer,
   onEntrainement,
+  onEcho,
   onCollection,
   onChangerProfil,
 }: {
@@ -17,6 +18,7 @@ export function Accueil({
   aFaire: number
   onDemarrer: () => void
   onEntrainement: () => void
+  onEcho: () => void
   onCollection: () => void
   onChangerProfil: () => void
 }) {
@@ -63,6 +65,9 @@ export function Accueil({
         <div className="grid w-full gap-carte" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(9rem, 1fr))' }}>
           <Touche ton="safran" onClick={onEntrainement}>
             🔊 Écouter les mots
+          </Touche>
+          <Touche ton="safran" onClick={onEcho}>
+            🎤 Répète après moi
           </Touche>
           <Touche ton="calme" onClick={onCollection}>
             ⭐ Ma collection

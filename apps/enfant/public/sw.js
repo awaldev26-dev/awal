@@ -1,4 +1,4 @@
-const CACHE = 'awal-v11'
+const CACHE = 'awal-v12'
 
 /**
  * Toutes les routes de l'application.
@@ -14,6 +14,7 @@ const ROUTES = [
   '/jouer/bilan',
   '/jouer/collection',
   '/mots',
+  '/echo',
 ]
 
 /**

@@ -32,6 +32,10 @@
   --color-accent: var(--color-terracotta);
   --color-accent-vif: var(--color-safran);
   --color-joie: var(--color-olive);
+  /* Enregistrement en cours. Volontairement loin de l'accent, qui est déjà
+     terracotta : sans quoi « prêt » et « j'enregistre » auraient la même
+     couleur, et l'enfant ne verrait pas la différence. */
+  --color-enregistre: var(--color-prune);
 
   /* ── Rythme ── */
   --spacing-serre: 0.5rem;

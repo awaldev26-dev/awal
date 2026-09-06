@@ -58,3 +58,32 @@ export class Lecteur {
     }
   }
 }
+
+/**
+ * Joue un son et n'attend pas son démarrage mais sa fin.
+ *
+ * `Lecteur.jouer` rend la main dès que la lecture commence, ce qui suffit à un
+ * jeu mais pas à enchaîner deux sons : l'Écho doit faire entendre le modèle
+ * puis la voix de l'enfant, dans cet ordre et sans chevauchement.
+ *
+ * Hors du cache du Lecteur, volontairement : une URL `blob:` est révoquée après
+ * usage, et la garder en cache ferait grossir une table d'entrées mortes.
+ *
+ * Une erreur de lecture résout au lieu de rejeter — un son manquant ne doit pas
+ * interrompre l'exercice.
+ */
+export function jouerJusquAuBout(url: string): Promise<void> {
+  return new Promise((resoudre) => {
+    const audio = new Audio()
+    // Seules les URL distantes ont besoin du mode CORS ; l'imposer à un blob
+    // local n'apporte rien et échoue sur certains navigateurs.
+    if (!url.startsWith('blob:')) audio.crossOrigin = 'anonymous'
+
+    const finir = () => resoudre()
+    audio.addEventListener('ended', finir, { once: true })
+    audio.addEventListener('error', finir, { once: true })
+
+    audio.src = url
+    void audio.play().catch(finir)
+  })
+}
