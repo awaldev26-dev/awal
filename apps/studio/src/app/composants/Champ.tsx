@@ -24,7 +24,18 @@ export function Champ({
   )
 }
 
+/**
+ * Classes communes aux champs de saisie.
+ *
+ * La police fait 16 px sur petit écran, 14 px seulement à partir de md.
+ * Ce n'est pas un choix esthétique : Safari sur iOS zoome de lui-même dès
+ * qu'on touche un champ dont la police est plus petite que 16 px, et la page
+ * se met alors à défiler horizontalement sans qu'on puisse y revenir. Élargir
+ * la police est le seul remède acceptable — désactiver le zoom du navigateur
+ * réglerait le symptôme en privant de zoom ceux qui en ont besoin pour lire.
+ */
 export const classesChamp =
-  'w-full rounded-champ border border-bordure bg-surface px-3 py-2 text-sm ' +
+  'w-full rounded-champ border border-bordure bg-surface px-3 py-2 ' +
+  'text-base md:text-sm ' +
   'text-encre transition placeholder:text-encre-faible ' +
   'focus:border-accent focus:outline-none'

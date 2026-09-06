@@ -30,7 +30,7 @@ export default function Connexion() {
               autoFocus
               autoComplete="current-password"
               aria-invalid={erreur !== null}
-              className="w-full rounded-champ border border-bordure bg-surface px-3 py-2.5 text-sm text-encre transition focus:border-accent focus:outline-none aria-[invalid=true]:border-danger"
+              className="w-full rounded-champ border border-bordure bg-surface px-3 py-2.5 text-base text-encre transition focus:border-accent focus:outline-none md:text-sm aria-[invalid=true]:border-danger"
             />
           </label>
 
