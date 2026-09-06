@@ -1,0 +1,145 @@
+@import 'tailwindcss';
+
+/**
+ * Jetons de « Les lettres ».
+ *
+ * Volontairement distincts de ceux d'Awal. Une interface pour une enfant de
+ * trois ans doit être plus grande et plus dépouillée que celle d'un enfant de
+ * huit ans : partager les jetons ferait converger les deux applications là où
+ * elles doivent diverger.
+ *
+ * Les jetons portent leur rôle et non leur teinte — --color-accent, pas
+ * --color-bleu. C'est ce qui permet de changer une couleur à un seul endroit.
+ */
+@theme {
+  /* ── Palette ── */
+  --color-lait: #fffdf7;
+  --color-lait-creuse: #f6eede;
+  --color-bleu: #3f7fd4;
+  --color-bleu-clair: #8fb9ef;
+  --color-framboise: #e0537c;
+  --color-mandarine: #f79a3e;
+  --color-menthe: #4fb98a;
+  --color-mure: #8a63c4;
+  --color-ardoise: #33302b;
+
+  /* ── Rôles ── */
+  --color-fond: var(--color-lait);
+  --color-surface: #ffffff;
+  --color-encre: var(--color-ardoise);
+  --color-encre-douce: #6f675c;
+  --color-accent: var(--color-bleu);
+  --color-joie: var(--color-menthe);
+  --color-attention: var(--color-mandarine);
+
+  /* ── Rythme ── */
+  --spacing-serre: 0.5rem;
+  --spacing-carte: 0.75rem;
+  --spacing-bloc: 1.25rem;
+  --spacing-large: 2rem;
+
+  /*
+   * Taille d'une lettre dans la grille. Fluide : à trois ans, le doigt est
+   * imprécis, la cible doit être la plus grande que l'écran permette. Le min()
+   * empêche le débordement horizontal sur un téléphone étroit.
+   */
+  --spacing-lettre: min(7rem, 26vw);
+  /* Cible d'un choix dans « Trouve la lettre » : trois par ligne, donc plus large. */
+  --spacing-choix: min(10rem, 28vw);
+
+  /* ── Formes ── */
+  --radius-lettre: 1.75rem;
+  --radius-touche: 2.25rem;
+  --radius-pilule: 999px;
+
+  /*
+   * Halos diffus plutôt qu'ombres portées : une ombre sous une tuile fait
+   * daté, et l'aura entoure la forme au lieu de la poser sur un plan.
+   */
+  --shadow-halo: 0 0 18px 2px rgb(51 48 43 / 0.09);
+  --shadow-halo-fort: 0 0 28px 5px rgb(51 48 43 / 0.14);
+
+  /* ── Animations ── */
+  --animate-rebond: rebond 0.3s ease-out;
+  --animate-flotte: flotte 2.8s ease-in-out infinite;
+  --animate-refus: refus 0.4s ease-in-out;
+  --animate-eclot: eclot 0.45s ease-out both;
+}
+
+@keyframes rebond {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.16);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes flotte {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.4rem);
+  }
+}
+
+/* Refus d'une mauvaise réponse : un balancement, jamais une secousse brutale.
+   À trois ans, une correction ne doit pas ressembler à une réprimande. */
+@keyframes refus {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-0.4rem) rotate(-2deg);
+  }
+  75% {
+    transform: translateX(0.4rem) rotate(2deg);
+  }
+}
+
+@keyframes eclot {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Le mouvement peut être désagréable, voire nauséeux. Le système sait déjà si
+   c'est le cas ; on l'écoute plutôt que d'ajouter un réglage que personne ne
+   trouvera. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+html {
+  background: var(--color-fond);
+  /* Une enfant de trois ans balaie l'écran au hasard : sans cela, la page
+     rebondit et le double-tap zoome en plein exercice. */
+  overscroll-behavior: none;
+  touch-action: manipulation;
+}
+
+body {
+  color: var(--color-encre);
+  /* Aucune sélection de texte : un appui long ferait apparaître une poignée
+     de sélection sur une lettre, incompréhensible à cet âge. */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}

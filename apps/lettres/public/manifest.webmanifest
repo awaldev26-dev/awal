@@ -1,0 +1,14 @@
+{
+  "name": "Les lettres",
+  "short_name": "Lettres",
+  "description": "Découvrir l'alphabet français",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fffdf7",
+  "theme_color": "#fffdf7",
+  "icons": [
+    { "src": "/icone-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icone-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
