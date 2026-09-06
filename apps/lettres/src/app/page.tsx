@@ -4,22 +4,24 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Accueil } from './ecrans/Accueil'
 import { ALPHABET } from '@/alphabet'
-import { dire, disponible, voixFrancaiseTrouvee } from '@/parole'
+import { dire, disponible, trouverVoix } from '@/parole'
 
 export default function PageAccueil() {
   const router = useRouter()
   const [muette, setMuette] = useState(false)
 
   /*
-   * On sonde la voix au chargement, avec une parole vide : la liste des voix
-   * n'est peuplée qu'après une première tentative sur certains moteurs, et
-   * `voixFrancaiseTrouvee` renverrait sinon un faux négatif.
+   * On cherche la voix sans rien prononcer.
    *
-   * Une chaîne vide ne produit aucun son, donc rien ne se déclenche sans geste.
+   * La sonde parlait auparavant une chaîne vide, pour peupler la liste des
+   * voix. C'était un énoncé fantôme : il n'émet ni début ni fin sur plusieurs
+   * moteurs, et il laissait `speaking` à vrai, ce qui coinçait la parole
+   * suivante. `trouverVoix` fait le même travail sans mettre quoi que ce soit
+   * en file.
    */
   useEffect(() => {
     if (!disponible()) return setMuette(true)
-    void dire('').then(() => setMuette(!voixFrancaiseTrouvee()))
+    void trouverVoix().then((voix) => setMuette(voix === null))
   }, [])
 
   return (
