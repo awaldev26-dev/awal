@@ -1,11 +1,23 @@
 'use client'
 
+/** Ce que la tuile est en train de vivre. */
+export type EtatLettre = 'repos' | 'dit' | 'ecartee' | 'reussi'
+
 /**
  * Une lettre touchable.
  *
  * La majuscule occupe presque toute la tuile : à trois ans, c'est la forme
  * qu'on apprend à reconnaître, et rien ne doit la concurrencer. D'où l'absence
  * de tout autre contenu.
+ *
+ * Quatre états, et deux d'entre eux portent tout le retour de l'exercice :
+ *
+ * — `ecartee` : touchée à tort. Estompée et hors jeu, mais toujours à sa place,
+ *   car retirer une tuile décalerait les autres et ferait taper à côté.
+ *   Aucune couleur d'alerte, aucune croix : à trois ans, une erreur ne se
+ *   sanctionne pas, elle se retire du chemin.
+ * — `reussi` : la bonne. Elle grandit, s'entoure d'un anneau et d'un halo
+ *   franc — c'est la seule chose qui doit attirer l'œil à cet instant.
  */
 export function Lettre({
   glyphe,
@@ -21,20 +33,25 @@ export function Lettre({
   /** Taille du glyphe. À fournir quand `taille` est relative, un pourcentage
    *  de police se rapportant à la police du parent et non à la largeur. */
   police?: string
-  etat?: 'repos' | 'dit' | 'refuse' | 'reussi'
+  etat?: EtatLettre
   onClick?: () => void
 }) {
+  const ecartee = etat === 'ecartee'
+  const reussi = etat === 'reussi'
+
   return (
     <button
       type="button"
       onClick={onClick}
+      // Hors jeu : plus aucun appui ne doit compter, ni au doigt ni au clavier.
+      disabled={ecartee}
       aria-label={`lettre ${glyphe}`}
       className={[
-        'grid place-items-center rounded-lettre bg-surface font-bold',
-        'transition-transform duration-100 active:scale-[0.96]',
+        'grid place-items-center rounded-lettre font-bold',
+        'transition-all duration-200',
+        ecartee ? 'bg-lait-creuse' : 'bg-surface active:scale-[0.96]',
         etat === 'dit' ? 'animate-rebond' : '',
-        etat === 'refuse' ? 'animate-refus' : '',
-        etat === 'reussi' ? 'animate-rebond' : '',
+        reussi ? 'animate-rebond' : '',
       ].join(' ')}
       style={{
         width: taille,
@@ -45,8 +62,17 @@ export function Lettre({
         color: couleur,
         fontSize: police ?? `calc(${taille} * 0.62)`,
         lineHeight: 1,
-        boxShadow:
-          etat === 'reussi' ? `0 0 34px 10px ${couleur}88` : `0 0 20px 4px ${couleur}40`,
+        // Estompée sans disparaître : elle reste lisible, donc elle continue
+        // d'apprendre la forme, mais elle ne sollicite plus.
+        opacity: ecartee ? 0.28 : 1,
+        transform: reussi ? 'scale(1.06)' : undefined,
+        outline: reussi ? `4px solid ${couleur}` : undefined,
+        outlineOffset: reussi ? '3px' : undefined,
+        boxShadow: ecartee
+          ? 'none'
+          : reussi
+            ? `0 0 40px 12px ${couleur}99`
+            : `0 0 20px 4px ${couleur}40`,
       }}
     >
       {glyphe}

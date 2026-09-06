@@ -8,41 +8,38 @@ import { dire, taire } from '@/parole'
 import { Fete } from '@/interface/Fete'
 import { Lettre } from '@/interface/Lettre'
 import { Retour } from '@/interface/Retour'
-import { Touche } from '@/interface/Touche'
 
 /** Trois choix : deux serait trivial, quatre trop à balayer du regard à trois ans. */
 const NOMBRE_CHOIX = 3
 
 /** Temps laissé à la fête avant la question suivante. */
-const FETE_MS = 1400
+const FETE_MS = 1200
 
 /**
  * Trouve la lettre.
  *
- * Elle entend une lettre, elle la touche parmi trois.
+ * Elle appuie sur l'oreille pour entendre la lettre, puis la touche parmi trois.
  *
- * Aucune sanction : une erreur fait balancer la tuile et rejoue le son, rien de
- * plus. Pas de buzzer, pas de croix rouge, pas de score — à trois ans, une
- * correction sonore devient un mauvais souvenir, pas un apprentissage.
+ * **Le son ne vient que de l'oreille.** La version précédente rejouait la lettre
+ * à chaque appui, y compris sur une bonne réponse : d'une aide, la voix
+ * devenait un rabâchage. C'est elle qui décide maintenant quand entendre, ce
+ * qui a deux vertus — l'écran est calme, et toute parole descend d'un geste,
+ * ce qu'exige Safari.
  *
- * Et pas de fin : l'exercice enchaîne tant qu'elle joue. Une barre de
- * progression n'aurait aucun sens pour quelqu'un qui ne compte pas encore.
+ * Aucune sanction : une erreur écarte la lettre touchée, estompée et hors jeu,
+ * et l'on réessaie. Écartée plutôt que supprimée, car retirer une tuile
+ * décalerait les autres et ferait taper à côté. Trois choix, donc deux erreurs
+ * au pire : la réussite est garantie, seul le chemin change.
  */
 export function Trouver({ onRetour }: { onRetour: () => void }) {
   const [question, setQuestion] = useState<Question | null>(null)
-  const [refusee, setRefusee] = useState<string | null>(null)
-  const [reussie, setReussie] = useState<string | null>(null)
-  // Verrouille les touches pendant la fête, sinon un martèlement enchaînerait
-  // plusieurs questions sans qu'elle en voie aucune.
-  const [verrouille, setVerrouille] = useState(false)
+  const [ecartees, setEcartees] = useState<string[]>([])
+  const [trouvee, setTrouvee] = useState<string | null>(null)
 
   const poser = useCallback(() => {
-    const suivante = tirerQuestion(ALPHABET, NOMBRE_CHOIX)
-    setQuestion(suivante)
-    setRefusee(null)
-    setReussie(null)
-    setVerrouille(false)
-    if (suivante) void dire(suivante.cible.dit)
+    setQuestion(tirerQuestion(ALPHABET, NOMBRE_CHOIX))
+    setEcartees([])
+    setTrouvee(null)
   }, [])
 
   useEffect(() => {
@@ -53,25 +50,22 @@ export function Trouver({ onRetour }: { onRetour: () => void }) {
   if (!question) return null
 
   function toucher(glyphe: string) {
-    if (verrouille) return
+    // Une fois trouvée, plus rien ne compte : sans ce verrou, un martèlement
+    // enchaînerait plusieurs questions sans qu'elle en voie aucune.
+    if (trouvee !== null || ecartees.includes(glyphe)) return
 
     if (glyphe !== question!.cible.glyphe) {
-      setRefusee(glyphe)
-      // Le son se rejoue : elle a probablement oublié ce qu'elle cherchait.
-      void dire(question!.cible.dit)
-      setTimeout(() => setRefusee((actuelle) => (actuelle === glyphe ? null : actuelle)), 450)
+      setEcartees((precedentes) => [...precedentes, glyphe])
       return
     }
 
-    setVerrouille(true)
-    setReussie(glyphe)
-    void dire(question!.cible.dit)
+    setTrouvee(glyphe)
     setTimeout(poser, FETE_MS)
   }
 
   return (
     <main className="relative mx-auto flex min-h-dvh w-full max-w-3xl flex-col px-bloc pt-carte pb-large">
-      <Fete actif={reussie !== null} />
+      <Fete actif={trouvee !== null} />
 
       <header className="flex items-center gap-carte">
         <Retour onClick={onRetour} />
@@ -79,38 +73,41 @@ export function Trouver({ onRetour }: { onRetour: () => void }) {
       </header>
 
       <div className="flex flex-1 flex-col items-center justify-center gap-large">
-        {/* Aussi grand que les lettres : elle oubliera ce qu'elle cherche, et
-            redemander le son doit être aussi facile que répondre. */}
-        <Touche
-          ton="calme"
+        {/*
+          Seule source de son de l'écran, donc la plus grande touche et la seule
+          qui bouge : à trois ans, on ne lit pas une consigne, on suit ce qui
+          attire l'œil.
+        */}
+        <button
+          type="button"
           onClick={() => dire(question.cible.dit)}
-          disabled={verrouille}
-          aria-label="réécouter la lettre"
+          disabled={trouvee !== null}
+          aria-label="écouter la lettre"
+          className={[
+            'grid size-28 place-items-center rounded-pilule bg-accent text-6xl shadow-halo-fort',
+            'transition-transform duration-100 active:scale-[0.96] disabled:opacity-45',
+            trouvee === null ? 'animate-flotte' : '',
+          ].join(' ')}
         >
-          <span className="text-5xl leading-none">👂</span>
-        </Touche>
+          👂
+        </button>
 
-        {/* Grille de trois colonnes et non un flex qui déborde : trois tuiles
-            plus les écarts dépassaient la largeur utile à 390 px, et
-            repassaient en deux lignes. */}
         <div className="grid w-full grid-cols-3 gap-carte">
-          {question.propositions.map((lettre) => (
-            <Lettre
-              key={lettre.glyphe}
-              glyphe={lettre.glyphe}
-              couleur={couleurDe(lettre.glyphe)}
-              taille="100%"
-              police="min(4.5rem, 15vw)"
-              etat={
-                reussie === lettre.glyphe
-                  ? 'reussi'
-                  : refusee === lettre.glyphe
-                    ? 'refuse'
-                    : 'repos'
-              }
-              onClick={() => toucher(lettre.glyphe)}
-            />
-          ))}
+          {question.propositions.map((lettre) => {
+            const ecartee = ecartees.includes(lettre.glyphe)
+            const gagnante = trouvee === lettre.glyphe
+            return (
+              <Lettre
+                key={lettre.glyphe}
+                glyphe={lettre.glyphe}
+                couleur={couleurDe(lettre.glyphe)}
+                taille="100%"
+                police="min(4.5rem, 15vw)"
+                etat={gagnante ? 'reussi' : ecartee ? 'ecartee' : 'repos'}
+                onClick={() => toucher(lettre.glyphe)}
+              />
+            )
+          })}
         </div>
       </div>
     </main>
