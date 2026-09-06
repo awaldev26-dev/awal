@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --port 3001",
+    "dev:disque": "STOCKAGE=disque next dev --port 3005",
     "build": "node ../../outils/port-libre.mjs 3001 && next build",
     "start": "next start --port 3001",
     "test": "vitest run",
