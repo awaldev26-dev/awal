@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { Baloo_2 } from 'next/font/google'
+import { AvisParole } from '@/interface/AvisParole'
 import { EnregistrerSW } from './EnregistrerSW'
 import './globals.css'
 
@@ -29,6 +30,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     <html lang="fr" className={ronde.variable}>
       <body className="min-h-dvh" style={{ fontFamily: 'var(--police), system-ui, sans-serif' }}>
         {children}
+        <AvisParole />
         <EnregistrerSW />
       </body>
     </html>

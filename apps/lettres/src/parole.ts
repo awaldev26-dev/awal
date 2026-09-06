@@ -48,6 +48,34 @@ let voixCherchee = false
 /** Numéro de la dernière parole demandée, pour abandonner celles supplantées. */
 let jeton = 0
 
+/**
+ * Le moteur du navigateur est bloqué et rien ne peut le débloquer depuis la
+ * page : seul un redémarrage du navigateur y parvient, l'état vivant dans son
+ * service de parole et non dans le document.
+ *
+ * On l'expose donc au parent. Un silence inexpliqué est intenable dans une
+ * application qu'une enfant de trois ans utilise seule — elle ne pourra ni le
+ * comprendre ni le signaler.
+ */
+let bloque = false
+const abonnes = new Set<() => void>()
+
+export function estBloque(): boolean {
+  return bloque
+}
+
+/** S'abonne au blocage. Renvoie de quoi se désabonner. */
+export function surBlocage(rappel: () => void): () => void {
+  abonnes.add(rappel)
+  return () => abonnes.delete(rappel)
+}
+
+function signalerBlocage(): void {
+  if (bloque) return
+  bloque = true
+  for (const rappel of abonnes) rappel()
+}
+
 const pause = (ms: number) => new Promise((resoudre) => setTimeout(resoudre, ms))
 
 /**
@@ -218,7 +246,8 @@ export async function dire(texte: string): Promise<void> {
   speechSynthesis.resume()
   await pause(REPIT_ANNULATION_MS)
   if (mien !== jeton) return
-  await prononcer(texte, voix)
+
+  if ((await prononcer(texte, voix)) === 'bloquee') signalerBlocage()
 }
 
 /**
