@@ -1,3 +1,5 @@
+import { appliquer, bornesUtiles } from '@awal/audio'
+
 /**
  * Traitement d'une prise avant envoi.
  *
@@ -14,9 +16,10 @@
  * jamais de la déformer — c'est une prononciation à imiter, pas un effet.
  *
  * Tout se passe dans le navigateur : l'hébergement ne fournit pas ffmpeg, et
- * le Web Audio suffit. Les fonctions de calcul pur sont exportées à part,
- * parce que ce sont elles qui portent les cas limites et qu'elles sont les
- * seules qu'on puisse tester hors navigateur.
+ * le Web Audio suffit. La mesure du niveau et la coupe du silence viennent de
+ * @awal/audio, que l'app enfant emploie aussi : l'Écho compare la voix du père
+ * à celle de l'enfant, et cette comparaison n'a de sens que si les deux visent
+ * le même niveau.
  */
 
 /** Coupe sous cette fréquence : rien d'utile pour une voix, et les grondements y vivent. */
@@ -40,112 +43,8 @@ const COMPRESSION = {
   relachement: 0.22,
 }
 
-/**
- * Niveau visé, en amplitude efficace. C'est lui qui rend toutes les prises
- * égales entre elles : normaliser la crête ne suffirait pas, deux prises de
- * même crête pouvant être perçues à des volumes très différents.
- */
-const CIBLE_EFFICACE = 0.1
-
-/** La crête ne doit jamais atteindre 1, sous peine de saturation à la lecture. */
-const PLAFOND_CRETE = 0.89
-
-/** Sans plafond, une prise quasi muette verrait son seul souffle amplifié. */
-const GAIN_MAX = 8
-
-/** Fenêtre d'analyse du silence. Assez courte pour être précise, assez longue
- *  pour qu'un claquement isolé ne passe pas pour de la parole. */
-const FENETRE_MS = 5
-
-/** Un seuil relatif à la crête : une prise douce ne doit pas être prise pour du silence. */
-const SEUIL_RELATIF = 0.04
-
-/** Plancher absolu, pour qu'une prise entièrement muette ne s'auto-justifie pas. */
-const SEUIL_PLANCHER = 0.004
-
-/** Marges conservées autour du mot : l'attaque et l'extinction en font partie. */
-const MARGE_AVANT_MS = 30
-const MARGE_APRES_MS = 120
-
-/** Fondus aux extrémités : une coupe franche produit un clic audible. */
-const FONDU_MS = 8
-
 /** Débit de l'encodage. Large pour une voix seule en mono. */
 const DEBIT = 48_000
-
-/**
- * Bornes du son utile, en index d'échantillons.
- *
- * Renvoie l'intervalle complet si aucune fenêtre ne dépasse le seuil : mieux
- * vaut livrer une prise muette telle quelle que de la réduire à néant, car
- * c'est en l'écoutant qu'on comprend que le micro n'a rien capté.
- */
-export function bornesUtiles(
-  echantillons: Float32Array,
-  frequence: number,
-): { debut: number; fin: number } {
-  const total = echantillons.length
-  if (total === 0) return { debut: 0, fin: 0 }
-
-  let crete = 0
-  for (let i = 0; i < total; i += 1) {
-    const valeur = Math.abs(echantillons[i] ?? 0)
-    if (valeur > crete) crete = valeur
-  }
-
-  const seuil = Math.max(crete * SEUIL_RELATIF, SEUIL_PLANCHER)
-  const fenetre = Math.max(1, Math.round((FENETRE_MS / 1000) * frequence))
-
-  let premiere = -1
-  let derniere = -1
-  for (let depart = 0; depart < total; depart += fenetre) {
-    const arret = Math.min(depart + fenetre, total)
-    let somme = 0
-    for (let i = depart; i < arret; i += 1) {
-      const valeur = echantillons[i] ?? 0
-      somme += valeur * valeur
-    }
-    if (Math.sqrt(somme / (arret - depart)) >= seuil) {
-      if (premiere === -1) premiere = depart
-      derniere = arret
-    }
-  }
-
-  if (premiere === -1) return { debut: 0, fin: total }
-
-  const margeAvant = Math.round((MARGE_AVANT_MS / 1000) * frequence)
-  const margeApres = Math.round((MARGE_APRES_MS / 1000) * frequence)
-  return {
-    debut: Math.max(0, premiere - margeAvant),
-    fin: Math.min(total, derniere + margeApres),
-  }
-}
-
-/**
- * Gain à appliquer pour amener la prise au niveau visé.
- *
- * Le niveau efficace commande, la crête ne fait que brider : c'est ainsi que
- * deux cent quarante-trois prises finissent au même volume perçu sans qu'une
- * seule sature.
- */
-export function gainNormalisation(echantillons: Float32Array): number {
-  const total = echantillons.length
-  if (total === 0) return 1
-
-  let somme = 0
-  let crete = 0
-  for (let i = 0; i < total; i += 1) {
-    const valeur = echantillons[i] ?? 0
-    somme += valeur * valeur
-    const absolue = Math.abs(valeur)
-    if (absolue > crete) crete = absolue
-  }
-
-  const efficace = Math.sqrt(somme / total)
-  if (efficace === 0 || crete === 0) return 1
-
-  return Math.min(CIBLE_EFFICACE / efficace, PLAFOND_CRETE / crete, GAIN_MAX)
-}
 
 /**
  * Contraintes de capture.
@@ -217,30 +116,13 @@ function tailler(rendu: AudioBuffer): AudioBuffer {
   const entree = rendu.getChannelData(0)
   const { debut, fin } = bornesUtiles(entree, rendu.sampleRate)
   const utile = entree.subarray(debut, fin)
-  const gain = gainNormalisation(utile)
 
-  const longueur = Math.max(1, utile.length)
   const taille = new AudioBuffer({
-    length: longueur,
+    length: Math.max(1, utile.length),
     numberOfChannels: 1,
     sampleRate: rendu.sampleRate,
   })
-  const sortie = taille.getChannelData(0)
-
-  const fondu = Math.min(
-    Math.round((FONDU_MS / 1000) * rendu.sampleRate),
-    Math.floor(longueur / 2),
-  )
-
-  for (let i = 0; i < utile.length; i += 1) {
-    let valeur = (utile[i] ?? 0) * gain
-    if (fondu > 0) {
-      if (i < fondu) valeur *= i / fondu
-      else if (i >= utile.length - fondu) valeur *= (utile.length - i) / fondu
-    }
-    sortie[i] = valeur
-  }
-
+  appliquer(utile, taille.getChannelData(0), rendu.sampleRate)
   return taille
 }
 

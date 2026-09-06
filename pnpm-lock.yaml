@@ -14,6 +14,9 @@ importers:
 
   apps/enfant:
     dependencies:
+      '@awal/audio':
+        specifier: workspace:*
+        version: link:../../packages/audio
       '@awal/corpus':
         specifier: workspace:*
         version: link:../../packages/corpus
@@ -54,6 +57,9 @@ importers:
 
   apps/studio:
     dependencies:
+      '@awal/audio':
+        specifier: workspace:*
+        version: link:../../packages/audio
       '@awal/corpus':
         specifier: workspace:*
         version: link:../../packages/corpus
@@ -94,6 +100,12 @@ importers:
       tsx:
         specifier: ^4.19.0
         version: 4.23.13
+      vitest:
+        specifier: ^2.1.0
+        version: 2.1.9(@types/node@22.20.1)(jsdom@25.0.1)(lightningcss@1.32.0)
+
+  packages/audio:
+    devDependencies:
       vitest:
         specifier: ^2.1.0
         version: 2.1.9(@types/node@22.20.1)(jsdom@25.0.1)(lightningcss@1.32.0)

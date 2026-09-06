@@ -15,7 +15,8 @@
     "next": "^16.3.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "zod": "^3.23.0"
+    "zod": "^3.23.0",
+    "@awal/audio": "workspace:*"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",

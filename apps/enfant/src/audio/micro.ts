@@ -71,12 +71,12 @@ export class Micro {
   }
 
   /**
-   * Arrête la prise et renvoie une URL jouable.
+   * Arrête la prise et renvoie le son capté.
    *
-   * À révoquer par l'appelant dès qu'elle ne sert plus : c'est lui qui sait
-   * quand la réécoute est terminée.
+   * Un Blob et non une URL : décider d'une URL, d'un décodage ou d'une mise à
+   * niveau n'est pas l'affaire du micro.
    */
-  arreter(): Promise<string> {
+  arreter(): Promise<Blob> {
     const graveur = this.graveur
     if (!graveur || graveur.state === 'inactive') {
       return Promise.reject(new Error('aucune prise en cours'))
@@ -86,7 +86,7 @@ export class Micro {
       graveur.onstop = () => {
         this.fermerFlux()
         this.graveur = null
-        resoudre(URL.createObjectURL(new Blob(this.morceaux, { type: graveur.mimeType })))
+        resoudre(new Blob(this.morceaux, { type: graveur.mimeType }))
       }
       graveur.stop()
     })

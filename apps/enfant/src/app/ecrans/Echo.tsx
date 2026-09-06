@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Artefact, Entree, Theme } from '@awal/corpus'
 import { jouerJusquAuBout } from '@/audio/lecteur'
 import { DUREE_MAX_S, Micro, MicroRefuse } from '@/audio/micro'
+import { normaliser, type PriseNormalisee } from '@/audio/normaliser'
 import { urlAudio } from '@/corpus/charger'
 import { BoutonRetour } from '@/interface/BoutonRetour'
 import { ListeThemes, grouperParTheme } from '@/interface/ListeThemes'
@@ -22,6 +23,21 @@ import { Touche } from '@/interface/Touche'
  * monter les boîtes et détruirait l'espacement.
  */
 type Etat = 'pret' | 'enregistre' | 'compare'
+
+/**
+ * Prise non mise à niveau, jouée telle quelle.
+ *
+ * Emprunté quand le décodage échoue : une comparaison de volumes vaut mieux
+ * que pas de comparaison, et l'enfant ne doit jamais perdre sa prise à cause
+ * d'un format que le navigateur n'a pas su relire.
+ */
+function repliBrut(brute: Blob): PriseNormalisee {
+  const url = URL.createObjectURL(brute)
+  return {
+    jouer: () => jouerJusquAuBout(url),
+    liberer: () => URL.revokeObjectURL(url),
+  }
+}
 
 export function Echo({
   artefact,
@@ -79,21 +95,21 @@ function Exercice({
   const [index, setIndex] = useState(0)
   const [etat, setEtat] = useState<Etat>('pret')
   const [secondes, setSecondes] = useState(0)
-  const [maPrise, setMaPrise] = useState<string | null>(null)
+  const [aPrise, setAPrise] = useState(false)
   const [joue, setJoue] = useState<'modele' | 'moi' | null>(null)
   const [refuse, setRefuse] = useState(false)
 
   const micro = useRef(new Micro())
-  // L'URL est doublée dans une référence pour pouvoir être révoquée sans
-  // effet de bord dans un updater d'état, que React peut rejouer.
-  const prise = useRef<string | null>(null)
+  // La prise vit dans une référence : la libérer est un effet de bord, qui n'a
+  // pas sa place dans un updater d'état que React peut rejouer.
+  const prise = useRef<PriseNormalisee | null>(null)
   const entree = entrees[index]
 
-  /** Révoque l'URL de la prise : rien ne doit survivre à sa réécoute. */
+  /** Libère la prise : rien ne doit survivre à sa réécoute. */
   function oublierPrise() {
-    if (prise.current) URL.revokeObjectURL(prise.current)
+    prise.current?.liberer()
     prise.current = null
-    setMaPrise(null)
+    setAPrise(false)
   }
 
   // Changer de mot referme tout : la prise du mot précédent n'a plus de sens.
@@ -110,7 +126,7 @@ function Exercice({
     const courant = micro.current
     return () => {
       courant.annuler()
-      if (prise.current) URL.revokeObjectURL(prise.current)
+      prise.current?.liberer()
       prise.current = null
     }
   }, [])
@@ -154,22 +170,33 @@ function Exercice({
   }
 
   async function arreter() {
-    const url = await micro.current.arreter().catch(() => null)
-    if (!url) return setEtat('pret')
+    const brute = await micro.current.arreter().catch(() => null)
+    if (!brute) return setEtat('pret')
 
-    prise.current = url
-    setMaPrise(url)
+    // Mise à niveau avant toute écoute : sans elle, l'enfant comparerait des
+    // volumes et non des prononciations. Le repli garde la prise brute plutôt
+    // que de priver de comparaison.
+    const normalisee = await normaliser(brute)
+    prise.current = normalisee ?? repliBrut(brute)
+
+    setAPrise(true)
     setEtat('compare')
     // La comparaison est le cœur de l'exercice : on l'enchaîne d'office, le
     // modèle d'abord, pour que l'enfant entende l'écart sans rien avoir à faire.
-    await comparer(url)
+    await comparer()
   }
 
-  async function comparer(url: string) {
+  async function ecouterMaPrise() {
+    setJoue('moi')
+    await prise.current?.jouer()
+    setJoue(null)
+  }
+
+  async function comparer() {
     setJoue('modele')
     await jouerJusquAuBout(urlModele)
     setJoue('moi')
-    await jouerJusquAuBout(url)
+    await prise.current?.jouer()
     setJoue(null)
   }
 
@@ -231,23 +258,15 @@ function Exercice({
         </p>
       ) : null}
 
-      {maPrise ? (
+      {aPrise ? (
         <div className="flex w-full flex-wrap justify-center gap-carte">
           <Touche ton="calme" onClick={ecouterModele} disabled={joue !== null}>
             👂 Le mot
           </Touche>
-          <Touche
-            ton="calme"
-            onClick={async () => {
-              setJoue('moi')
-              await jouerJusquAuBout(maPrise)
-              setJoue(null)
-            }}
-            disabled={joue !== null}
-          >
+          <Touche ton="calme" onClick={ecouterMaPrise} disabled={joue !== null}>
             {joue === 'moi' ? '🔊 …' : '🙂 Toi'}
           </Touche>
-          <Touche ton="safran" onClick={() => comparer(maPrise)} disabled={joue !== null}>
+          <Touche ton="safran" onClick={comparer} disabled={joue !== null}>
             🔁 Les deux
           </Touche>
         </div>

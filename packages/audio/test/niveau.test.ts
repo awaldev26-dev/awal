@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { bornesUtiles, gainNormalisation } from '@/audio/traitement'
+import { bornesUtiles, gainNormalisation } from '../src/niveau'
 
 const FREQUENCE = 48_000
 
