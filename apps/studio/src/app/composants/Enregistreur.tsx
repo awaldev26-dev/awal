@@ -1,9 +1,10 @@
-"use client";
+'use client'
 
-import { useEffect, useRef, useState } from "react";
-import { televerserAudio } from "../actions";
+import { useEffect, useRef, useState } from 'react'
+import { televerserAudio } from '../actions'
+import { CONTRAINTES_MICRO, traiter } from '@/audio/traitement'
 
-type Etat = "pret" | "enregistre" | "envoi";
+type Etat = 'pret' | 'enregistre' | 'traitement' | 'envoi'
 
 /**
  * Enregistrement d'une entrée.
@@ -11,6 +12,10 @@ type Etat = "pret" | "enregistre" | "envoi";
  * Trois choses comptent quand on enchaîne deux cents prises : voir qu'on
  * enregistre, entendre le résultat aussitôt, et pouvoir refaire sans réfléchir.
  * D'où le chronomètre, la réécoute immédiate et le raccourci clavier.
+ *
+ * La prise passe par @/audio/traitement avant d'être envoyée : silence coupé,
+ * niveau égalisé, timbre légèrement étoffé. L'aperçu joue le fichier traité,
+ * et non la prise brute — sinon on validerait autre chose que ce qui est stocké.
  */
 export function Enregistreur({
   entreeId,
@@ -18,80 +23,79 @@ export function Enregistreur({
   urlBase,
   onEnvoye,
 }: {
-  entreeId: string;
-  audioActuel: string | null;
-  urlBase: string;
-  onEnvoye: () => void;
+  entreeId: string
+  audioActuel: string | null
+  urlBase: string
+  onEnvoye: () => void
 }) {
-  const [etat, setEtat] = useState<Etat>("pret");
-  const [secondes, setSecondes] = useState(0);
-  const [apercu, setApercu] = useState<string | null>(null);
-  const enregistreur = useRef<MediaRecorder | null>(null);
-  const morceaux = useRef<Blob[]>([]);
+  const [etat, setEtat] = useState<Etat>('pret')
+  const [secondes, setSecondes] = useState(0)
+  const [apercu, setApercu] = useState<string | null>(null)
+  const enregistreur = useRef<MediaRecorder | null>(null)
+  const morceaux = useRef<Blob[]>([])
 
   // Une nouvelle entrée efface l'aperçu de la précédente.
   useEffect(() => {
-    setApercu(null);
-    setEtat("pret");
-    setSecondes(0);
-  }, [entreeId]);
+    setApercu(null)
+    setEtat('pret')
+    setSecondes(0)
+  }, [entreeId])
 
   useEffect(() => {
-    if (etat !== "enregistre") return;
-    const minuteur = setInterval(
-      () => setSecondes((valeur) => valeur + 1),
-      1000,
-    );
-    return () => clearInterval(minuteur);
-  }, [etat]);
+    if (etat !== 'enregistre') return
+    const minuteur = setInterval(() => setSecondes((valeur) => valeur + 1), 1000)
+    return () => clearInterval(minuteur)
+  }, [etat])
 
   async function demarrer() {
-    const flux = await navigator.mediaDevices.getUserMedia({ audio: true });
-    morceaux.current = [];
-    setSecondes(0);
+    const flux = await navigator.mediaDevices.getUserMedia(CONTRAINTES_MICRO)
+    morceaux.current = []
+    setSecondes(0)
 
-    const micro = new MediaRecorder(flux);
-    micro.ondataavailable = (evenement) =>
-      morceaux.current.push(evenement.data);
+    const micro = new MediaRecorder(flux)
+    micro.ondataavailable = (evenement) => morceaux.current.push(evenement.data)
     micro.onstop = async () => {
-      for (const piste of flux.getTracks()) piste.stop();
-      const blob = new Blob(morceaux.current, { type: micro.mimeType });
-      setApercu(URL.createObjectURL(blob));
-      setEtat("envoi");
-      const extension = micro.mimeType.includes("mp4") ? "mp4" : "webm";
+      for (const piste of flux.getTracks()) piste.stop()
+      setEtat('traitement')
+      const brute = new Blob(morceaux.current, { type: micro.mimeType })
+      const traitee = await traiter(brute, micro.mimeType)
+
+      setApercu(URL.createObjectURL(traitee))
+      setEtat('envoi')
+      const extension = traitee.type.includes('mp4') ? 'mp4' : 'webm'
       await televerserAudio(
         entreeId,
-        new File([blob], `${entreeId}.${extension}`, { type: micro.mimeType }),
-      );
-      setEtat("pret");
-      onEnvoye();
-    };
+        new File([traitee], `${entreeId}.${extension}`, { type: traitee.type }),
+      )
+      setEtat('pret')
+      onEnvoye()
+    }
 
-    enregistreur.current = micro;
-    micro.start();
-    setEtat("enregistre");
+    enregistreur.current = micro
+    micro.start()
+    setEtat('enregistre')
   }
 
   function basculer() {
-    if (etat === "enregistre") enregistreur.current?.stop();
-    else if (etat === "pret") void demarrer();
+    if (etat === 'enregistre') enregistreur.current?.stop()
+    else if (etat === 'pret') void demarrer()
   }
 
   // Espace démarre et arrête la prise : on garde les mains libres.
   useEffect(() => {
     function auClavier(evenement: KeyboardEvent) {
-      const cible = evenement.target as HTMLElement | null;
-      if (cible && ["INPUT", "TEXTAREA"].includes(cible.tagName)) return;
-      if (evenement.code !== "Space") return;
-      evenement.preventDefault();
-      basculer();
+      const cible = evenement.target as HTMLElement | null
+      if (cible && ['INPUT', 'TEXTAREA'].includes(cible.tagName)) return
+      if (evenement.code !== 'Space') return
+      evenement.preventDefault()
+      basculer()
     }
-    window.addEventListener("keydown", auClavier);
-    return () => window.removeEventListener("keydown", auClavier);
-  });
+    window.addEventListener('keydown', auClavier)
+    return () => window.removeEventListener('keydown', auClavier)
+  })
 
-  const source = apercu ?? (audioActuel ? `${urlBase}${audioActuel}` : null);
-  const estRemplacement = audioActuel?.includes("remplacement") ?? false;
+  const source = apercu ?? (audioActuel ? `${urlBase}${audioActuel}` : null)
+  const estRemplacement = audioActuel?.includes('remplacement') ?? false
 
   return (
     <div className="rounded-panneau border border-bordure bg-surface p-bloc">
@@ -99,21 +103,23 @@ export function Enregistreur({
         <button
           type="button"
           onClick={basculer}
-          disabled={etat === "envoi"}
+          disabled={etat === 'traitement' || etat === 'envoi'}
           className={[
-            "flex h-11 items-center gap-2 rounded-pilule px-5 text-sm font-semibold transition",
-            etat === "enregistre"
-              ? "bg-danger text-white hover:bg-danger/90"
-              : "bg-accent text-white hover:bg-accent-sombre disabled:opacity-50",
-          ].join(" ")}
+            'flex h-11 items-center gap-2 rounded-pilule px-5 text-sm font-semibold transition',
+            etat === 'enregistre'
+              ? 'bg-danger text-white hover:bg-danger/90'
+              : 'bg-accent text-white hover:bg-accent-sombre disabled:opacity-50',
+          ].join(' ')}
         >
-          {etat === "enregistre" ? (
+          {etat === 'enregistre' ? (
             <>
               <span className="size-2.5 rounded-sm bg-white" />
               Arrêter — {secondes} s
             </>
-          ) : etat === "envoi" ? (
-            "Envoi…"
+          ) : etat === 'traitement' ? (
+            'Traitement…'
+          ) : etat === 'envoi' ? (
+            'Envoi…'
           ) : (
             <>
               <span className="size-2.5 animate-pulse rounded-pilule bg-white" />
@@ -129,12 +135,7 @@ export function Enregistreur({
 
         {source ? (
           // La clé force le rechargement quand l'audio change.
-          <audio
-            key={source}
-            controls
-            src={source}
-            className="h-9 w-full md:w-auto md:flex-1"
-          />
+          <audio key={source} controls src={source} className="h-9 w-full md:w-auto md:flex-1" />
         ) : (
           <span className="text-sm text-danger">aucun audio</span>
         )}
@@ -146,5 +147,5 @@ export function Enregistreur({
         </p>
       ) : null}
     </div>
-  );
+  )
 }

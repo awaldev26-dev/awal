@@ -1,17 +1,17 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
-import type { EntreeSource } from "@/depot/types";
-import { analyserPicto, emojiDepuisPicto } from "@awal/corpus";
-import { enregistrerEntree } from "../actions";
-import { Champ, classesChamp } from "./Champ";
-import { ChoixPicto } from "./ChoixPicto";
-import { Enregistreur } from "./Enregistreur";
+import { useEffect, useState } from 'react'
+import type { EntreeSource } from '@/depot/types'
+import { analyserPicto, emojiDepuisPicto } from '@awal/corpus'
+import { enregistrerEntree } from '../actions'
+import { Champ, classesChamp } from './Champ'
+import { ChoixPicto } from './ChoixPicto'
+import { Enregistreur } from './Enregistreur'
 
 /** Affiche l'illustration, qu'elle soit un emoji ou une image. */
 function Vignette({ picto, urlBase }: { picto: string; urlBase: string }) {
-  const analyse = analyserPicto(picto);
-  if (analyse?.type === "image") {
+  const analyse = analyserPicto(picto)
+  if (analyse?.type === 'image') {
     // eslint-disable-next-line @next/next/no-img-element
     return (
       <img
@@ -19,11 +19,9 @@ function Vignette({ picto, urlBase }: { picto: string; urlBase: string }) {
         alt=""
         className="size-11 shrink-0 rounded-champ object-cover"
       />
-    );
+    )
   }
-  return (
-    <span className="text-4xl leading-none">{emojiDepuisPicto(picto)}</span>
-  );
+  return <span className="text-4xl leading-none">{emojiDepuisPicto(picto)}</span>
 }
 
 export function Editeur({
@@ -36,27 +34,27 @@ export function Editeur({
   onModifie,
   onRetourListe,
 }: {
-  ligne: EntreeSource;
-  urlBase: string;
-  position: number;
-  total: number;
-  onPrecedent: () => void;
-  onSuivant: () => void;
-  onModifie: () => void;
-  onRetourListe: () => void;
+  ligne: EntreeSource
+  urlBase: string
+  position: number
+  total: number
+  onPrecedent: () => void
+  onSuivant: () => void
+  onModifie: () => void
+  onRetourListe: () => void
 }) {
-  const [enCours, setEnCours] = useState(false);
-  const [enregistre, setEnregistre] = useState(false);
+  const [enCours, setEnCours] = useState(false)
+  const [enregistre, setEnregistre] = useState(false)
 
   // Change d'entrée : on efface la confirmation précédente.
-  useEffect(() => setEnregistre(false), [ligne.id]);
+  useEffect(() => setEnregistre(false), [ligne.id])
 
   async function soumettre(donnees: FormData) {
-    setEnCours(true);
-    await enregistrerEntree(donnees);
-    setEnCours(false);
-    setEnregistre(true);
-    onModifie();
+    setEnCours(true)
+    await enregistrerEntree(donnees)
+    setEnCours(false)
+    setEnregistre(true)
+    onModifie()
   }
 
   return (
@@ -75,9 +73,7 @@ export function Editeur({
 
         <Vignette picto={ligne.picto} urlBase={urlBase} />
         <div className="min-w-0 flex-1">
-          <h1 className="truncate font-kabyle text-xl text-encre">
-            {ligne.kabyle}
-          </h1>
+          <h1 className="truncate font-kabyle text-xl text-encre">{ligne.kabyle}</h1>
           <p className="truncate text-sm text-encre-douce">{ligne.fr}</p>
         </div>
         <div className="flex shrink-0 items-center gap-1">
@@ -122,10 +118,7 @@ export function Editeur({
           <input type="hidden" name="id" value={ligne.id} />
 
           <div className="grid gap-bloc sm:grid-cols-2">
-            <Champ
-              etiquette="Kabyle"
-              aide="Transcription usuelle : gh, kh, ou, th, dh, 3"
-            >
+            <Champ etiquette="Kabyle" aide="Transcription usuelle : gh, kh, ou, th, dh, 3">
               <input
                 name="kabyle"
                 defaultValue={ligne.kabyle}
@@ -134,25 +127,18 @@ export function Editeur({
             </Champ>
 
             <Champ etiquette="Français">
-              <input
-                name="fr"
-                defaultValue={ligne.fr}
-                className={classesChamp}
-              />
+              <input name="fr" defaultValue={ligne.fr} className={classesChamp} />
             </Champ>
 
             <Champ etiquette="Pluriel" aide="Facultatif">
               <input
                 name="pluriel"
-                defaultValue={ligne.pluriel ?? ""}
+                defaultValue={ligne.pluriel ?? ''}
                 className={`${classesChamp} font-kabyle`}
               />
             </Champ>
 
-            <Champ
-              etiquette="Niveau"
-              aide="1 pour les plus jeunes, 3 pour les lecteurs"
-            >
+            <Champ etiquette="Niveau" aide="1 pour les plus jeunes, 3 pour les lecteurs">
               <input
                 type="number"
                 name="niveau"
@@ -165,11 +151,7 @@ export function Editeur({
           </div>
 
           <Champ etiquette="Notes">
-            <input
-              name="notes"
-              defaultValue={ligne.notes}
-              className={classesChamp}
-            />
+            <input name="notes" defaultValue={ligne.notes} className={classesChamp} />
           </Champ>
 
           <label className="flex items-center gap-2 text-sm text-encre-douce">
@@ -188,22 +170,20 @@ export function Editeur({
               disabled={enCours}
               className="rounded-champ bg-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-accent-sombre disabled:opacity-50"
             >
-              {enCours ? "Enregistrement…" : "Enregistrer les modifications"}
+              {enCours ? 'Enregistrement…' : 'Enregistrer les modifications'}
             </button>
-            {enregistre ? (
-              <span className="text-sm text-succes">Enregistré.</span>
-            ) : null}
+            {enregistre ? <span className="text-sm text-succes">Enregistré.</span> : null}
           </div>
         </form>
 
         {ligne.contient.length > 0 ? (
           <p className="text-xs text-encre-faible">
             Cette phrase emploie&nbsp;
-            <span className="font-kabyle">{ligne.contient.join(", ")}</span> —
-            elle ne sera proposée qu’une fois ces mots connus.
+            <span className="font-kabyle">{ligne.contient.join(', ')}</span> — elle ne sera proposée
+            qu’une fois ces mots connus.
           </p>
         ) : null}
       </div>
     </div>
-  );
+  )
 }

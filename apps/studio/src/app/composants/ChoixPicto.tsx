@@ -1,15 +1,11 @@
-"use client";
+'use client'
 
-import { useEffect, useRef, useState } from "react";
-import {
-  analyserPicto,
-  emojiDepuisPicto,
-  pictoDepuisEmoji,
-} from "@awal/corpus";
-import { definirPictoEmoji, televerserPicto } from "../actions";
+import { useEffect, useRef, useState } from 'react'
+import { analyserPicto, emojiDepuisPicto, pictoDepuisEmoji } from '@awal/corpus'
+import { definirPictoEmoji, televerserPicto } from '../actions'
 
 /** Côté du carré dans lequel l'image est recadrée avant envoi. */
-const COTE = 256;
+const COTE = 256
 
 /**
  * Réduit une image au format d'une vignette, dans le navigateur.
@@ -20,14 +16,14 @@ const COTE = 256;
  * vingt kilo-octets.
  */
 async function reduire(fichier: File): Promise<File> {
-  const image = await createImageBitmap(fichier);
-  const cote = Math.min(image.width, image.height);
-  const toile = document.createElement("canvas");
-  toile.width = COTE;
-  toile.height = COTE;
+  const image = await createImageBitmap(fichier)
+  const cote = Math.min(image.width, image.height)
+  const toile = document.createElement('canvas')
+  toile.width = COTE
+  toile.height = COTE
 
-  const contexte = toile.getContext("2d");
-  if (!contexte) throw new Error("Canvas indisponible.");
+  const contexte = toile.getContext('2d')
+  if (!contexte) throw new Error('Canvas indisponible.')
   contexte.drawImage(
     image,
     (image.width - cote) / 2,
@@ -38,13 +34,13 @@ async function reduire(fichier: File): Promise<File> {
     0,
     COTE,
     COTE,
-  );
+  )
 
   const blob = await new Promise<Blob | null>((resoudre) =>
-    toile.toBlob(resoudre, "image/webp", 0.85),
-  );
-  if (!blob) throw new Error("Conversion de l’image impossible.");
-  return new File([blob], "picto.webp", { type: "image/webp" });
+    toile.toBlob(resoudre, 'image/webp', 0.85),
+  )
+  if (!blob) throw new Error('Conversion de l’image impossible.')
+  return new File([blob], 'picto.webp', { type: 'image/webp' })
 }
 
 export function ChoixPicto({
@@ -53,63 +49,57 @@ export function ChoixPicto({
   urlBase,
   onChange,
 }: {
-  entreeId: string;
-  picto: string;
-  urlBase: string;
-  onChange: () => void;
+  entreeId: string
+  picto: string
+  urlBase: string
+  onChange: () => void
 }) {
-  const analyse = analyserPicto(picto);
-  const [saisie, setSaisie] = useState(emojiDepuisPicto(picto));
-  const [etat, setEtat] = useState<"pret" | "envoi">("pret");
-  const [erreur, setErreur] = useState<string | null>(null);
-  const fichierRef = useRef<HTMLInputElement | null>(null);
+  const analyse = analyserPicto(picto)
+  const [saisie, setSaisie] = useState(emojiDepuisPicto(picto))
+  const [etat, setEtat] = useState<'pret' | 'envoi'>('pret')
+  const [erreur, setErreur] = useState<string | null>(null)
+  const fichierRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
-    setSaisie(emojiDepuisPicto(picto));
-    setErreur(null);
-  }, [picto, entreeId]);
+    setSaisie(emojiDepuisPicto(picto))
+    setErreur(null)
+  }, [picto, entreeId])
 
   async function validerEmoji() {
-    const reference = pictoDepuisEmoji(saisie);
+    const reference = pictoDepuisEmoji(saisie)
     if (!reference) {
-      setErreur("Colle un emoji dans le champ.");
-      return;
+      setErreur('Colle un emoji dans le champ.')
+      return
     }
-    setEtat("envoi");
-    setErreur(null);
-    await definirPictoEmoji(entreeId, reference);
-    setEtat("pret");
-    onChange();
+    setEtat('envoi')
+    setErreur(null)
+    await definirPictoEmoji(entreeId, reference)
+    setEtat('pret')
+    onChange()
   }
 
   async function choisirImage(fichier: File) {
-    setEtat("envoi");
-    setErreur(null);
+    setEtat('envoi')
+    setErreur(null)
     try {
-      await televerserPicto(entreeId, await reduire(fichier));
-      onChange();
+      await televerserPicto(entreeId, await reduire(fichier))
+      onChange()
     } catch (cause) {
-      setErreur(String(cause).slice(0, 120));
+      setErreur(String(cause).slice(0, 120))
     }
-    setEtat("pret");
-    if (fichierRef.current) fichierRef.current.value = "";
+    setEtat('pret')
+    if (fichierRef.current) fichierRef.current.value = ''
   }
 
   return (
     <div className="rounded-panneau border border-bordure bg-surface p-bloc">
       <div className="flex items-start gap-encart md:gap-bloc">
         <div className="grid size-16 shrink-0 place-items-center md:size-20 overflow-hidden rounded-panneau border border-bordure bg-surface-creuse">
-          {analyse?.type === "image" ? (
+          {analyse?.type === 'image' ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={`${urlBase}${analyse.cle}`}
-              alt=""
-              className="size-full object-cover"
-            />
+            <img src={`${urlBase}${analyse.cle}`} alt="" className="size-full object-cover" />
           ) : (
-            <span className="text-4xl leading-none">
-              {emojiDepuisPicto(picto) || "❓"}
-            </span>
+            <span className="text-4xl leading-none">{emojiDepuisPicto(picto) || '❓'}</span>
           )}
         </div>
 
@@ -123,9 +113,9 @@ export function ChoixPicto({
                 value={saisie}
                 onChange={(evenement) => setSaisie(evenement.target.value)}
                 onKeyDown={(evenement) => {
-                  if (evenement.key === "Enter") {
-                    evenement.preventDefault();
-                    void validerEmoji();
+                  if (evenement.key === 'Enter') {
+                    evenement.preventDefault()
+                    void validerEmoji()
                   }
                 }}
                 placeholder="Colle un emoji"
@@ -135,7 +125,7 @@ export function ChoixPicto({
               <button
                 type="button"
                 onClick={validerEmoji}
-                disabled={etat === "envoi"}
+                disabled={etat === 'envoi'}
                 className="rounded-champ border border-bordure bg-surface px-3 py-2 text-sm whitespace-nowrap text-encre-douce transition hover:bg-surface-creuse disabled:opacity-50"
               >
                 Utiliser cet emoji
@@ -149,8 +139,8 @@ export function ChoixPicto({
               type="file"
               accept="image/*"
               onChange={(evenement) => {
-                const fichier = evenement.target.files?.[0];
-                if (fichier) void choisirImage(fichier);
+                const fichier = evenement.target.files?.[0]
+                if (fichier) void choisirImage(fichier)
               }}
               className="hidden"
               id={`picto-fichier-${entreeId}`}
@@ -159,7 +149,7 @@ export function ChoixPicto({
               htmlFor={`picto-fichier-${entreeId}`}
               className="cursor-pointer rounded-champ border border-bordure bg-surface px-3 py-2 text-sm whitespace-nowrap text-encre-douce transition hover:bg-surface-creuse"
             >
-              {etat === "envoi" ? "Envoi…" : "Choisir une photo…"}
+              {etat === 'envoi' ? 'Envoi…' : 'Choisir une photo…'}
             </label>
             <span className="text-xs text-encre-faible">
               recadrée en carré de {COTE} px, convertie en WebP
@@ -172,5 +162,5 @@ export function ChoixPicto({
         </div>
       </div>
     </div>
-  );
+  )
 }
