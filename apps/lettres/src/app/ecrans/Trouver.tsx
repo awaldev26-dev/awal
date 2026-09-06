@@ -25,6 +25,11 @@ const FETE_MS = 1250
  * qui a deux vertus — l'écran est calme, et toute parole descend d'un geste,
  * ce qu'exige Safari.
  *
+ * Les lettres ne s'éveillent qu'après la première écoute. Elles restent
+ * visibles mais grises et inertes, et c'est l'oreille qui les fait éclore en
+ * couleur : son rôle se comprend ainsi sans qu'on ait à l'écrire, ce qui
+ * compte quand on ne lit pas encore.
+ *
  * Aucune sanction : une erreur écarte la lettre touchée, estompée et hors jeu,
  * et l'on réessaie. Écartée plutôt que supprimée, car retirer une tuile
  * décalerait les autres et ferait taper à côté. Trois choix, donc deux erreurs
@@ -34,11 +39,15 @@ export function Trouver({ onRetour }: { onRetour: () => void }) {
   const [question, setQuestion] = useState<Question | null>(null)
   const [ecartees, setEcartees] = useState<string[]>([])
   const [trouvee, setTrouvee] = useState<string | null>(null)
+  // Les lettres restent inertes jusqu'à la première écoute : chercher avant
+  // d'entendre ne serait que deviner.
+  const [ecoutee, setEcoutee] = useState(false)
 
   const poser = useCallback(() => {
     setQuestion(tirerQuestion(ALPHABET, NOMBRE_CHOIX))
     setEcartees([])
     setTrouvee(null)
+    setEcoutee(false)
   }, [])
 
   useEffect(() => {
@@ -77,13 +86,17 @@ export function Trouver({ onRetour }: { onRetour: () => void }) {
         */}
         <button
           type="button"
-          onClick={() => dire(question.cible.dit)}
+          onClick={() => {
+            setEcoutee(true)
+            void dire(question.cible.dit)
+          }}
           disabled={trouvee !== null}
           aria-label="écouter la lettre"
           className={[
             'grid size-28 place-items-center rounded-pilule bg-accent text-6xl shadow-halo-fort',
             'transition-transform duration-100 active:scale-[0.96] disabled:opacity-45',
-            trouvee === null ? 'animate-flotte' : '',
+            // Elle n'attire l'œil que tant qu'elle n'a pas servi.
+            !ecoutee ? 'animate-flotte' : '',
           ].join(' ')}
         >
           👂
@@ -103,7 +116,9 @@ export function Trouver({ onRetour }: { onRetour: () => void }) {
                 couleur={couleurDe(lettre.glyphe)}
                 taille="100%"
                 police="min(4.5rem, 15vw)"
-                etat={gagnante ? 'reussi' : ecartee ? 'ecartee' : 'repos'}
+                etat={
+                  gagnante ? 'reussi' : ecartee ? 'ecartee' : ecoutee ? 'repos' : 'endormie'
+                }
                 onClick={() => toucher(lettre.glyphe)}
               />
             )

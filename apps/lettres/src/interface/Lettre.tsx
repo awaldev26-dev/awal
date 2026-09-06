@@ -3,7 +3,7 @@
 import { Eclat } from './Eclat'
 
 /** Ce que la tuile est en train de vivre. */
-export type EtatLettre = 'repos' | 'dit' | 'ecartee' | 'reussi'
+export type EtatLettre = 'endormie' | 'repos' | 'dit' | 'ecartee' | 'reussi'
 
 /**
  * Une lettre touchable.
@@ -12,8 +12,12 @@ export type EtatLettre = 'repos' | 'dit' | 'ecartee' | 'reussi'
  * qu'on apprend à reconnaître, et rien ne doit la concurrencer. D'où l'absence
  * de tout autre contenu.
  *
- * Quatre états, et deux d'entre eux portent tout le retour de l'exercice :
+ * Cinq états, et trois portent tout le retour de l'exercice :
  *
+ * — `endormie` : on n'a pas encore écouté la lettre à trouver. La tuile est
+ *   bien là, mais grise et sans halo, et elle ne répond pas. Chercher avant
+ *   d'entendre ne serait que deviner ; et cet état donne son rôle à l'oreille
+ *   sans qu'on ait à l'écrire, puisqu'elle fait éclore les lettres en couleur.
  * — `ecartee` : touchée à tort. Estompée et hors jeu, mais toujours à sa place,
  *   car retirer une tuile décalerait les autres et ferait taper à côté.
  *   Aucune couleur d'alerte, aucune croix : à trois ans, une erreur ne se
@@ -42,20 +46,23 @@ export function Lettre({
 }) {
   const ecartee = etat === 'ecartee'
   const reussi = etat === 'reussi'
+  const endormie = etat === 'endormie'
+  const inerte = ecartee || endormie
 
   return (
     <button
       type="button"
       onClick={onClick}
       // Hors jeu : plus aucun appui ne doit compter, ni au doigt ni au clavier.
-      disabled={ecartee}
+      disabled={inerte}
       aria-label={`lettre ${glyphe}`}
       className={[
         // `relative` et `overflow-visible` : l'éclat déborde volontairement de
         // la tuile, sinon il serait rogné à ses bords.
         'relative grid place-items-center overflow-visible rounded-lettre font-bold',
         'transition-all duration-200',
-        ecartee ? 'bg-lait-creuse' : 'bg-surface active:scale-[0.96]',
+        'bg-surface',
+        inerte ? '' : 'active:scale-[0.96]',
         etat === 'dit' ? 'animate-rebond' : '',
         reussi ? 'animate-triomphe z-10' : '',
       ].join(' ')}
@@ -65,17 +72,20 @@ export function Lettre({
         aspectRatio: taille === '100%' ? '1' : undefined,
         // La couleur du glyphe et l'aura viennent de la même teinte : c'est
         // elle qui distingue une tuile de sa voisine, sans contour net.
-        color: couleur,
+        // Grise avant l'écoute : la couleur est une récompense de l'oreille.
+        color: endormie ? 'var(--color-encre-douce)' : couleur,
         fontSize: police ?? `calc(${taille} * 0.62)`,
         lineHeight: 1,
         // Estompée sans disparaître : elle reste lisible, donc elle continue
         // d'apprendre la forme, mais elle ne sollicite plus.
-        opacity: ecartee ? 0.28 : 1,
+        opacity: ecartee ? 0.4 : 1,
         boxShadow: ecartee
           ? 'none'
-          : reussi
-            ? `0 0 48px 16px ${couleur}aa`
-            : `0 0 20px 4px ${couleur}40`,
+          : endormie
+            ? 'var(--shadow-halo)'
+            : reussi
+              ? `0 0 48px 16px ${couleur}aa`
+              : `0 0 20px 4px ${couleur}40`,
       }}
     >
       {reussi ? <Eclat /> : null}

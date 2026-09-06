@@ -1,0 +1,13 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - heading "Les lettres" [level=1] [ref=e3]
+    - generic [ref=e4]:
+      - button "A B C Écouter les lettres" [ref=e5]:
+        - generic [ref=e6]: A B C
+        - generic [ref=e7]: Écouter les lettres
+      - button "👂 Trouve la lettre" [ref=e8]:
+        - generic [ref=e9]: 👂
+        - generic [ref=e10]: Trouve la lettre
+  - button "Open Next.js Dev Tools" [ref=e16] [cursor=pointer]:
+    - img [ref=e17]
+  - alert [ref=e20]

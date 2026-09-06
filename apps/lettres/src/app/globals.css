@@ -15,6 +15,10 @@
   /* ── Palette ── */
   --color-lait: #fffdf7;
   --color-lait-creuse: #f6eede;
+  /* Crème franchement plus soutenue que le blanc des tuiles. Le fond était
+     #fffdf7 contre des tuiles #ffffff : à l'œil, la même couleur, et les
+     tuiles ne se détachaient que par leur halo. */
+  --color-sable: #eee0c4;
   --color-bleu: #3f7fd4;
   --color-bleu-clair: #8fb9ef;
   --color-framboise: #e0537c;
@@ -24,7 +28,7 @@
   --color-ardoise: #33302b;
 
   /* ── Rôles ── */
-  --color-fond: var(--color-lait);
+  --color-fond: var(--color-sable);
   --color-surface: #ffffff;
   --color-encre: var(--color-ardoise);
   --color-encre-douce: #6f675c;

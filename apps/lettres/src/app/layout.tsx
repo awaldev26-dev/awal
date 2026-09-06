@@ -22,7 +22,9 @@ export const metadata = {
 }
 
 export const viewport = {
-  themeColor: '#fffdf7',
+  // Accordée au fond : sinon la barre d'état et l'écran de démarrage gardent
+  // un blanc qui tranche avec l'application.
+  themeColor: '#eee0c4',
 }
 
 export default function Layout({ children }: { children: ReactNode }) {
