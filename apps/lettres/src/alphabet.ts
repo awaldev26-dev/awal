@@ -11,8 +11,11 @@
  *   « ku » viserait /ky/, le nom de la lettre, là où « qu » donnerait /k/,
  *   c'est-à-dire son son.
  * — `X` s'écrit « ixe » plutôt que « iks ».
- * — `E` s'écrit « eu », un « e » seul risquant de n'être pas prononcé, la
- *   voyelle étant muette en fin de mot français.
+ * — `E` s'écrit « e », tout simplement. « eu » avait d'abord été choisi par
+ *   crainte qu'un « e » seul ne soit muet ; c'était un risque imaginaire, et
+ *   le remède introduisait un vrai défaut : « eu » se dit /ø/ et non /ə/, une
+ *   voyelle antérieure arrondie que l'oreille confond avec le /y/ de `U`. Un
+ *   « e » seul est bien prononcé, et dure autant que « eu ».
  * — `N` s'écrit « ène » et non « enne », qui est pourtant l'orthographe usuelle
  *   du nom de la lettre : la voix Thomas de macOS l'épelait, prononçant
  *   « e-n-n-e ». Constaté à l'oreille, puis confirmé par la durée — « enne »
@@ -39,7 +42,7 @@ export const ALPHABET: readonly Lettre[] = [
   { glyphe: 'B', dit: 'bé' },
   { glyphe: 'C', dit: 'cé' },
   { glyphe: 'D', dit: 'dé' },
-  { glyphe: 'E', dit: 'eu' },
+  { glyphe: 'E', dit: 'e' },
   { glyphe: 'F', dit: 'effe' },
   { glyphe: 'G', dit: 'gé' },
   { glyphe: 'H', dit: 'hache' },
