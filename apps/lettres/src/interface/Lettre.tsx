@@ -1,5 +1,7 @@
 'use client'
 
+import { Eclat } from './Eclat'
+
 /** Ce que la tuile est en train de vivre. */
 export type EtatLettre = 'repos' | 'dit' | 'ecartee' | 'reussi'
 
@@ -16,8 +18,10 @@ export type EtatLettre = 'repos' | 'dit' | 'ecartee' | 'reussi'
  *   car retirer une tuile décalerait les autres et ferait taper à côté.
  *   Aucune couleur d'alerte, aucune croix : à trois ans, une erreur ne se
  *   sanctionne pas, elle se retire du chemin.
- * — `reussi` : la bonne. Elle grandit, s'entoure d'un anneau et d'un halo
- *   franc — c'est la seule chose qui doit attirer l'œil à cet instant.
+ * — `reussi` : la bonne. Elle bondit au-delà de sa taille avant de se poser,
+ *   une onde s'en échappe et un éclat en jaillit. Le contour net d'avant
+ *   ressemblait à un champ de formulaire, et les grains figés ne fêtaient
+ *   rien : c'est le mouvement qui célèbre.
  */
 export function Lettre({
   glyphe,
@@ -47,11 +51,13 @@ export function Lettre({
       disabled={ecartee}
       aria-label={`lettre ${glyphe}`}
       className={[
-        'grid place-items-center rounded-lettre font-bold',
+        // `relative` et `overflow-visible` : l'éclat déborde volontairement de
+        // la tuile, sinon il serait rogné à ses bords.
+        'relative grid place-items-center overflow-visible rounded-lettre font-bold',
         'transition-all duration-200',
         ecartee ? 'bg-lait-creuse' : 'bg-surface active:scale-[0.96]',
         etat === 'dit' ? 'animate-rebond' : '',
-        reussi ? 'animate-rebond' : '',
+        reussi ? 'animate-triomphe z-10' : '',
       ].join(' ')}
       style={{
         width: taille,
@@ -65,16 +71,14 @@ export function Lettre({
         // Estompée sans disparaître : elle reste lisible, donc elle continue
         // d'apprendre la forme, mais elle ne sollicite plus.
         opacity: ecartee ? 0.28 : 1,
-        transform: reussi ? 'scale(1.06)' : undefined,
-        outline: reussi ? `4px solid ${couleur}` : undefined,
-        outlineOffset: reussi ? '3px' : undefined,
         boxShadow: ecartee
           ? 'none'
           : reussi
-            ? `0 0 40px 12px ${couleur}99`
+            ? `0 0 48px 16px ${couleur}aa`
             : `0 0 20px 4px ${couleur}40`,
       }}
     >
+      {reussi ? <Eclat /> : null}
       {glyphe}
     </button>
   )

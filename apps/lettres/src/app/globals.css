@@ -62,7 +62,16 @@
   /* ── Animations ── */
   --animate-rebond: rebond 0.3s ease-out;
   --animate-flotte: flotte 2.8s ease-in-out infinite;
-  --animate-eclot: eclot 0.45s ease-out both;
+  /* Triomphe de la lettre trouvée : un ressort qui dépasse puis se pose. La
+     courbe à plus de 1 est ce qui donne l'élan ; une interpolation douce
+     ferait un gonflement mou. */
+  --animate-triomphe: triomphe 0.62s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  /* Onde qui s'étend et se dissipe, à la place du contour net qui faisait
+     « champ de formulaire ». */
+  --animate-onde: onde 0.85s ease-out forwards;
+  /* Éclat projeté depuis la lettre. Chaque grain reçoit sa direction en
+     variables, sinon ils partiraient tous au même endroit. */
+  --animate-eclat: eclat 0.95s cubic-bezier(0.15, 0.75, 0.3, 1) forwards;
 }
 
 @keyframes rebond {
@@ -87,14 +96,43 @@
   }
 }
 
-@keyframes eclot {
+@keyframes triomphe {
   0% {
-    transform: scale(0.4);
-    opacity: 0;
+    transform: scale(1) rotate(0deg);
+  }
+  42% {
+    transform: scale(1.24) rotate(-5deg);
+  }
+  72% {
+    transform: scale(1.11) rotate(4deg);
   }
   100% {
-    transform: scale(1);
+    transform: scale(1.15) rotate(0deg);
+  }
+}
+
+@keyframes onde {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+@keyframes eclat {
+  0% {
+    transform: translate(0, 0) scale(0.2) rotate(0deg);
+    opacity: 0;
+  }
+  18% {
     opacity: 1;
+  }
+  100% {
+    transform: translate(var(--dx), var(--dy)) scale(1) rotate(var(--rot));
+    opacity: 0;
   }
 }
 

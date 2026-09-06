@@ -5,15 +5,14 @@ import { ALPHABET } from '@/alphabet'
 import { tirerQuestion, type Question } from '@/choix'
 import { couleurDe } from '@/couleurs'
 import { dire, taire } from '@/parole'
-import { Fete } from '@/interface/Fete'
 import { Lettre } from '@/interface/Lettre'
 import { Retour } from '@/interface/Retour'
 
 /** Trois choix : deux serait trivial, quatre trop à balayer du regard à trois ans. */
 const NOMBRE_CHOIX = 3
 
-/** Temps laissé à la fête avant la question suivante. */
-const FETE_MS = 1200
+/** Temps laissé à l'éclat avant la question suivante : il dure environ 0,95 s. */
+const FETE_MS = 1250
 
 /**
  * Trouve la lettre.
@@ -64,9 +63,7 @@ export function Trouver({ onRetour }: { onRetour: () => void }) {
   }
 
   return (
-    <main className="relative mx-auto flex min-h-dvh w-full max-w-3xl flex-col px-bloc pt-carte pb-large">
-      <Fete actif={trouvee !== null} />
-
+    <main className="mx-auto flex min-h-dvh w-full max-w-3xl flex-col px-bloc pt-carte pb-large">
       <header className="flex items-center gap-carte">
         <Retour onClick={onRetour} />
         <h1 className="text-2xl font-bold text-encre">Trouve la lettre</h1>
@@ -94,8 +91,11 @@ export function Trouver({ onRetour }: { onRetour: () => void }) {
 
         <div className="grid w-full grid-cols-3 gap-carte">
           {question.propositions.map((lettre) => {
-            const ecartee = ecartees.includes(lettre.glyphe)
             const gagnante = trouvee === lettre.glyphe
+            // Les perdantes s'éteignent aussi une fois la bonne trouvée : rien
+            // ne doit disputer l'attention à la lettre qui vient d'être fêtée.
+            const ecartee =
+              !gagnante && (ecartees.includes(lettre.glyphe) || trouvee !== null)
             return (
               <Lettre
                 key={lettre.glyphe}
