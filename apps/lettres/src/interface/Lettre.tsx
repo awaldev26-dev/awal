@@ -15,9 +15,10 @@ export type EtatLettre = 'endormie' | 'repos' | 'dit' | 'ecartee' | 'reussi'
  * Cinq états, et trois portent tout le retour de l'exercice :
  *
  * — `endormie` : on n'a pas encore écouté la lettre à trouver. La tuile est
- *   bien là, mais grise et sans halo, et elle ne répond pas. Chercher avant
- *   d'entendre ne serait que deviner ; et cet état donne son rôle à l'oreille
- *   sans qu'on ait à l'écrire, puisqu'elle fait éclore les lettres en couleur.
+ *   bien là, mais estompée, grise et sans halo, et elle ne répond pas.
+ *   Chercher avant d'entendre ne serait que deviner ; et cet état donne son
+ *   rôle à l'oreille sans qu'on ait à l'écrire, puisqu'elle fait éclore les
+ *   lettres en couleur et en pleine lumière.
  * — `ecartee` : touchée à tort. Estompée et hors jeu, mais toujours à sa place,
  *   car retirer une tuile décalerait les autres et ferait taper à côté.
  *   Aucune couleur d'alerte, aucune croix : à trois ans, une erreur ne se
@@ -76,9 +77,14 @@ export function Lettre({
         color: endormie ? 'var(--color-encre-douce)' : couleur,
         fontSize: police ?? `calc(${taille} * 0.62)`,
         lineHeight: 1,
-        // Estompée sans disparaître : elle reste lisible, donc elle continue
-        // d'apprendre la forme, mais elle ne sollicite plus.
-        opacity: ecartee ? 0.4 : 1,
+        /*
+         * Estompée sans disparaître, dans les deux cas où la tuile ne répond
+         * pas : elle reste lisible, donc elle continue d'apprendre la forme,
+         * mais elle ne sollicite plus. Un peu plus pâle une fois écartée
+         * qu'endormie, car écartée l'est définitivement — et les deux états ne
+         * se côtoient jamais, l'un précédant l'écoute et l'autre la suivant.
+         */
+        opacity: ecartee ? 0.4 : endormie ? 0.5 : 1,
         boxShadow: ecartee
           ? 'none'
           : endormie
